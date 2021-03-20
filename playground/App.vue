@@ -51,7 +51,7 @@ export default defineComponent({
   },
   setup () {
     const input = ref(window.location.hash
-      ? decodeURIComponent(window.location.hash.substr(1))
+      ? atob(window.location.hash.substr(1))
       : defaultInput)
 
     const parsedInput = computed(() => evaluateSource(input.value))
@@ -59,7 +59,7 @@ export default defineComponent({
     const types = computed(() => generateDts(schema.value))
 
     watch(input, () => {
-      window.location.hash = '#' + encodeURIComponent(input.value)
+      window.location.hash = '#' + btoa(input.value)
     })
 
     return {
