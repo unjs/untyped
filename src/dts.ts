@@ -1,5 +1,5 @@
 import type { Schema, JSType } from './types'
-import { escapeKey, getType } from './utils'
+import { escapeKey } from './utils'
 
 const TYPE_MAP: Record<JSType, string> = {
   array: 'any[]',
@@ -28,7 +28,7 @@ function _genTypes (schema: Schema, spaces: string): string[] {
     } else {
       let type: string
       if (val.type === 'array') {
-        type = val.items.map(item => getType(item.type) + '[]').join(' | ')
+        type = val.items.map(item => mapType(item.type) + '[]').join(' | ')
       } else {
         type = mapType(val.type)
       }
