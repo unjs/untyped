@@ -21,6 +21,7 @@
   "scripts": {
     "build": "siroc build",
     "dev": "jest --watch",
+    "play": "vite playground",
     "lint": "eslint --ext .js,.ts .",
     "prepublishOnly": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
@@ -31,12 +32,17 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/jest": "latest",
     "@types/node": "latest",
+    "@vitejs/plugin-vue": "^1.1.5",
+    "@vue/compiler-sfc": "^3.0.7",
     "eslint": "latest",
     "jest": "latest",
     "jiti": "latest",
     "json-schema": "^0.3.0",
+    "monaco-editor": "^0.23.0",
     "siroc": "latest",
     "standard-version": "latest",
-    "ts-jest": "^26.5.4"
+    "ts-jest": "^26.5.4",
+    "vite": "^2.1.2",
+    "vue": "3"
   }
 }
