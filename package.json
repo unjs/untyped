@@ -1,0 +1,42 @@
+{
+  "name": "magic-schema",
+  "version": "0.0.0",
+  "description": "",
+  "repository": "unjsio/magic-schema",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    "./": "./",
+    ".": {
+      "import": "./dist/magic-schema.mjs",
+      "require": "./dist/magic-schema.js"
+    }
+  },
+  "main": "./dist/magic-schema.js",
+  "module": "./dist/magic-schema.mjs",
+  "types": "./dist/magic-schema.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "dev": "jest --watch",
+    "lint": "eslint --ext .js,.ts .",
+    "prepublishOnly": "yarn build",
+    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
+    "test": "yarn lint && jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "@types/jest": "latest",
+    "@types/node": "latest",
+    "eslint": "latest",
+    "jest": "latest",
+    "jiti": "latest",
+    "json-schema": "^0.3.0",
+    "siroc": "latest",
+    "standard-version": "latest",
+    "ts-jest": "^26.5.4"
+  }
+}
