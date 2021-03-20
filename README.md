@@ -6,6 +6,9 @@
 [![Codecov][codecov-src]][codecov-href]
 [![bundle][bundle-src]][bundle-href]
 
+
+**▶️ Check [online playground](https://schema.unjs.io/)!**
+
 ## Usage
 
 ### Install package
