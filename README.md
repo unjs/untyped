@@ -7,7 +7,9 @@
 [![bundle][bundle-src]][bundle-href]
 
 
-**▶️ Check [online playground](https://schema.unjs.io/)!**
+
+**▶️ Check [online playground](https://magic-schema.unjs.io)**
+
 
 ## Usage
 
