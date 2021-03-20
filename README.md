@@ -133,11 +133,11 @@ interface MyObject {
 [npm-downloads-src]: https://img.shields.io/npm/dm/magic-schema?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/magic-schema
 
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjsio/magic-schema/ci/main?style=flat-square
-[github-actions-href]: https://github.com/unjsio/magic-schema/actions?query=workflow%3Aci
+[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/magic-schema/ci/main?style=flat-square
+[github-actions-href]: https://github.com/unjs/magic-schema/actions?query=workflow%3Aci
 
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjsio/magic-schema/main?style=flat-square
-[codecov-href]: https://codecov.io/gh/unjsio/magic-schema
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/magic-schema/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/unjs/magic-schema
 
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/magic-schema?style=flat-square
 [bundle-href]: https://bundlephobia.com/result?p=magic-schema
