@@ -2,11 +2,11 @@
   <div class="container">
     <div class="block">
       <h2> Reference </h2>
-      <Editor v-model:value="input" />
+      <Editor :value="input" @update:value="input = $event" />
     </div>
     <div class="block">
       <h2> Schema </h2>
-      <Editor :value="schemaStr" read-only language="json" />
+      <Editor :value="JSON.stringify(schema, null, 2)" read-only language="json" />
     </div>
     <div class="block">
       <h2> Types </h2>
@@ -50,22 +50,21 @@ export default defineComponent({
     Editor
   },
   setup () {
-    const input = ref(defaultInput)
-    const schema = ref({})
-    const types = ref('')
+    const input = ref(window.location.hash
+      ? decodeURIComponent(window.location.hash.substr(1))
+      : defaultInput)
 
-    watch(input, (value) => {
-      const inputObj = evaluateSource(value)
-      schema.value = resolveSchema(inputObj)
-      types.value = generateDts(schema.value)
+    const parsedInput = computed(() => evaluateSource(input.value))
+    const schema = computed(() => resolveSchema(parsedInput.value))
+    const types = computed(() => generateDts(schema.value))
+
+    watch(input, () => {
+      window.location.hash = '#' + encodeURIComponent(input.value)
     })
-
-    const schemaStr = computed(() => JSON.stringify(schema.value, null, 2))
 
     return {
       input,
       schema,
-      schemaStr,
       types
     }
   }
