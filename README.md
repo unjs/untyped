@@ -121,7 +121,7 @@ interface MyObject {
 
 - Clone repository
 - Install dependencies with `yarn install`
-- Use `yarn dev` to start jest watcher verifying changes
+- Use `yarn dev` to start playground (work with `src/`)
 - Use `yarn test` before push to ensure all tests and lint checks passing
 
 ## License

@@ -20,8 +20,7 @@
   ],
   "scripts": {
     "build": "siroc build",
-    "dev": "jest --watch",
-    "play": "vite playground",
+    "dev": "vite playground",
     "lint": "eslint --ext .js,.ts .",
     "prepublishOnly": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
@@ -43,6 +42,7 @@
     "standard-version": "latest",
     "ts-jest": "^26.5.4",
     "vite": "^2.1.2",
+    "vite-plugin-windicss": "^0.9.5",
     "vue": "3"
   }
 }

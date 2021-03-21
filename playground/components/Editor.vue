@@ -56,12 +56,17 @@ export default defineComponent({
       value: this.value,
       language: this.language,
       readOnly: this.readOnly,
+      wordWrap: true,
+      automaticLayout: true,
       minimap: {
         enabled: false
       }
     })
     this.editor = editor
-    editor.onDidChangeModelContent(() => {
+    // editor.onDidChangeModelContent(() => {
+    //   this.$emit('update:value', editor.getValue())
+    // })
+    editor.onDidBlurEditorWidget(() => {
       this.$emit('update:value', editor.getValue())
     })
   }
