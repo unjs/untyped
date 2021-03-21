@@ -107,7 +107,7 @@ body, html, #app {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @apply shadow-lg rounded m-30px;
+  @apply lg:shadow-lg lg:rounded lg:m-30px;
 }
 
 .block-title {
