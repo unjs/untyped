@@ -2,13 +2,13 @@ import { getType, isObject, unique } from './utils'
 import type { InputObject, InputValue, JSValue, Schema } from './types'
 
 export function resolveSchema (obj: InputObject) {
-  const schema = _resolveSchema(obj, obj, obj)
+  const schema = _resolveSchema(obj, obj)
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
   return schema
 }
 
-function _resolveSchema (input: InputValue, parent: InputObject, root: InputObject): Schema {
+function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObject): Schema {
   // Node is plain value
   if (!isObject(input)) {
     return normalizeSchema({
@@ -22,15 +22,22 @@ function _resolveSchema (input: InputValue, parent: InputObject, root: InputObje
   const schema: Schema = { ...node.$schema }
 
   // Resolve children
+  let proxifiedNode = node
+  const getSchema = (key) => {
+    schema.properties = schema.properties || {}
+    if (!schema.properties[key]) {
+      schema.properties[key] = _resolveSchema(node[key], proxifiedNode, root || proxifiedNode)
+    }
+    return schema.properties[key]
+  }
+  proxifiedNode = new Proxy(node, { get: (_, key) => getSchema(key).default, set: () => false })
+
   for (const key in node) {
     // Ignore special keys
     if (key === '$resolve' || key === '$schema' || key === '$default') {
       continue
     }
-    const resolved = _resolveSchema(node[key], node, root)
-    schema.properties = schema.properties || {}
-    schema.properties[key] = resolved
-    node[key] = resolved.default
+    getSchema(key)
   }
 
   // Infer default value from $resolve and $default
@@ -38,7 +45,7 @@ function _resolveSchema (input: InputValue, parent: InputObject, root: InputObje
     schema.default = node.$default
   }
   if (typeof node.$resolve === 'function') {
-    schema.default = node.$resolve(schema.default, parent, root)
+    schema.default = node.$resolve(schema.default, parent, root || proxifiedNode)
   }
 
   // Infer type from default value

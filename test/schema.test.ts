@@ -76,7 +76,7 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $resolve (dependency)', () => {
+  it('with $resolve (dependency order-1)', () => {
     const schema = resolveSchema({
       foo: { $resolve: () => 'foo' },
       bar: { $resolve: (val, parent) => parent.foo + (val || 'bar') }
@@ -90,15 +90,26 @@ describe('resolveSchema', () => {
     })
   })
 
-  it.skip('with $resolve (dependency)', () => {
+  it('with $resolve (dependency order-2)', () => {
     const schema = resolveSchema({
-      bar: { $resolve: (val, parent) => parent.foo + (val || 'bar') },
-      foo: { $resolve: () => 'foo' }
+      nested: {
+        foo: { $resolve: (val, _parent, root) => root.rootDir + (val || 'bar') }
+      },
+      rootDir: { $resolve: () => 'root/' }
     })
     expect(schema).toMatchObject({
       properties: {
-        bar: {
-          default: 'foobar'
+        rootDir: {
+          type: 'string',
+          default: 'root/'
+        },
+        nested: {
+          properties: {
+            foo: {
+              type: 'string',
+              default: 'root/bar'
+            }
+          }
         }
       }
     })
