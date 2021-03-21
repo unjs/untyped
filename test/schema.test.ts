@@ -2,7 +2,9 @@ import { resolveSchema } from '../src'
 
 describe('resolveSchema', () => {
   it('direct value', () => {
-    const schema = resolveSchema({ foo: 'bar' })
+    const schema = resolveSchema({
+      foo: 'bar'
+    })
     expect(schema).toMatchObject({
       type: 'object',
       properties: {
@@ -15,7 +17,9 @@ describe('resolveSchema', () => {
   })
 
   it('nested value', () => {
-    const schema = resolveSchema({ foo: { bar: 123 } })
+    const schema = resolveSchema({
+      foo: { bar: 123 }
+    })
     expect(schema).toMatchObject({
       properties: {
         foo: {
@@ -32,7 +36,9 @@ describe('resolveSchema', () => {
   })
 
   it('with $default', () => {
-    const schema = resolveSchema({ foo: { $default: 'bar' } })
+    const schema = resolveSchema({
+      foo: { $default: 'bar' }
+    })
     expect(schema).toMatchObject({
       properties: {
         foo: {
@@ -44,7 +50,9 @@ describe('resolveSchema', () => {
   })
 
   it('with $schema', () => {
-    const schema = resolveSchema({ foo: { $schema: { title: 'this is foo' } } })
+    const schema = resolveSchema({
+      foo: { $schema: { title: 'this is foo' } }
+    })
     expect(schema).toMatchObject({
       properties: {
         foo: {
@@ -55,12 +63,42 @@ describe('resolveSchema', () => {
   })
 
   it('with $resolve', () => {
-    const schema = resolveSchema({ foo: { $default: '123', $resolve: val => parseInt(val) } })
+    const schema = resolveSchema({
+      foo: { $default: '123', $resolve: val => parseInt(val) }
+    })
     expect(schema).toMatchObject({
       properties: {
         foo: {
           default: 123,
           type: 'number'
+        }
+      }
+    })
+  })
+
+  it('with $resolve (dependency)', () => {
+    const schema = resolveSchema({
+      foo: { $resolve: () => 'foo' },
+      bar: { $resolve: (val, parent) => parent.foo + (val || 'bar') }
+    })
+    expect(schema).toMatchObject({
+      properties: {
+        bar: {
+          default: 'foobar'
+        }
+      }
+    })
+  })
+
+  it.skip('with $resolve (dependency)', () => {
+    const schema = resolveSchema({
+      bar: { $resolve: (val, parent) => parent.foo + (val || 'bar') },
+      foo: { $resolve: () => 'foo' }
+    })
+    expect(schema).toMatchObject({
+      properties: {
+        bar: {
+          default: 'foobar'
         }
       }
     })
