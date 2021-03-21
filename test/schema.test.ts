@@ -1,57 +1,129 @@
-// import { posix as p } from 'path'
-import { resolveSchema, generateDts } from '../src'
-import type { InputObject } from '../src/types'
-import { expectSnapshot } from './utils'
+import { resolveSchema } from '../src'
 
-const fixture1: InputObject = {
-  name: 'earth',
-  specs: {
-    gravity: {
-      $resolve: val => parseFloat(val),
-      $default: '9.8'
-    },
-    moons: {
-      $resolve: (val = ['moon']) => [].concat(val),
-      $schema: {
-        title: 'planet moons'
+describe('resolveSchema', () => {
+  it('direct value', () => {
+    const schema = resolveSchema({ foo: 'bar' })
+    expect(schema).toMatchObject({
+      type: 'object',
+      properties: {
+        foo: {
+          type: 'string',
+          default: 'bar'
+        }
       }
-    }
-  }
-}
-
-// const fixture2: InputObject = {
-//   srcDir: 'src',
-//   userOptions: {
-//     $schema: {
-//       title: 'custom user options'
-//     }
-//   },
-//   workingDir: {
-//     $default: '/',
-//     $schema: {
-//       title: 'working directory'
-//     }
-//   },
-//   entry: {
-//     $resolve: (val: string = 'index.js', parent: any) => p.resolve(parent.workingDir, parent.srcDir, val),
-//     $schema: {
-//       title: 'entrty file',
-//       description: 'will be resolved from current working directory if not absolute'
-//     }
-//   }
-// }
-
-describe('schema', () => {
-  it('resolveSchema', () => {
-    const schema = resolveSchema(fixture1)
-    expectSnapshot(schema, 'schema.json')
+    })
   })
-})
 
-describe('dts', () => {
-  it('generateDts', () => {
-    const schema = resolveSchema(fixture1)
-    const dts = generateDts(schema)
-    expectSnapshot(dts, 'fixture.gen.d.ts')
+  it('nested value', () => {
+    const schema = resolveSchema({ foo: { bar: 123 } })
+    expect(schema).toMatchObject({
+      properties: {
+        foo: {
+          type: 'object',
+          properties: {
+            bar: {
+              default: 123,
+              type: 'number'
+            }
+          }
+        }
+      }
+    })
+  })
+
+  it('with $default', () => {
+    const schema = resolveSchema({ foo: { $default: 'bar' } })
+    expect(schema).toMatchObject({
+      properties: {
+        foo: {
+          type: 'string',
+          default: 'bar'
+        }
+      }
+    })
+  })
+
+  it('with $schema', () => {
+    const schema = resolveSchema({ foo: { $schema: { title: 'this is foo' } } })
+    expect(schema).toMatchObject({
+      properties: {
+        foo: {
+          title: 'this is foo'
+        }
+      }
+    })
+  })
+
+  it('with $resolve', () => {
+    const schema = resolveSchema({ foo: { $default: '123', $resolve: val => parseInt(val) } })
+    expect(schema).toMatchObject({
+      properties: {
+        foo: {
+          default: 123,
+          type: 'number'
+        }
+      }
+    })
+  })
+
+  it('array', () => {
+    const schema = resolveSchema({
+      empty: [],
+      numbers: [1, 2, 3],
+      mixed: [true, 123],
+      resolved: {
+        $default: ['d'],
+        $resolve: val => ['r'].concat(val)
+      }
+    })
+    expect(schema).toMatchObject({
+      properties: {
+        empty: {
+          type: 'array',
+          default: [],
+          items: {
+            type: 'any'
+          }
+        },
+        numbers: {
+          type: 'array',
+          default: [
+            1,
+            2,
+            3
+          ],
+          items: {
+            type: [
+              'number'
+            ]
+          }
+        },
+        mixed: {
+          type: 'array',
+          default: [
+            true,
+            123
+          ],
+          items: {
+            type: [
+              'boolean',
+              'number'
+            ]
+          }
+        },
+        resolved: {
+          default: [
+            'r',
+            'd'
+          ],
+          type: 'array',
+          items: {
+            type: [
+              'string'
+            ]
+          }
+        }
+      }
+    })
   })
 })

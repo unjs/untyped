@@ -1,5 +1,5 @@
 import type { Schema, JSType } from './types'
-import { escapeKey } from './utils'
+import { escapeKey, unique } from './utils'
 
 const TYPE_MAP: Record<JSType, string> = {
   array: 'any[]',
@@ -28,9 +28,10 @@ function _genTypes (schema: Schema, spaces: string): string[] {
     } else {
       let type: string
       if (val.type === 'array') {
-        type = val.items.map(item => mapType(item.type) + '[]').join(' | ')
+        const _type = getTsType(val.items.type)
+        type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
       } else {
-        type = mapType(val.type)
+        type = getTsType(val.type)
       }
       buff.push(`${escapeKey(key)}: ${type},\n`)
     }
@@ -44,7 +45,10 @@ function _genTypes (schema: Schema, spaces: string): string[] {
   return buff.map(i => spaces + i)
 }
 
-function mapType (type?: JSType) {
+function getTsType (type: JSType | JSType[]): string {
+  if (Array.isArray(type)) {
+    return unique(type.map(t => getTsType(t))).join(' | ') || 'any'
+  }
   return (type && TYPE_MAP[type]) || 'any'
 }
 
