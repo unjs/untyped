@@ -64,8 +64,8 @@ function generateJSDoc (schema: Schema): string[] {
   }
 
   if (
-    schema.default &&
     schema.type !== 'object' &&
+    schema.type !== 'any' &&
     !(Array.isArray(schema.default) && schema.default.length === 0)
   ) {
     const stringified = JSON.stringify(schema.default) || ''
