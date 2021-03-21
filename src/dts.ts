@@ -40,6 +40,8 @@ function _genTypes (schema: Schema, spaces: string): string[] {
   if (buff.length) {
     const last = buff.pop() || ''
     buff.push(last.substr(0, last.length - 1))
+  } else {
+    buff.push('[key: string]: any')
   }
 
   return buff.map(i => spaces + i)
@@ -64,12 +66,13 @@ function generateJSDoc (schema: Schema): string[] {
   }
 
   if (
-    schema.type !== 'object' &&
-    schema.type !== 'any' &&
+    schema.type !== 'object' && schema.type !== 'any' &&
     !(Array.isArray(schema.default) && schema.default.length === 0)
   ) {
-    const stringified = JSON.stringify(schema.default) || ''
-    buff.push(`@default ${stringified.replace(/\*\//g, '*\\/')}`)
+    const stringified = JSON.stringify(schema.default)
+    if (stringified) {
+      buff.push(`@default ${stringified.replace(/\*\//g, '*\\/')}`)
+    }
   }
 
   if (buff.length) {
