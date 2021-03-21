@@ -46,14 +46,17 @@
 
 <script>
 import 'virtual:windi.css'
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, ref, computed, watch, defineAsyncComponent, h } from 'vue'
 import { resolveSchema, generateDts } from '../src'
 import { evaluateSource, tryFn, defaultInput } from './utils'
-import Editor from './components/Editor.vue'
+import LoadingComponent from './components/Loading.vue'
 
 export default defineComponent({
   components: {
-    Editor
+    Editor: defineAsyncComponent({
+      loader: () => import('./components/Editor.vue'),
+      loadingComponent: LoadingComponent
+    })
   },
   setup () {
     const activeTab = ref('editor')

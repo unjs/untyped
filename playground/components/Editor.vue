@@ -4,28 +4,20 @@
 
 <script>
 import { defineComponent } from 'vue'
-import * as monaco from 'monaco-editor'
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
-import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
-import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution'
+import 'monaco-editor/esm/vs/language/json/monaco.contribution'
+import 'monaco-editor/esm/vs/basic-languages/monaco.contribution'
+import 'monaco-editor/esm/vs/editor/editor.all'
+import { editor as moncacoEditor } from 'monaco-editor/esm/vs/editor/editor.api'
 
-self.MonacoEnvironment = {
-  getWorker (_, label) {
-    if (label === 'json') {
-      return new JsonWorker()
-    }
-    if (label === 'css' || label === 'scss' || label === 'less') {
-      return new CssWorker()
-    }
-    if (label === 'html' || label === 'handlebars' || label === 'razor') {
-      return new HtmlWorker()
-    }
-    if (label === 'typescript' || label === 'javascript') {
-      return new TsWorker()
-    }
-    return new EditorWorker()
+// https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-amd-cross.md
+globalThis.MonacoEnvironment = {
+  getWorkerUrl () {
+    const moncoCDN = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.23'
+    return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+      self.MonacoEnvironment = { baseUrl: '${moncoCDN}/min/' };
+      importScripts('${moncoCDN}/min/vs/base/worker/workerMain.js');
+    `)}`
   }
 }
 
@@ -52,7 +44,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    const editor = monaco.editor.create(this.$refs.editor, {
+    const editor = moncacoEditor.create(this.$refs.editor, {
       value: this.value,
       language: this.language,
       readOnly: this.readOnly,
