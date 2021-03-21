@@ -42,18 +42,22 @@ export function safeComputed (fn) {
   })
 }
 
-export const defaultInput = `export default {
-  name: 'earth',
-  specs: {
-    gravity: {
-      $resolve: val => parseFloat(val),
-      $default: '9.8'
+export const defaultInput = `
+export default {
+    name: 'vulcan',
+    price: 12.5,
+    checked: {
+        $default: false,
+        $schema: {
+            description: 'checked state'
+        }
     },
-    moons: {
-      $resolve: (val = ['moon']) => [].concat(val),
-      $schema: {
-        title: 'planet moons'
-      }
+    dimensions: {
+        width: 5,
+        height: 10
+    },
+    tags: {
+        $resolve: (val) => ['tag1'].concat(val).filter(Boolean)
     }
-  }
-}`
+}
+`.trim()
