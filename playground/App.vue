@@ -20,23 +20,23 @@
               v-for="tab in ['editor', 'types', 'schema']"
               :key="tab"
               class="tab select-none px-3 mx-1 rounded inline"
-              :class="[tab == activeTab ? 'bg-gray-400' : 'bg-gray-200']"
-              @click="activeTab = tab"
+              :class="[tab == state.activeTab ? 'bg-gray-400' : 'bg-gray-200']"
+              @click="state.activeTab = tab"
             >
               {{ tab[0].toUpperCase() + tab.substr(1) }}
             </div>
           </div>
         </div>
         <!-- Editor -->
-        <div v-if="activeTab === 'editor'" class="block-content">
-          <Editor :value="input" @update:value="input = $event" />
+        <div v-if="state.activeTab === 'editor'" class="block-content">
+          <Editor :value="state.input" @update:value="state.input = $event" />
         </div>
         <!-- Schema -->
-        <div v-if="activeTab === 'schema'" class="block-content">
+        <div v-if="state.activeTab === 'schema'" class="block-content">
           <Editor :value="JSON.stringify(schema, null, 2)" read-only language="json" />
         </div>
         <!-- Types -->
-        <div v-if="activeTab === 'types'" class="block-content">
+        <div v-if="state.activeTab === 'types'" class="block-content">
           <Editor :value="types" read-only language="typescript" />
         </div>
       </div>
@@ -46,9 +46,9 @@
 
 <script>
 import 'virtual:windi.css'
-import { defineComponent, ref, computed, watch, defineAsyncComponent, h } from 'vue'
+import { defineComponent, defineAsyncComponent } from 'vue'
 import { resolveSchema, generateDts } from '../src'
-import { evaluateSource, tryFn, defaultInput } from './utils'
+import { evaluateSource, defaultInput, persistedState, safeComputed } from './utils'
 import LoadingComponent from './components/Loading.vue'
 
 export default defineComponent({
@@ -59,40 +59,19 @@ export default defineComponent({
     })
   },
   setup () {
-    const activeTab = ref('editor')
-    const inputError = ref(null)
+    const state = persistedState({
+      activeTab: 'editor',
+      input: defaultInput
+    })
 
-    const input = ref(tryFn(() => atob(window.location.hash.substr(1))) || defaultInput)
-
-    const parsedInput = computed(() => tryFn(
-      () => {
-        inputError.value = null
-        return evaluateSource(input.value)
-      },
-      (err) => {
-        inputError.value = err
-        return {}
-      }
-    ))
-
-    const schema = computed(() => tryFn(
-      () => resolveSchema(parsedInput.value),
-      err => ({ $error: 'Error resolving schema' + err })
-    ))
-
-    const types = computed(() => tryFn(
-      () => generateDts(schema.value),
-      err => ('// Error generating types: ' + err)
-    ))
-
-    watch(input, () => { window.location.hash = '#' + btoa(input.value) })
+    const parsedInput = safeComputed(() => evaluateSource(state.input))
+    const schema = safeComputed(() => resolveSchema(parsedInput.value))
+    const types = safeComputed(() => generateDts(schema.value))
 
     return {
-      input,
-      inputError,
+      state,
       schema,
-      types,
-      activeTab
+      types
     }
   }
 })
