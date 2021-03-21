@@ -1,4 +1,4 @@
-import { getType, isObject } from './utils'
+import { getType, isObject, unique } from './utils'
 import type { InputObject, InputValue, JSValue, Schema } from './types'
 
 export function resolveSchema (obj: InputObject) {
@@ -11,10 +11,10 @@ export function resolveSchema (obj: InputObject) {
 function _resolveSchema (input: InputValue, parent: InputObject, root: InputObject): Schema {
   // Node is plain value
   if (!isObject(input)) {
-    return {
+    return normalizeSchema({
       type: getType(input),
       default: input as JSValue
-    }
+    })
   }
 
   // Clone to avoid mutation
@@ -43,13 +43,20 @@ function _resolveSchema (input: InputValue, parent: InputObject, root: InputObje
 
   // Infer type from default value
   if (!schema.type) {
-    if (Array.isArray(schema.default)) {
-      schema.type = 'array'
-      schema.items = schema.default.map(i => getType(i)).map(type => ({ type }))
-    } else {
-      schema.type = getType(schema.default) || (schema.properties ? 'object' : 'any')
-    }
+    schema.type = getType(schema.default) || (schema.properties ? 'object' : 'any')
   }
 
+  return normalizeSchema(schema)
+}
+
+function normalizeSchema (schema: Schema) {
+  if (schema.type === 'array' && !('items' in schema)) {
+    schema.items = {
+      type: unique((schema.default as any[]).map(i => getType(i)))
+    }
+    if (!schema.items.type.length) {
+      schema.items.type = 'any'
+    }
+  }
   return schema
 }

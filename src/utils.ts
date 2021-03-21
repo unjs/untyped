@@ -18,3 +18,7 @@ export function getType (val: any): JSType | null {
 export function isObject (val: any): boolean {
   return val !== null && !Array.isArray(val) && typeof val === 'object'
 }
+
+export function unique (arr: any[]) {
+  return Array.from(new Set(arr))
+}

@@ -22,8 +22,8 @@ export type JSType =
 
 // A subset of JSONSchema7
 export interface Schema {
-  type?: JSType
-  items?: Schema[]
+  type?: JSType | JSType[]
+  items?: Schema
   default?: JSValue
   properties?: { [key: string]: Schema }
   title?: string
