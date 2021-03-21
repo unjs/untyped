@@ -30,7 +30,7 @@ function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObj
     }
     return schema.properties[key]
   }
-  proxifiedNode = new Proxy(node, { get: (_, key) => getSchema(key).default, set: () => false })
+  proxifiedNode = new Proxy(node, { get: (_, key) => getSchema(key).default || node[key as string], set: () => false })
 
   for (const key in node) {
     // Ignore special keys
