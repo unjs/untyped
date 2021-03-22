@@ -10,26 +10,35 @@
       </div>
     </div>
     <!-- Main -->
-    <main class="flex flex-col flex-1">
+    <main class="flex flex-col lg:flex-row flex-1">
+      <!-- Editor -->
+      <div class="block">
+        <div class="block-title">
+          <div class="flex select-none">
+            <div class="tab">
+              Editor
+            </div>
+          </div>
+        </div>
+        <div class="block-content">
+          <Editor :value="state.input" @update:value="state.input = $event" />
+        </div>
+      </div>
       <!-- Tabs -->
       <div class="block">
         <!-- Tab buttons -->
         <div class="block-title">
           <div class="flex cursor-grab">
             <div
-              v-for="tab in ['editor', 'types', 'schema']"
+              v-for="tab in ['types', 'schema']"
               :key="tab"
-              class="tab select-none px-3 mx-1 rounded inline"
+              class="tab"
               :class="[tab == state.activeTab ? 'bg-gray-400' : 'bg-gray-200']"
               @click="state.activeTab = tab"
             >
               {{ tab[0].toUpperCase() + tab.substr(1) }}
             </div>
           </div>
-        </div>
-        <!-- Editor -->
-        <div v-if="state.activeTab === 'editor'" class="block-content">
-          <Editor :value="state.input" @update:value="state.input = $event" />
         </div>
         <!-- Schema -->
         <div v-if="state.activeTab === 'schema'" class="block-content">
@@ -60,7 +69,7 @@ export default defineComponent({
   },
   setup () {
     const state = persistedState({
-      activeTab: 'editor',
+      activeTab: 'types',
       input: defaultInput
     })
 
@@ -94,12 +103,17 @@ body, html, #app {
 
 .block-title {
   padding: .5em;
-  @apply border-gray-500;
+  @apply border-green-500 border-b-2 flex flex-col;
 }
 
 .block-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+  @apply: pt-3;
+}
+
+.tab {
+  @apply select-none px-3 mx-1 rounded;
 }
 </style>

@@ -55,12 +55,12 @@ export default defineComponent({
       }
     })
     this.editor = editor
-    // editor.onDidChangeModelContent(() => {
-    //   this.$emit('update:value', editor.getValue())
-    // })
-    editor.onDidBlurEditorWidget(() => {
+    editor.onDidChangeModelContent(() => {
       this.$emit('update:value', editor.getValue())
     })
+    // editor.onDidBlurEditorWidget(() => {
+    //   this.$emit('update:value', editor.getValue())
+    // })
   }
 })
 </script>
