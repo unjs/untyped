@@ -4,6 +4,7 @@ const globalKeys = Object.getOwnPropertyNames(globalThis)
   .filter(key => key[0].toLocaleLowerCase() === key[0])
 
 export function evaluateSource (src) {
+  // eslint-disable-next-line no-new-func
   const fn = Function(`
     const sandbox = {
       module: { exports: {} },
@@ -52,12 +53,13 @@ export function safeComputed (fn) {
   })
 }
 
-export function asyncImport({ loader, loading, error }) {
+export function asyncImport ({ loader, loading, error }) {
   const m = reactive(loading || {})
-  loader().then((res) => Object.assign(m, res)).catch((err) => {
+  loader().then(res => Object.assign(m, res)).catch((err) => {
     if (error) {
       Object.assign(m, error(err))
     }
+    // eslint-disable-next-line no-console
     console.error(err)
   })
   return m
