@@ -23,7 +23,8 @@
   ],
   "scripts": {
     "build": "siroc build",
-    "dev": "vite playground",
+    "dev": "jest --watch",
+    "playground": "vite playground",
     "lint": "eslint --ext .js,.ts .",
     "prepublishOnly": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
