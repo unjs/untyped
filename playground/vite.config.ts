@@ -4,9 +4,6 @@ import windiCSS from 'vite-plugin-windicss'
 
 // https://vitejs.dev/config
 export default defineConfig({
-  define: {
-    'process.env': '{}'
-  },
   plugins: [
     vue(),
     windiCSS({

@@ -1,10 +1,20 @@
 import { reactive, watch, computed } from 'vue'
 
+const globalKeys = Object.getOwnPropertyNames(globalThis)
+  .filter(key => key[0].toLocaleLowerCase() === key[0])
+
 export function evaluateSource (src) {
-  let val
-  // eslint-disable-next-line no-eval
-  eval('val = ' + src.replace('export default', ''))
-  return val
+  const fn = Function(`
+    const sandbox = {
+      module: { exports: {} },
+      ${globalKeys.map(key => `"${key}": {}`).join(',')}
+    }
+    with (sandbox) {
+      ${src.replace('export default', 'module.exports = ')};
+    };
+    return sandbox.module.exports;
+  `)
+  return fn.call({})
 }
 
 export function tryFn (fn) {
@@ -40,6 +50,17 @@ export function safeComputed (fn) {
       return lastState
     }
   })
+}
+
+export function asyncImport({ loader, loading, error }) {
+  const m = reactive(loading || {})
+  loader().then((res) => Object.assign(m, res)).catch((err) => {
+    if (error) {
+      Object.assign(m, error(err))
+    }
+    console.error(err)
+  })
+  return m
 }
 
 export const defaultInput = `
