@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/unjs/magic-schema/compare/v0.0.3...v0.0.4) (2021-03-23)
+
+
+### Features
+
+* support loader with jsdoc support ([b31b4af](https://github.com/unjs/magic-schema/commit/b31b4af0ce954b5ddfae267b3fdc4aa84feff51a))
+
+
+### Bug Fixes
+
+* handle empty types ([d82bf01](https://github.com/unjs/magic-schema/commit/d82bf01977561888b8275f596b14ace882a9abda))
+* return plain values if no nested schema ([f9f2c04](https://github.com/unjs/magic-schema/commit/f9f2c04026fe4040a0cdd6bb38dc9646f5634bbd))
+
 ### [0.0.3](https://github.com/unjs/magic-schema/compare/v0.0.2...v0.0.3) (2021-03-21)
 
 
