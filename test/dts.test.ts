@@ -1,8 +1,8 @@
-import { resolveSchema, generateDts } from '../src'
+import { resolveSchema, generateTypes } from '../src'
 
 describe('resolveSchema', () => {
   it('basic', () => {
-    const types = generateDts(resolveSchema({
+    const types = generateTypes(resolveSchema({
       test: {
         foo: {
           $default: 'test value',
@@ -28,7 +28,7 @@ interface MyObject {
   })
 
   it('array', () => {
-    const types = generateDts(resolveSchema({
+    const types = generateTypes(resolveSchema({
       empty: [],
       numbers: [1, 2, 3],
       mixed: [true, 123]
@@ -48,7 +48,7 @@ interface MyObject {
   })
 
   it('escapeKey', () => {
-    const types = generateDts(resolveSchema({
+    const types = generateTypes(resolveSchema({
       '*key': '123'
     }))
     expect(types).toMatch('"*key": string')

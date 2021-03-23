@@ -13,7 +13,7 @@ const TYPE_MAP: Record<JSType, string> = {
   function: 'Function'
 }
 
-export function generateDts (schema: Schema, name: string = 'MyObject') {
+export function generateTypes (schema: Schema, name: string = 'MyObject') {
   return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
 }
 

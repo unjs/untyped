@@ -94,7 +94,7 @@ Output:
 ```js
 import { resolveSchema } from 'magic-schema'
 
-const types = generateDts(resolveSchema(defaultPlanet))
+const types = generateTypes(resolveSchema(defaultPlanet))
 ```
 
 Output:

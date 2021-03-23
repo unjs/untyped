@@ -73,7 +73,7 @@
 <script>
 import 'virtual:windi.css'
 import { defineComponent, defineAsyncComponent, watch } from 'vue'
-import { resolveSchema, generateDts, applyDefaults } from '../src'
+import { resolveSchema, generateTypes, applyDefaults } from '../src'
 import { evaluateSource, persistedState, safeComputed, asyncImport } from './utils'
 import { defaultReference, defaultInput } from './consts'
 import LoadingComponent from './components/loading.vue'
@@ -105,7 +105,7 @@ export default defineComponent({
     const transpiledRef = safeComputed(() => loader.transform(state.ref))
     const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value))
     const schema = safeComputed(() => resolveSchema(referenceObj.value))
-    const types = safeComputed(() => generateDts(schema.value))
+    const types = safeComputed(() => generateTypes(schema.value))
 
     const inputObj = safeComputed(() => evaluateSource(state.input))
     const resolvedInput = safeComputed(() => applyDefaults(referenceObj.value, inputObj.value))
