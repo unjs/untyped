@@ -13,6 +13,8 @@ const TYPE_MAP: Record<JSType, string> = {
   function: 'Function'
 }
 
+const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type']
+
 export function generateTypes (schema: Schema, name: string = 'MyObject') {
   return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
 }
@@ -55,7 +57,7 @@ function getTsType (type: JSType | JSType[]): string {
 }
 
 function generateJSDoc (schema: Schema): string[] {
-  const buff = []
+  let buff = []
 
   if (schema.title) {
     buff.push(schema.title)
@@ -74,6 +76,15 @@ function generateJSDoc (schema: Schema): string[] {
       buff.push(`@default ${stringified.replace(/\*\//g, '*\\/')}`)
     }
   }
+
+  for (const key in schema) {
+    if (!SCHEMA_KEYS.includes(key)) {
+      buff.push('', `@${key} ${schema[key]}`)
+    }
+  }
+
+  // Normalize new lines in values
+  buff = buff.map(i => i.split('\n')).flat()
 
   if (buff.length) {
     return buff.length === 1
