@@ -20,11 +20,13 @@ export type JSType =
   'any' |
   'array'
 
-// A subset of JSONSchema7
+export type ResolveFn = ((value: any, parent: InputObject, root: InputObject) => JSValue)
+
 export interface Schema {
   type?: JSType | JSType[]
   items?: Schema
   default?: JSValue
+  resolve?: ResolveFn
   properties?: { [key: string]: Schema }
   title?: string
   description?: string
@@ -34,7 +36,7 @@ export interface Schema {
 export interface InputObject {
   [key: string]: any
   $schema?: Schema
-  $resolve?: JSValue | ((value: any, parent: InputObject, root: InputObject) => JSValue)
+  $resolve?: ResolveFn
 }
 
 export type InputValue = InputObject | JSValue

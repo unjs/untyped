@@ -1,14 +1,14 @@
 import { getType, isObject, unique } from './utils'
 import type { InputObject, InputValue, JSValue, Schema } from './types'
 
-export function resolveSchema (obj: InputObject) {
-  const schema = _resolveSchema(obj, obj)
+export function resolveSchema (obj: InputObject, preserveResolve?: boolean) {
+  const schema = _resolveSchema(obj, obj, undefined, preserveResolve)
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
   return schema
 }
 
-function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObject): Schema {
+function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObject, preserveResolve?: boolean): Schema {
   // Node is plain value
   if (!isObject(input)) {
     return normalizeSchema({
@@ -26,7 +26,7 @@ function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObj
   const getSchema = (key) => {
     schema.properties = schema.properties || {}
     if (!schema.properties[key]) {
-      schema.properties[key] = _resolveSchema(node[key], proxifiedNode, root || proxifiedNode)
+      schema.properties[key] = _resolveSchema(node[key], proxifiedNode, root || proxifiedNode, preserveResolve)
     }
     return schema.properties[key]
   }
@@ -46,6 +46,9 @@ function _resolveSchema (input: InputValue, parent: InputObject, root?: InputObj
   }
   if (typeof node.$resolve === 'function') {
     schema.default = node.$resolve(schema.default, parent, root || proxifiedNode)
+    if (preserveResolve) {
+      schema.resolve = node.$resolve
+    }
   }
 
   // Infer type from default value

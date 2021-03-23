@@ -14,43 +14,56 @@
       <!-- Editor -->
       <div class="block">
         <div class="block-title">
-          <div class="flex select-none">
-            <div class="tab">
-              Editor
-            </div>
-          </div>
+          <Tabs v-model="state.editorTab" :tabs="['reference', 'input']" />
+          <span class="block-label">Editor</span>
         </div>
-        <div class="block-content">
-          <Editor :value="state.input" language="typescript" @update:value="state.input = $event" />
+        <div v-if="state.editorTab === 'reference'" class="block-content">
+          <div class="block-info">
+            Reference describes object shape, defaults, and normalizer.
+            We can use jsdocs to set additional comments.
+          </div>
+          <Editor v-model="state.ref" language="typescript" />
+        </div>
+        <div v-if="state.editorTab === 'input'" class="block-content">
+          <div class="block-info">
+            This is user input. Using reference object, we can apply defaults.
+          </div>
+          <Editor v-model="state.input" language="typescript" />
         </div>
       </div>
-      <!-- Tabs -->
+      <!-- Output -->
       <div class="block">
-        <!-- Tab buttons -->
         <div class="block-title">
-          <div class="flex cursor-grab">
-            <div
-              v-for="tab in ['types', 'schema', 'loader']"
-              :key="tab"
-              class="tab"
-              :class="[tab == state.activeTab ? 'bg-gray-400' : 'bg-gray-200']"
-              @click="state.activeTab = tab"
-            >
-              {{ tab[0].toUpperCase() + tab.substr(1) }}
-            </div>
-          </div>
+          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'types', 'resolved']" />
+          <span class="block-label">Output</span>
         </div>
         <!-- Schema -->
-        <div v-if="state.activeTab === 'schema'" class="block-content">
-          <Editor :value="JSON.stringify(schema, null, 2)" read-only language="json" />
+        <div v-if="state.outputTab === 'schema'" class="block-content">
+          <div class="block-info">
+            Schema is auto generated from reference and is json-schema compliant.
+          </div>
+          <Editor :model-value="JSON.stringify(schema, null, 2)" read-only language="json" />
         </div>
         <!-- Types -->
-        <div v-if="state.activeTab === 'types'" class="block-content">
-          <Editor :value="types" read-only language="typescript" />
+        <div v-if="state.outputTab === 'types'" class="block-content">
+          <div class="block-info">
+            Types are auto generated from schema for typescript usage.
+          </div>
+          <Editor :model-value="types" read-only language="typescript" />
         </div>
         <!-- Loader -->
-        <div v-if="state.activeTab === 'loader'" class="block-content">
-          <Editor :value="transpiled" read-only language="typescript" />
+        <div v-if="state.outputTab === 'loader'" class="block-content">
+          <div class="block-info">
+            Using optional loader, we can support jsdoc to describe object.
+          </div>
+          <Editor :model-value="transpiledRef" read-only language="typescript" />
+        </div>
+        <!-- Resolved -->
+        <div v-if="state.outputTab === 'resolved'" class="block-content">
+          <div class="block-info">
+            We can apply reference object to user input to apply defaults.
+          </div>
+          <Editor :model-value="JSON.stringify(resolvedInput, null, 2)" read-only language="typescript" />
         </div>
       </div>
     </main>
@@ -59,41 +72,51 @@
 
 <script>
 import 'virtual:windi.css'
-import { defineComponent, defineAsyncComponent } from 'vue'
-import { resolveSchema, generateDts } from '../src'
-import { evaluateSource, defaultInput, persistedState, safeComputed, asyncImport } from './utils'
-import LoadingComponent from './components/Loading.vue'
+import { defineComponent, defineAsyncComponent, watch } from 'vue'
+import { resolveSchema, generateDts, applyDefaults } from '../src'
+import { evaluateSource, persistedState, safeComputed, asyncImport } from './utils'
+import { defaultReference, defaultInput } from './consts'
+import LoadingComponent from './components/loading.vue'
+import Tabs from './components/tabs.vue'
 
 export default defineComponent({
   components: {
+    Tabs,
     Editor: defineAsyncComponent({
-      loader: () => import('./components/Editor.vue'),
+      loader: () => import('./components/editor.vue'),
       loadingComponent: LoadingComponent
     })
   },
   setup () {
     const state = persistedState({
-      activeTab: 'types',
+      editorTab: 'reference',
+      outputTab: 'types',
+      ref: defaultReference,
       input: defaultInput
     })
 
     window.process = { env: {} }
     const loader = asyncImport({
       loader: () => import('../src/loader'),
-      loading: { transform: () => '{} // loader is loading...' },
-      error: (err) => ({ transform: () => '{} // Error loading loader: ' + err })
+      loading: { transform: () => 'export default {} // loader is loading...' },
+      error: err => ({ transform: () => 'export default {} // Error loading loader: ' + err })
     })
 
-    const transpiled = safeComputed(() => loader.transform(state.input))
-    const parsedInput = safeComputed(() => evaluateSource(transpiled.value))
-    const schema = safeComputed(() => resolveSchema(parsedInput.value))
+    const transpiledRef = safeComputed(() => loader.transform(state.ref))
+    const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value))
+    const schema = safeComputed(() => resolveSchema(referenceObj.value))
     const types = safeComputed(() => generateDts(schema.value))
+
+    const inputObj = safeComputed(() => evaluateSource(state.input))
+    const resolvedInput = safeComputed(() => applyDefaults(referenceObj.value, inputObj.value))
 
     return {
       state,
       schema,
       types,
-      transpiled
+      transpiledRef,
+      inputObj,
+      resolvedInput
     }
   }
 })
@@ -116,7 +139,15 @@ body, html, #app {
 
 .block-title {
   padding: .5em;
+  position: relative;
   @apply border-green-500 border-b-2 flex flex-col;
+}
+
+.block-label {
+  position: absolute;
+  right: 0;
+  top: 0;
+  @apply rounded-bl-xl bg-green-400 px-3 text-white;
 }
 
 .block-content {
@@ -126,7 +157,12 @@ body, html, #app {
   @apply: pt-3;
 }
 
-.tab {
-  @apply select-none px-3 mx-1 rounded;
+.block-info {
+  padding: .25em;
+  @apply border-dashed border-light-blue-500 border-b-1 mb-3 text-gray-700;
+}
+
+code {
+  @apply bg-gray-500 rounded text-gray-100 py-.5 px-2;
 }
 </style>

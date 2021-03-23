@@ -23,7 +23,7 @@ globalThis.MonacoEnvironment = {
 
 export default defineComponent({
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     },
@@ -37,7 +37,7 @@ export default defineComponent({
     }
   },
   watch: {
-    value (value, oldValue) {
+    modelValue (value, oldValue) {
       if (value !== oldValue && this.readOnly) {
         this.editor.setValue(value)
       }
@@ -45,7 +45,7 @@ export default defineComponent({
   },
   mounted () {
     const editor = moncacoEditor.create(this.$refs.editor, {
-      value: this.value,
+      value: this.modelValue,
       language: this.language,
       readOnly: this.readOnly,
       wordWrap: true,
@@ -56,7 +56,7 @@ export default defineComponent({
     })
     this.editor = editor
     editor.onDidChangeModelContent(() => {
-      this.$emit('update:value', editor.getValue())
+      this.$emit('update:modelValue', editor.getValue())
     })
     // editor.onDidBlurEditorWidget(() => {
     //   this.$emit('update:value', editor.getValue())

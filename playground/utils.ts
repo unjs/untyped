@@ -31,7 +31,7 @@ export function tryFn (fn) {
 export function persistedState (initialState = {}) {
   const state = reactive({
     ...initialState,
-    ...tryFn(() => JSON.parse(atob(window.location.hash.substr(1))))
+    ...tryFn(() => JSON.parse(atob(window.location.hash.substr(1)) || '{}'))
   })
   watch(state, () => {
     window.location.hash = '#' + btoa(JSON.stringify(state))
@@ -64,24 +64,3 @@ export function asyncImport ({ loader, loading, error }) {
   })
   return m
 }
-
-export const defaultInput = `
-export default {
-    name: 'vulcan',
-    price: 12.5,
-    /**
-     * checked state
-     * If is null, will use last checked status
-     */
-    checked: false,
-    dimensions: {
-        /** width in px */
-        width: 5,
-        /** width in px */
-        height: 10
-    },
-    tags: {
-        $resolve: (val) => ['tag1'].concat(val).filter(Boolean)
-    }
-}
-`.trim()
