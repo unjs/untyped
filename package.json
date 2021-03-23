@@ -10,6 +10,9 @@
     ".": {
       "import": "./dist/magic-schema.mjs",
       "require": "./dist/magic-schema.js"
+    },
+    "./loader": {
+      "require": "./dist/loader.js"
     }
   },
   "main": "./dist/magic-schema.js",
@@ -26,9 +29,13 @@
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "yarn lint && jest"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@babel/standalone": "^7.13.12",
+    "@babel/template": "^7.12.13",
+    "@babel/types": "^7.13.12",
     "@nuxtjs/eslint-config-typescript": "latest",
+    "@types/babel__standalone": "^7.1.3",
+    "@types/babel__traverse": "^7.11.1",
     "@types/jest": "latest",
     "@types/node": "latest",
     "@vitejs/plugin-vue": "^1.1.5",

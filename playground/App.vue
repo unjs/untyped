@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="block-content">
-          <Editor :value="state.input" @update:value="state.input = $event" />
+          <Editor :value="state.input" language="typescript" @update:value="state.input = $event" />
         </div>
       </div>
       <!-- Tabs -->
@@ -30,7 +30,7 @@
         <div class="block-title">
           <div class="flex cursor-grab">
             <div
-              v-for="tab in ['types', 'schema']"
+              v-for="tab in ['types', 'schema', 'loader']"
               :key="tab"
               class="tab"
               :class="[tab == state.activeTab ? 'bg-gray-400' : 'bg-gray-200']"
@@ -48,6 +48,10 @@
         <div v-if="state.activeTab === 'types'" class="block-content">
           <Editor :value="types" read-only language="typescript" />
         </div>
+        <!-- Loader -->
+        <div v-if="state.activeTab === 'loader'" class="block-content">
+          <Editor :value="transpiled" read-only language="typescript" />
+        </div>
       </div>
     </main>
   </div>
@@ -55,8 +59,9 @@
 
 <script>
 import 'virtual:windi.css'
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent, defineAsyncComponent, watch } from 'vue'
 import { resolveSchema, generateDts } from '../src'
+import { transform } from '../src/loader'
 import { evaluateSource, defaultInput, persistedState, safeComputed } from './utils'
 import LoadingComponent from './components/Loading.vue'
 
@@ -73,14 +78,16 @@ export default defineComponent({
       input: defaultInput
     })
 
-    const parsedInput = safeComputed(() => evaluateSource(state.input))
+    const transpiled = safeComputed(() => transform(state.input))
+    const parsedInput = safeComputed(() => evaluateSource(transpiled.value))
     const schema = safeComputed(() => resolveSchema(parsedInput.value))
     const types = safeComputed(() => generateDts(schema.value))
 
     return {
       state,
       schema,
-      types
+      types,
+      transpiled
     }
   }
 })

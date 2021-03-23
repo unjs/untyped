@@ -269,6 +269,11 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
+"@babel/standalone@^7.13.12":
+  version "7.13.12"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.13.12.tgz#a7065c30bd8511cd48c99193bd69e7c596bbbc44"
+  integrity sha512-2Xb4B3EdCmgwo7Q3WVHoLfZh0Jg1AvgjWF3e2kLGZ3Yg6EosD0g6qzMZJHZ2sCoEI/g7/bjphSMTqjQDZc6SkA==
+
 "@babel/template@^7.12.13", "@babel/template@^7.3.3":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.12.13.tgz#530265be8a2589dbb37523844c5bcb55947fb327"
@@ -297,6 +302,15 @@
   version "7.13.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.13.0.tgz#74424d2816f0171b4100f0ab34e9a374efdf7f80"
   integrity sha512-hE+HE8rnG1Z6Wzo+MhaKE5lM5eMx71T4EHJgku2E3xIfaULhDcxiiRxUYgwX8qwP1BBSlag+TdGOt6JAidIZTA==
+  dependencies:
+    "@babel/helper-validator-identifier" "^7.12.11"
+    lodash "^4.17.19"
+    to-fast-properties "^2.0.0"
+
+"@babel/types@^7.13.12":
+  version "7.13.12"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.13.12.tgz#edbf99208ef48852acdff1c8a681a1e4ade580cd"
+  integrity sha512-K4nY2xFN4QMvQwkQ+zmBDp6ANMbVNw6BbxWmYA4qNjhR9W+Lj/8ky5MEY2Me5r+B2c6/v6F53oMndG+f9s3IiA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.12.11"
     lodash "^4.17.19"
@@ -657,6 +671,13 @@
   dependencies:
     "@babel/types" "^7.0.0"
 
+"@types/babel__standalone@^7.1.3":
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@types/babel__standalone/-/babel__standalone-7.1.3.tgz#e275639469c056f7cecc4963c88a803f028236dd"
+  integrity sha512-gj2Uvh8NT7+/0liAKMBtAqWspdg1LGZ471AD9Rdvrg1mB0q45qnl21dQPGz/ZtMYRgem0Aj/CUVQYHP3QDb5Gw==
+  dependencies:
+    "@babel/core" "^7.1.0"
+
 "@types/babel__template@*":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@types/babel__template/-/babel__template-7.4.0.tgz#0c888dd70b3ee9eebb6e4f200e809da0076262be"
@@ -665,7 +686,7 @@
     "@babel/parser" "^7.1.0"
     "@babel/types" "^7.0.0"
 
-"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6":
+"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6", "@types/babel__traverse@^7.11.1":
   version "7.11.1"
   resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.11.1.tgz#654f6c4f67568e24c23b367e947098c6206fa639"
   integrity sha512-Vs0hm0vPahPMYi9tDjtP66llufgO3ST16WXaSTtDGEl9cewAl3AibmxWw6TINOqHPT9z0uABKAYjT9jNSg4npw==
