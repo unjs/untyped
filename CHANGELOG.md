@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/unjs/magic-schema/compare/v0.0.4...v0.0.5) (2021-03-23)
+
+
+### Features
+
+* applyDefaults and updated playground ([1e6550f](https://github.com/unjs/magic-schema/commit/1e6550fbabceffa333642f9270b0999b477f9948))
+
+
+### Bug Fixes
+
+* preserve additional tags in generated types ([7c01b35](https://github.com/unjs/magic-schema/commit/7c01b35855aa43838e0b10a1d0515390df69d3a1))
+
 ### [0.0.4](https://github.com/unjs/magic-schema/compare/v0.0.3...v0.0.4) (2021-03-23)
 
 
