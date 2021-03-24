@@ -4,17 +4,26 @@ const globalKeys = Object.getOwnPropertyNames(globalThis)
   .filter(key => key[0].toLocaleLowerCase() === key[0])
 
 export function evaluateSource (src) {
+  // Basic commonjs transform
+  src = src
+    .replace('export default', 'module.exports = ')
+    .replace(/export (const|let|var) (\w+) ?= ?/g, 'exports.$2 = ')
+
   // eslint-disable-next-line no-new-func
   const fn = Function(`
+    const exports = {};
+    const module = { exports }
     const sandbox = {
-      module: { exports: {} },
+      module,
+      exports,
       ${globalKeys.map(key => `"${key}": {}`).join(',')}
     }
     with (sandbox) {
-      ${src.replace('export default', 'module.exports = ')};
+      ${src};
     };
     return sandbox.module.exports;
   `)
+
   return fn.call({})
 }
 

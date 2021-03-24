@@ -1,5 +1,5 @@
 export const defaultReference = `
-export default {
+export const config = {
     name: 'default',
     price: 12.5,
     /**
