@@ -11,8 +11,11 @@
       "import": "./dist/untyped.mjs",
       "require": "./dist/untyped.js"
     },
-    "./loader": {
-      "require": "./dist/loader.js"
+    "./loader/babel": {
+      "require": "./dist/loader/babel.js"
+    },
+    "./loader/transform": {
+      "require": "./dist/loader/transform.js"
     }
   },
   "main": "./dist/untyped.js",
@@ -43,7 +46,6 @@
     "@vue/compiler-sfc": "^3.0.7",
     "eslint": "latest",
     "jest": "latest",
-    "jiti": "latest",
     "json-schema": "^0.3.0",
     "monaco-editor": "^0.23.0",
     "siroc": "latest",

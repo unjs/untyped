@@ -1,5 +1,5 @@
-import { getType, isObject, unique } from './utils'
-import type { InputObject, InputValue, JSValue, Schema } from './types'
+import { getType, isObject, unique } from '../utils'
+import type { InputObject, InputValue, JSValue, Schema } from '../types'
 
 export function resolveSchema (obj: InputObject, preserveResolve?: boolean) {
   const schema = _resolveSchema(obj, obj, undefined, preserveResolve)

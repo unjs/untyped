@@ -72,7 +72,7 @@
 
 <script>
 import 'virtual:windi.css'
-import { defineComponent, defineAsyncComponent, watch } from 'vue'
+import { defineComponent, defineAsyncComponent } from 'vue'
 import { resolveSchema, generateTypes, applyDefaults } from '../src'
 import { evaluateSource, persistedState, safeComputed, asyncImport } from './utils'
 import { defaultReference, defaultInput } from './consts'
@@ -97,7 +97,7 @@ export default defineComponent({
 
     window.process = { env: {} }
     const loader = asyncImport({
-      loader: () => import('../src/loader'),
+      loader: () => import('../src/loader/transform'),
       loading: { transform: () => 'export default {} // loader is loading...' },
       error: err => ({ transform: () => 'export default {} // Error loading loader: ' + err })
     })

@@ -1,5 +1,5 @@
-export { resolveSchema } from './schema'
-export { generateTypes } from './dts'
-export { applyDefaults } from './defaults'
+export { resolveSchema } from './schema/resolve'
+export { generateTypes } from './generator/dts'
+export { applyDefaults } from './schema/apply'
 
 export * from './types'

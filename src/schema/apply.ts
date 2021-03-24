@@ -1,5 +1,5 @@
-import { resolveSchema } from './schema'
-import type { InputObject, Schema } from './types'
+import type { InputObject, Schema } from '../types'
+import { resolveSchema } from './resolve'
 
 export function applyDefaults (ref: InputObject, input: InputObject) {
   const schema = resolveSchema(ref, true)

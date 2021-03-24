@@ -1,37 +1,19 @@
-import { transform as babelTransform } from '@babel/standalone/babel.min.js'
 import type { PluginObj } from '@babel/core'
 import * as t from '@babel/types'
+import { Schema } from '../types'
 
-function jsdocSchema () {
+export default function babelPluginUntyped () {
   return <PluginObj>{
     visitor: {
       ObjectProperty (p) {
         if (p.node.leadingComments) {
-          const lines = p.node.leadingComments
-            .filter(c => c.type === 'CommentBlock')
-            .map(c => c.value.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
-            .flat()
-            .filter(Boolean)
+          const { comments, blockTags } = parseJSDocs(
+            p.node.leadingComments
+              .filter(c => c.type === 'CommentBlock')
+              .map(c => c.value)
+          )
 
-          const comments: string[] = []
-          while (lines.length && !lines[0].startsWith('@')) {
-            comments.push(lines.shift())
-          }
-
-          const blockTags: Record<string, string> = {}
-          let lastTag = null
-          for (const line of lines) {
-            const m = line.match(/@(\w+) ?(.*)/)
-            if (m) {
-              blockTags[m[1]] = m[2]
-              lastTag = m[1]
-            } else {
-              blockTags[lastTag] =
-                (blockTags[lastTag] ? blockTags[lastTag] + '\n' : '') + line
-            }
-          }
-
-          const schema: any = {}
+          const schema: Partial<Schema> = {}
           if (comments.length) {
             schema.title = comments.shift()
           }
@@ -76,15 +58,33 @@ function jsdocSchema () {
   }
 }
 
-export function transform (src) {
-  const res = babelTransform(src, {
-    filename: 'src.ts',
-    presets: [
-      'typescript'
-    ],
-    plugins: [
-      jsdocSchema
-    ]
-  })
-  return res.code
+function parseJSDocs (input: string | string[]) {
+  const lines = [].concat(input)
+    .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
+    .flat()
+    .filter(Boolean)
+
+  const comments: string[] = []
+
+  while (lines.length && !lines[0].startsWith('@')) {
+    comments.push(lines.shift())
+  }
+
+  const blockTags: Record<string, string> = {}
+  let lastTag = null
+  for (const line of lines) {
+    const m = line.match(/@(\w+) ?(.*)/)
+    if (m) {
+      blockTags[m[1]] = m[2]
+      lastTag = m[1]
+    } else {
+      blockTags[lastTag] =
+        (blockTags[lastTag] ? blockTags[lastTag] + '\n' : '') + line
+    }
+  }
+
+  return {
+    comments,
+    blockTags
+  }
 }

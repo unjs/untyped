@@ -3847,7 +3847,7 @@ jest@latest:
     import-local "^3.0.2"
     jest-cli "^26.6.3"
 
-jiti@^1.6.2, jiti@^1.6.3, jiti@latest:
+jiti@^1.6.2, jiti@^1.6.3, jiti@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.6.4.tgz#63453b602d0234f8bd7ce638f03f0e74ef99be12"
   integrity sha512-ICUtP0/rAyT/GaaDG0vj6fmWzx5yjFc7v+L1MAEARGl1+lrdJ8wtJNChr+ZGEdPoOhFwdhtcDO5VM2TNNgPpjQ==

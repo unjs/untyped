@@ -1,5 +1,5 @@
-import type { Schema, JSType } from './types'
-import { escapeKey, unique } from './utils'
+import type { Schema, JSType } from '../types'
+import { escapeKey, unique } from '../utils'
 
 const TYPE_MAP: Record<JSType, string> = {
   array: 'any[]',
