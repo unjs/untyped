@@ -13,7 +13,7 @@ const TYPE_MAP: Record<JSType, string> = {
   function: 'Function'
 }
 
-const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type']
+const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type', 'tags']
 
 export function generateTypes (schema: Schema, name: string = 'MyObject') {
   return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
@@ -80,6 +80,12 @@ function generateJSDoc (schema: Schema): string[] {
   for (const key in schema) {
     if (!SCHEMA_KEYS.includes(key)) {
       buff.push('', `@${key} ${schema[key]}`)
+    }
+  }
+
+  if (Array.isArray(schema.tags)) {
+    for (const tag of schema.tags) {
+      buff.push('', tag)
     }
   }
 

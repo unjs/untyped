@@ -1,21 +1,20 @@
 export const defaultReference = `
-export const config = {
-    name: 'default',
-    price: 12.5,
+/**
+ * create a new nuxt instance
+ *
+ * @param config - Your Nuxt config
+ */
+ export default {
     /**
-     * checked state
-     */
-    checked: false,
-    dimensions: {
-        /** width in px */
-        width: 10,
-        /** height in px */
-        height: 10
-    },
-    tags: {
-        $resolve: (val) => ['tag1'].concat(val).filter(Boolean)
-    }
-}
+      * Foo
+      */
+     a: (config: NuxtConfig = {}): Nuxt => {
+         return 42 + 32
+     },
+     b: (config: NuxtConfig): Nuxt => {},
+     c: ({ config }: NuxtConfig): Nuxt => {},
+     d: ({ config }: NuxtConfig = {}): Nuxt => {},
+ }
 `.trim()
 
 export const defaultInput = `

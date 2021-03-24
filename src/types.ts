@@ -32,6 +32,7 @@ export interface Schema {
   title?: string
   description?: string
   $schema?: string
+  tags?: string[]
 }
 
 export interface InputObject {

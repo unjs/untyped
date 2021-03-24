@@ -22,7 +22,7 @@ export function _generateMarkdown (schema: Schema, title: string, level) {
     lines.push(`**Default**: \`${JSON.stringify(schema.default)}\`    `)
   }
   if (schema.title) {
-    lines.push('', schema.title, '')
+    lines.push('', '> ' + schema.title, '')
   }
   if (schema.description) {
     lines.push('', schema.description, '')

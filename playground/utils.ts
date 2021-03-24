@@ -1,7 +1,7 @@
 import { reactive, watch, computed } from 'vue'
 
 const globalKeys = Object.getOwnPropertyNames(globalThis)
-  .filter(key => key[0].toLocaleLowerCase() === key[0])
+  .filter(key => key[0].toLocaleLowerCase() === key[0] && key !== 'console')
 
 export function evaluateSource (src) {
   // Basic commonjs transform

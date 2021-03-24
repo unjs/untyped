@@ -2,12 +2,12 @@ import type { PluginObj } from '@babel/core'
 import * as t from '@babel/types'
 import { Schema } from '../types'
 
-export default function babelPluginUntyped () {
+export default function babelPluginUntyped() {
   return <PluginObj>{
     visitor: {
       ObjectProperty (p) {
         if (p.node.leadingComments) {
-          const { comments, blockTags } = parseJSDocs(
+          const { comments, tags } = parseJSDocs(
             p.node.leadingComments
               .filter(c => c.type === 'CommentBlock')
               .map(c => c.value)
@@ -20,12 +20,47 @@ export default function babelPluginUntyped () {
           if (comments.length) {
             schema.description = comments.join('\n')
           }
-          for (const tag in blockTags) {
-            schema[tag] = blockTags[tag]
+
+          // Infer function arguments
+          const code = this.file.code.split('\n')
+          const getCode = (loc) => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
+          if (p.node.value.type === 'ArrowFunctionExpression') {
+            p.node.value.params.forEach((param, index) => {
+              if (param.loc.end.line !== param.loc.start.line) { return null }
+              const isAssignment = param.type === 'AssignmentPattern'
+              const _param = isAssignment ? param.left : param
+              const _paramDocs = {
+                name: _param.name || ('arg' + index),
+                type: getCode(_param.loc)
+                  .split(':').slice(1).join(':').trim()
+              }
+
+              let defaultValue = null
+              if (isAssignment) {
+                defaultValue = getCode(param.right.loc)
+              }
+
+              if (!tags.find(t => t[0] === 'param' && t[1].includes(_paramDocs.name))) {
+                // TODO merge type
+                tags.push(
+                  `@param {${_paramDocs.type}} ${defaultValue ? `[${_paramDocs.name}=${defaultValue}]` : _paramDocs.name}`
+                )
+              }
+            })
+            if (!schema.description) {
+              schema.description = getCode(p.node.value.loc)
+            }
           }
 
           const schemaAstProps =
             Object.entries(schema).map(e => t.objectProperty(t.identifier(e[0]), t.stringLiteral(e[1] as string)))
+
+          schemaAstProps.push(
+            t.objectProperty(
+              t.identifier('tags'),
+              t.arrayExpression(tags.map(tag => t.stringLiteral(tag)))
+            ))
+
           const schemaAst = t.objectExpression(schemaAstProps)
 
           if (p.node.value.type === 'ObjectExpression') {
@@ -70,21 +105,13 @@ function parseJSDocs (input: string | string[]) {
     comments.push(lines.shift())
   }
 
-  const blockTags: Record<string, string> = {}
-  let lastTag = null
+  const tags: string[] = []
   for (const line of lines) {
-    const m = line.match(/@(\w+) ?(.*)/)
-    if (m) {
-      blockTags[m[1]] = m[2]
-      lastTag = m[1]
-    } else {
-      blockTags[lastTag] =
-        (blockTags[lastTag] ? blockTags[lastTag] + '\n' : '') + line
-    }
+    tags.push(line)
   }
 
   return {
     comments,
-    blockTags
+    tags
   }
 }
