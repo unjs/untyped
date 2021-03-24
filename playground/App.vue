@@ -3,7 +3,7 @@
     <!-- Nav -->
     <div class="p-1em bg-cyan-500 text-white flex space-x-0 justify-between">
       <p class="font-extrabold">
-        <a href="/">MagicSchema</a>
+        <a href="/">Untyped</a>
       </p>
       <div>
         <a href="https://github.com/unjs/untyped" role="noopener" target="github">Github</a>
@@ -34,7 +34,7 @@
       <!-- Output -->
       <div class="block">
         <div class="block-title">
-          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'types', 'resolved']" />
+          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'docs', 'types', 'resolved']" />
           <span class="block-label">Output</span>
         </div>
         <!-- Schema -->
@@ -50,6 +50,13 @@
             Types are auto generated from schema for typescript usage.
           </div>
           <Editor :model-value="types" read-only language="typescript" />
+        </div>
+        <!-- Docs -->
+        <div v-if="state.outputTab === 'docs'" class="block-content">
+          <div class="block-info">
+            Markdown documentation is auto generated from schema.
+          </div>
+          <Markdown :value="markdown" />
         </div>
         <!-- Loader -->
         <div v-if="state.outputTab === 'loader'" class="block-content">
@@ -73,7 +80,7 @@
 <script>
 import 'virtual:windi.css'
 import { defineComponent, defineAsyncComponent } from 'vue'
-import { resolveSchema, generateTypes, applyDefaults } from '../src'
+import { resolveSchema, generateTypes, applyDefaults, generateMarkdown } from '../src'
 import { evaluateSource, persistedState, safeComputed, asyncImport } from './utils'
 import { defaultReference, defaultInput } from './consts'
 import LoadingComponent from './components/loading.vue'
@@ -84,6 +91,10 @@ export default defineComponent({
     Tabs,
     Editor: defineAsyncComponent({
       loader: () => import('./components/editor.vue'),
+      loadingComponent: LoadingComponent
+    }),
+    Markdown: defineAsyncComponent({
+      loader: () => import('./components/markdown.vue'),
       loadingComponent: LoadingComponent
     })
   },
@@ -106,6 +117,7 @@ export default defineComponent({
     const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value))
     const schema = safeComputed(() => resolveSchema(referenceObj.value))
     const types = safeComputed(() => generateTypes(schema.value))
+    const markdown = safeComputed(() => generateMarkdown(schema.value))
 
     const inputObj = safeComputed(() => evaluateSource(state.input))
     const resolvedInput = safeComputed(() => applyDefaults(referenceObj.value, inputObj.value))
@@ -116,7 +128,8 @@ export default defineComponent({
       types,
       transpiledRef,
       inputObj,
-      resolvedInput
+      resolvedInput,
+      markdown
     }
   }
 })
@@ -160,9 +173,5 @@ body, html, #app {
 .block-info {
   padding: .25em;
   @apply border-dashed border-light-blue-500 border-b-1 mb-3 text-gray-700;
-}
-
-code {
-  @apply bg-gray-500 rounded text-gray-100 py-.5 px-2;
 }
 </style>
