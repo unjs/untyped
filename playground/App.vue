@@ -6,7 +6,7 @@
         <a href="/">MagicSchema</a>
       </p>
       <div>
-        <a href="https://github.com/unjs/magic-schema" role="noopener" target="github">Github</a>
+        <a href="https://github.com/unjs/untyped" role="noopener" target="github">Github</a>
       </div>
     </div>
     <!-- Main -->

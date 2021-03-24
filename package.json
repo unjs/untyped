@@ -1,23 +1,23 @@
 {
-  "name": "magic-schema",
-  "version": "0.0.5",
+  "name": "untyped",
+  "version": "0.2.0",
   "description": "",
-  "repository": "unjs/magic-schema",
+  "repository": "unjs/untyped",
   "license": "MIT",
   "sideEffects": false,
   "exports": {
     "./": "./",
     ".": {
-      "import": "./dist/magic-schema.mjs",
-      "require": "./dist/magic-schema.js"
+      "import": "./dist/untyped.mjs",
+      "require": "./dist/untyped.js"
     },
     "./loader": {
       "require": "./dist/loader.js"
     }
   },
-  "main": "./dist/magic-schema.js",
-  "module": "./dist/magic-schema.mjs",
-  "types": "./dist/magic-schema.d.ts",
+  "main": "./dist/untyped.js",
+  "module": "./dist/untyped.mjs",
+  "types": "./dist/untyped.d.ts",
   "files": [
     "dist"
   ],

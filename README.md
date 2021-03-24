@@ -1,4 +1,4 @@
-# magic-schema
+# untyped
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -8,19 +8,19 @@
 
 
 
-**▶️ Check [online playground](https://magic-schema.unjs.io)**
+**▶️ Check [online playground](https://untyped.unjs.io)**
 
 
 ## Usage
 
 ### Install package
 
-Install `magic-schema` npm package:
+Install `untyped` npm package:
 
 ```sh
-yarn add magic-schema
+yarn add untyped
 # or
-npm i magic-schema
+npm i untyped
 ```
 
 ### Define reference object
@@ -48,7 +48,7 @@ const defaultPlanet = {
 ### Resolving Schema
 
 ```js
-import { resolveSchema } from 'magic-schema'
+import { resolveSchema } from 'untyped'
 
 const schema = resolveSchema(defaultPlanet)
 ```
@@ -92,7 +92,7 @@ Output:
 
 
 ```js
-import { resolveSchema } from 'magic-schema'
+import { resolveSchema } from 'untyped'
 
 const types = generateTypes(resolveSchema(defaultPlanet))
 ```
@@ -128,18 +128,20 @@ interface MyObject {
 
 [MIT](./LICENSE)
 
+Thanks to [@dominikschreiber](https://github.com/dominikschreiber) for donating package name.
+
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/magic-schema?style=flat-square
-[npm-version-href]: https://npmjs.com/package/magic-schema
+[npm-version-src]: https://img.shields.io/npm/v/untyped?style=flat-square
+[npm-version-href]: https://npmjs.com/package/untyped
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/magic-schema?style=flat-square
-[npm-downloads-href]: https://npmjs.com/package/magic-schema
+[npm-downloads-src]: https://img.shields.io/npm/dm/untyped?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/untyped
 
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/magic-schema/ci/main?style=flat-square
-[github-actions-href]: https://github.com/unjs/magic-schema/actions?query=workflow%3Aci
+[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/untyped/ci/main?style=flat-square
+[github-actions-href]: https://github.com/unjs/untyped/actions?query=workflow%3Aci
 
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/magic-schema/main?style=flat-square
-[codecov-href]: https://codecov.io/gh/unjs/magic-schema
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/untyped/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/unjs/untyped
 
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/magic-schema?style=flat-square
-[bundle-href]: https://bundlephobia.com/result?p=magic-schema
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/untyped?style=flat-square
+[bundle-href]: https://bundlephobia.com/result?p=untyped
