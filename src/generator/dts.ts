@@ -45,7 +45,7 @@ function _genTypes (schema: Schema, spaces: string): string[] {
         const _type = getTsType(val.items.type)
         type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
       } else if (val.type === 'function') {
-        type = genFunctionType(val)
+        type = `(${genFunctionArgs(val.args)}) => any`
       } else {
         type = getTsType(val.type)
       }
@@ -70,8 +70,8 @@ function getTsType (type: JSType | JSType[]): string {
   return (type && TYPE_MAP[type]) || 'any'
 }
 
-export function genFunctionType (schema: Schema) {
-  const args = schema.args.map((arg) => {
+export function genFunctionArgs (args: Schema['args']) {
+  return args.map((arg) => {
     let argStr = arg.name
     if (arg.optional) {
       argStr += '?'
@@ -83,9 +83,7 @@ export function genFunctionType (schema: Schema) {
       argStr += ' = ' + arg.default
     }
     return argStr
-  })
-
-  return `(${args.join(', ')}) => {}`
+  }).join(', ')
 }
 
 function generateJSDoc (schema: Schema): string[] {
