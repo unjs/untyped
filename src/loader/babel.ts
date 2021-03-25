@@ -55,20 +55,23 @@ export default function babelPluginUntyped () {
 
         // Extract arguments
         p.node.params.forEach((param, index) => {
-          if (param.loc.end.line !== param.loc.start.line) { return null }
-          const isAssignment = param.type === 'AssignmentPattern'
-          const _param = isAssignment ? param.left : param
-
+          if (param.loc.end.line !== param.loc.start.line) {
+            return null
+          }
+          if (param.type !== 'AssignmentPattern' && param.type !== 'Identifier') {
+            return null
+          }
+          const _param = param.type === 'AssignmentPattern' ? param.left : param
           const arg = {
+            // @ts-ignore TODO
             name: _param.name || ('arg' + index),
             type: getCode(_param.loc).split(':').slice(1).join(':').trim() || undefined,
-            default: undefined
-          }
-          if (_param.optional) {
-            arg.optional = true
+            default: undefined,
+            // @ts-ignore TODO
+            optional: _param.optional || undefined
           }
 
-          if (isAssignment) {
+          if (param.type === 'AssignmentPattern') {
             arg.default = getCode(param.right.loc)
           }
           schema.args.push(arg)
