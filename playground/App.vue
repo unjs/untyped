@@ -34,7 +34,7 @@
       <!-- Output -->
       <div class="block">
         <div class="block-title">
-          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'docs', 'types', 'resolved']" />
+          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'types', 'docs', 'resolved']" />
           <span class="block-label">Output</span>
         </div>
         <!-- Schema -->
@@ -101,7 +101,7 @@ export default defineComponent({
   setup () {
     const state = persistedState({
       editorTab: 'reference',
-      outputTab: 'types',
+      outputTab: 'schema',
       ref: defaultReference,
       input: defaultInput
     })

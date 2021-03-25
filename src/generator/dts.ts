@@ -13,7 +13,19 @@ const TYPE_MAP: Record<JSType, string> = {
   function: 'Function'
 }
 
-const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type', 'id']
+const SCHEMA_KEYS = [
+  'items',
+  'default',
+  'resolve',
+  'properties',
+  'title',
+  'description',
+  '$schema',
+  'type',
+  'tags',
+  'args',
+  'id'
+]
 
 export function generateTypes (schema: Schema, name: string = 'Untyped') {
   return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
@@ -32,6 +44,8 @@ function _genTypes (schema: Schema, spaces: string): string[] {
       if (val.type === 'array') {
         const _type = getTsType(val.items.type)
         type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
+      } else if (val.type === 'function') {
+        type = genFunctionType(val)
       } else {
         type = getTsType(val.type)
       }
@@ -54,6 +68,24 @@ function getTsType (type: JSType | JSType[]): string {
     return unique(type.map(t => getTsType(t))).join(' | ') || 'any'
   }
   return (type && TYPE_MAP[type]) || 'any'
+}
+
+export function genFunctionType (schema: Schema) {
+  const args = schema.args.map((arg) => {
+    let argStr = arg.name
+    if (arg.optional) {
+      argStr += '?'
+    }
+    if (arg.type) {
+      argStr += ': ' + arg.type
+    }
+    if (arg.default) {
+      argStr += ' = ' + arg.default
+    }
+    return argStr
+  })
+
+  return `(${args.join(', ')}) => {}`
 }
 
 function generateJSDoc (schema: Schema): string[] {
@@ -80,6 +112,12 @@ function generateJSDoc (schema: Schema): string[] {
   for (const key in schema) {
     if (!SCHEMA_KEYS.includes(key)) {
       buff.push('', `@${key} ${schema[key]}`)
+    }
+  }
+
+  if (Array.isArray(schema.tags)) {
+    for (const tag of schema.tags) {
+      buff.push('', tag)
     }
   }
 

@@ -1,13 +1,14 @@
 import { reactive, watch, computed } from 'vue'
 
 const globalKeys = Object.getOwnPropertyNames(globalThis)
-  .filter(key => key[0].toLocaleLowerCase() === key[0])
+  .filter(key => key[0].toLocaleLowerCase() === key[0] && key !== 'console')
 
 export function evaluateSource (src) {
   // Basic commonjs transform
   src = src
     .replace('export default', 'module.exports = ')
     .replace(/export (const|let|var) (\w+) ?= ?/g, 'exports.$2 = ')
+    .replace(/export (function|class) (\w+)/g, 'exports.$2 = $1 $2 ')
 
   // eslint-disable-next-line no-new-func
   const fn = Function(`
