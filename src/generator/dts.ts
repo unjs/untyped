@@ -73,19 +73,18 @@ function getTsType (type: JSType | JSType[]): string {
 export function genFunctionType (schema: Schema) {
   const args = schema.args.map((arg) => {
     let argStr = arg.name
-    if (arg.optional) {
+    if (arg.optional || arg.default) {
       argStr += '?'
     }
     if (arg.type) {
       argStr += ': ' + arg.type
     }
-    if (arg.default) {
-      argStr += ' = ' + arg.default
-    }
     return argStr
   })
 
-  return `(${args.join(', ')}) => {}`
+  const returns = String(schema.returns || 'any')
+
+  return `(${args.join(', ')}) => ${returns}`
 }
 
 function generateJSDoc (schema: Schema): string[] {

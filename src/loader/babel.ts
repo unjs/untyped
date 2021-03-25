@@ -2,6 +2,57 @@ import type { PluginObj } from '@babel/core'
 import * as t from '@babel/types'
 import { Schema } from '../types'
 
+function getType (e: t.Expression, getCode: (loc: t.SourceLocation) => string) {
+  switch (e.type) {
+    case 'TypeCastExpression':
+    case 'TSAsExpression':
+      return getCode(e.typeAnnotation.loc)
+
+    case 'StringLiteral':
+      return 'string'
+
+    case 'BooleanLiteral':
+      return 'boolean'
+
+    case 'BigIntLiteral':
+      return 'BigInt'
+
+    case 'DecimalLiteral':
+    case 'NumericLiteral':
+      return 'number'
+
+    case 'NullLiteral':
+      return 'null'
+
+    case 'RegExpLiteral':
+      return 'RegExp'
+
+    case 'NewExpression':
+      return e.callee.type === 'Identifier' ? e.callee.name : 'any'
+
+    case 'ArrayExpression': {
+      const types = Array.from(new Set(e.elements.map(el => t.isExpression(el) && getType(el, getCode)))).filter(Boolean)
+      return `Array<${types.join(' | ')}>`
+    }
+
+    case 'TupleExpression': {
+      const types = e.elements.map(el => t.isExpression(el) ? getType(el, getCode) : 'any')
+      return `[${types.join(', ')}]`
+    }
+
+    case 'AssignmentExpression':
+      return getType(e.right, getCode)
+
+    case 'ArrowFunctionExpression':
+    case 'FunctionExpression':
+      return 'Function'
+
+    case 'ObjectExpression':
+      return 'Record<any, any>'
+  }
+  return 'any'
+}
+
 export default function babelPluginUntyped () {
   return <PluginObj>{
     visitor: {
@@ -51,7 +102,7 @@ export default function babelPluginUntyped () {
         schema.args = []
 
         const code = this.file.code.split('\n')
-        const getCode = loc => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
+        const getCode = (loc: t.SourceLocation) => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
 
         // Extract arguments
         p.node.params.forEach((param, index) => {
@@ -73,9 +124,14 @@ export default function babelPluginUntyped () {
 
           if (param.type === 'AssignmentPattern') {
             arg.default = getCode(param.right.loc)
+            arg.type = arg.type || getType(param.right, getCode)
           }
           schema.args.push(arg)
         })
+
+        if (p.node.returnType?.type === 'TSTypeAnnotation') {
+          schema.returns = getCode(p.node.returnType.typeAnnotation.loc)
+        }
 
         // Replace function with it's meta
         const schemaAst = t.objectExpression([
