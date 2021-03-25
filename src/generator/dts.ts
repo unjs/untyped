@@ -23,6 +23,7 @@ const SCHEMA_KEYS = [
   '$schema',
   'type',
   'tags',
+  'args',
   'id'
 ]
 
@@ -43,6 +44,8 @@ function _genTypes (schema: Schema, spaces: string): string[] {
       if (val.type === 'array') {
         const _type = getTsType(val.items.type)
         type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
+      } else if (val.type === 'function') {
+        type = genFunctionType(val)
       } else {
         type = getTsType(val.type)
       }
@@ -65,6 +68,24 @@ function getTsType (type: JSType | JSType[]): string {
     return unique(type.map(t => getTsType(t))).join(' | ') || 'any'
   }
   return (type && TYPE_MAP[type]) || 'any'
+}
+
+export function genFunctionType (schema: Schema) {
+  const args = schema.args.map((arg) => {
+    let argStr = arg.name
+    if (arg.optional) {
+      argStr += '?'
+    }
+    if (arg.type) {
+      argStr += ': ' + arg.type
+    }
+    if (arg.default) {
+      argStr += ' = ' + arg.default
+    }
+    return argStr
+  })
+
+  return `(${args.join(', ')}) => {}`
 }
 
 function generateJSDoc (schema: Schema): string[] {

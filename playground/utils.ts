@@ -8,6 +8,7 @@ export function evaluateSource (src) {
   src = src
     .replace('export default', 'module.exports = ')
     .replace(/export (const|let|var) (\w+) ?= ?/g, 'exports.$2 = ')
+    .replace(/export (function|class) (\w+)/g, 'exports.$2 = $1 $2 ')
 
   // eslint-disable-next-line no-new-func
   const fn = Function(`

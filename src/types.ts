@@ -34,6 +34,12 @@ export interface Schema {
   description?: string
   $schema?: string
   tags?: string[]
+  args?: {
+    name: string
+    type?: string,
+    default?: any
+    optional?: boolean
+  }[]
 }
 
 export interface InputObject {
