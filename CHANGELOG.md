@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/unjs/untyped/compare/v0.0.5...v0.2.1) (2021-03-25)
+
+
+### Features
+
+* apply cirtular defaults ([f847195](https://github.com/unjs/untyped/commit/f8471958b5b8489c8ffcd3adc7e817b2d16b9a9b))
+* basic markdown generation ([d2c25b7](https://github.com/unjs/untyped/commit/d2c25b7478daafe6f1ab73f650f3953afa0be69d))
+* infer function types ([#1](https://github.com/unjs/untyped/issues/1)) ([8f16a32](https://github.com/unjs/untyped/commit/8f16a326ff69b7799a7224decbd63e7a98b26c45))
+
 ### [0.0.5](https://github.com/unjs/untyped/compare/v0.0.4...v0.0.5) (2021-03-23)
 
 
