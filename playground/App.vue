@@ -101,7 +101,7 @@ export default defineComponent({
   setup () {
     const state = persistedState({
       editorTab: 'reference',
-      outputTab: 'schema',
+      outputTab: 'types',
       ref: defaultReference,
       input: defaultInput
     })
@@ -160,7 +160,7 @@ body, html, #app {
   position: absolute;
   right: 0;
   top: 0;
-  @apply rounded-bl-xl bg-green-400 px-3 text-white;
+  @apply rounded-bl-xl bg-green-400 px-3 text-white select-none;
 }
 
 .block-content {
