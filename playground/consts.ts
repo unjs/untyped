@@ -1,5 +1,5 @@
 export const defaultReference = `
-export function add (id: String, date = new Date(), append?: Boolean) {}
+export function add (id: string, date = new Date(), append?: boolean) {}
 
 export const config = {
     name: 'default',
