@@ -13,9 +13,9 @@ const TYPE_MAP: Record<JSType, string> = {
   function: 'Function'
 }
 
-const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type']
+const SCHEMA_KEYS = ['items', 'default', 'resolve', 'properties', 'title', 'description', '$schema', 'type', 'id']
 
-export function generateTypes (schema: Schema, name: string = 'MyObject') {
+export function generateTypes (schema: Schema, name: string = 'Untyped') {
   return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
 }
 

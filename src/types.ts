@@ -21,9 +21,10 @@ export type JSType =
   'array'
 
 // eslint-disable-next-line no-use-before-define
-export type ResolveFn = ((value: any, parent: InputObject, root: InputObject) => JSValue)
+export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue)
 
 export interface Schema {
+  id?: string,
   type?: JSType | JSType[]
   items?: Schema
   default?: JSValue

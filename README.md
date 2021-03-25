@@ -100,7 +100,7 @@ const types = generateTypes(resolveSchema(defaultPlanet))
 Output:
 
 ```ts
-interface MyObject {
+interface Untyped {
    /** @default "earth" */
   name: string,
 
