@@ -15,24 +15,6 @@ export function getType (val: any): JSType | null {
   return type
 }
 
-function genFunctionType (schema: Schema) {
-  const args = schema.args.map((arg) => {
-    let argStr = arg.name
-    if (arg.optional) {
-      argStr += '?'
-    }
-    if (arg.type) {
-      argStr += ': ' + arg.type
-    }
-    if (arg.default) {
-      argStr += ' = ' + arg.default
-    }
-    return argStr
-  })
-
-  return `(${args.join(', ')}) => {}`
-}
-
 export function isObject (val: any): boolean {
   return val !== null && !Array.isArray(val) && typeof val === 'object'
 }
