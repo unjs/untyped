@@ -14,7 +14,7 @@ describe('resolveSchema', () => {
       }
     }))
     expect(types).toBe(`
-interface MyObject {
+interface Untyped {
    test: {
     /**
      * Test
@@ -35,7 +35,7 @@ interface MyObject {
     }))
 
     expect(types).toBe(`
-interface MyObject {
+interface Untyped {
    empty: any[],
 
   /** @default [1,2,3] */

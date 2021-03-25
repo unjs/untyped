@@ -79,7 +79,7 @@ describe('resolveSchema', () => {
   it('with $resolve (dependency order-1)', () => {
     const schema = resolveSchema({
       foo: { $resolve: () => 'foo' },
-      bar: { $resolve: (val, parent) => parent.foo + (val || 'bar') }
+      bar: { $resolve: (val, get) => get('foo') + (val || 'bar') }
     })
     expect(schema).toMatchObject({
       properties: {
@@ -93,7 +93,7 @@ describe('resolveSchema', () => {
   it('with $resolve (dependency order-2)', () => {
     const schema = resolveSchema({
       nested: {
-        foo: { $resolve: (val, _parent, root) => root.rootDir + (val || 'bar') }
+        foo: { $resolve: (val, get) => get('rootDir') + (val || 'bar') }
       },
       rootDir: { $resolve: () => 'root/' }
     })

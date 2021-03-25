@@ -18,7 +18,7 @@ export const defaultReference = `
 `.trim()
 
 export const defaultInput = `
-export default {
+export const config = {
     name: 'foo',
     dimensions: {
         height: 25
