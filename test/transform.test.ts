@@ -66,11 +66,13 @@ export const add = {
   })
 
   it('correctly handles a function assigned to a variable', () => {
-    const result = transform(`
+    const results = [transform(`
       export const bob = function add (test: string): string {}
-    `)
+    `), transform(`
+      export const bob = (test: string): string => {}
+    `)]
 
-    expect(result).toBe(`
+    results.forEach(result => expect(result).toBe(`
 export const bob = {
   $schema: {
     type: "function",
@@ -81,6 +83,6 @@ export const bob = {
     }]
   }
 };
-`.trim())
+`.trim()))
   })
 })
