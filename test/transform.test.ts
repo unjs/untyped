@@ -23,10 +23,7 @@ describe('transform (functions)', () => {
           items: {}
         }, {
           name: 'date',
-          type: 'Date',
-          items: {
-            type: 'Date'
-          }
+          type: 'Date'
         }, {
           name: 'append',
           optional: true,
@@ -53,10 +50,7 @@ describe('transform (functions)', () => {
           }
         }, {
           name: 'append',
-          type: 'false',
-          items: {
-            type: 'false'
-          }
+          type: 'false'
         }]
       }
     })

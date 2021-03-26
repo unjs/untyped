@@ -97,30 +97,6 @@ export default function babelPluginUntyped () {
           // Infer type from default value
           if (param.type === 'AssignmentPattern') {
             Object.assign(arg, mergedTypes(arg, inferArgType(param.right, getCode)))
-            // if (param.right.type === 'TSAsExpression') {
-            //   arg.default = getCode(param.right.expression.loc)
-            // } else {
-            //   arg.default = getCode(param.right.loc)
-            // }
-            // if (param.right.type === 'TSAsExpression' && param.right.typeAnnotation.type === 'TSTypeReference' && param.right.typeAnnotation.typeName.type === 'Identifier' && param.right.typeAnnotation.typeName.name === 'const') {
-            //   // Ignore 'as const' as it's not properly a type on its own
-            //   switch (param.right.expression.type) {
-            //     case 'BigIntLiteral':
-            //     case 'BooleanLiteral':
-            //     case 'DecimalLiteral':
-            //     case 'NullLiteral':
-            //     case 'NumericLiteral':
-            //     case 'RegExpLiteral':
-            //     case 'StringLiteral':
-            //       arg.type = arg.type || getCode(param.right.expression.loc)
-            //       break
-
-            //     default:
-            //       arg.type = arg.type || getType(param.right.expression, getCode)
-            //   }
-            // } else {
-            //   arg.type = arg.type || getType(param.right, getCode)
-            // }
           }
           schema.args.push(arg)
         })
@@ -217,6 +193,22 @@ function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
     return inferArgType(e.right, getCode)
   }
   if (e.type === 'TypeCastExpression' || e.type === 'TSAsExpression') {
+    if (e.typeAnnotation.type === 'TSTypeReference' && e.typeAnnotation.typeName.type === 'Identifier' && e.typeAnnotation.typeName.name === 'const') {
+      // Ignore 'as const' as it's not properly a type on its own
+      switch (e.expression.type) {
+        case 'BigIntLiteral':
+        case 'BooleanLiteral':
+        case 'DecimalLiteral':
+        case 'NullLiteral':
+        case 'NumericLiteral':
+        case 'RegExpLiteral':
+        case 'StringLiteral':
+          return { type: getCode(e.expression.loc) as JSType }
+
+        default:
+          return inferArgType(e.expression, getCode)
+      }
+    }
     return {
       type: getCode(e.typeAnnotation.loc) as JSType
     }
