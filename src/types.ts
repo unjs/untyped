@@ -34,6 +34,8 @@ export interface Schema {
   description?: string
   $schema?: string
   tags?: string[]
+
+  returns?: string,
   args?: {
     name: string
     type?: string,

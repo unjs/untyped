@@ -43,7 +43,7 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
 
   const schema: Schema = ctx.resolveCache[id] = {
     ...node.$schema,
-    id: '#' + id
+    id: '#' + id.replace(/\./g, '/')
   }
 
   // Resolve children
