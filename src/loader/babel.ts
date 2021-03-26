@@ -51,11 +51,11 @@ export default function babelPluginUntyped () {
         schema.args = []
 
         const code = this.file.code.split('\n')
-        const getCode = loc => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
+        const getCode = (loc: t.SourceLocation) => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
 
         // Extract arguments
         p.node.params.forEach((param, index) => {
-          if (param.loc.end.line !== param.loc.start.line) {
+          if (param.loc?.end.line !== param.loc?.start.line) {
             return null
           }
           if (param.type !== 'AssignmentPattern' && param.type !== 'Identifier') {
@@ -65,15 +65,16 @@ export default function babelPluginUntyped () {
           const arg = {
             // @ts-ignore TODO
             name: _param.name || ('arg' + index),
-            type: getCode(_param.loc).split(':').slice(1).join(':').trim() || undefined,
-            default: undefined,
+            type: (_param.loc && getCode(_param.loc).split(':').slice(1).join(':').trim()) || undefined,
+            default: undefined as undefined | string,
             // @ts-ignore TODO
             optional: _param.optional || undefined
           }
 
-          if (param.type === 'AssignmentPattern') {
+          if (param.type === 'AssignmentPattern' && param.right.loc) {
             arg.default = getCode(param.right.loc)
           }
+          schema.args = schema.args || []
           schema.args.push(arg)
         })
 
@@ -81,7 +82,7 @@ export default function babelPluginUntyped () {
         const schemaAst = t.objectExpression([
           buildObjectPropery('$schema', t.objectExpression(schemaToPropsAst(schema)))
         ])
-        p.replaceWith(t.variableDeclaration('const', [t.variableDeclarator(t.identifier(p.node.id.name), schemaAst)]))
+        p.replaceWith(t.variableDeclaration('const', [t.variableDeclarator(t.identifier(p.node.id?.name || 'variable'), schemaAst)]))
       }
     }
   }
@@ -90,14 +91,17 @@ export default function babelPluginUntyped () {
 function parseJSDocs (input: string | string[]): Schema {
   const schema: Schema = {}
 
-  const lines = [].concat(input)
+  const lines = ([] as string[]).concat(input)
     .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
     .flat()
     .filter(Boolean)
 
   const comments: string[] = []
   while (lines.length && !lines[0].startsWith('@')) {
-    comments.push(lines.shift())
+    const comment = lines.shift()
+    if (comment) {
+      comments.push(comment)
+    }
   }
   if (comments.length === 1) {
     schema.title = comments[0]
@@ -140,7 +144,7 @@ function buildObjectPropsAst (obj: any) {
   return props
 }
 
-function buildObjectPropery (name, val) {
+function buildObjectPropery (name: string, val: t.Expression) {
   return t.objectProperty(t.identifier(name), val)
 }
 
@@ -162,6 +166,6 @@ function schemaToPropsAst (schema: Schema) {
   return props
 }
 
-function schemaToAst (schema) {
+function schemaToAst (schema: Schema) {
   return t.objectExpression(schemaToPropsAst(schema))
 }

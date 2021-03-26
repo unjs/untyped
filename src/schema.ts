@@ -1,8 +1,8 @@
-import { getType, isObject, unique, getValue, setValue, joinPath } from './utils'
+import { getType, isObject, unique, getValue, setValue, joinPath, nonEmpty } from './utils'
 import type { InputObject, InputValue, JSValue, Schema } from './types'
 
 interface _ResolveCtx {
-  root?: InputObject
+  root: InputObject
   defaults?: InputObject,
   resolveCache: Record<string, Schema>
 }
@@ -88,12 +88,12 @@ export function applyDefaults (ref: InputObject, input: InputObject) {
   return input
 }
 
-function normalizeSchema (schema: Schema) {
+function normalizeSchema (schema: Partial<Schema>): asserts schema is Schema {
   if (schema.type === 'array' && !('items' in schema)) {
     schema.items = {
-      type: unique((schema.default as any[]).map(i => getType(i)))
+      type: nonEmpty(unique((schema.default as any[]).map(i => getType(i))))
     }
-    if (!schema.items.type.length) {
+    if (!schema.items.type!.length) {
       schema.items.type = 'any'
     }
   }

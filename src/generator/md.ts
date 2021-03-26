@@ -1,11 +1,10 @@
 import type { Schema } from '../types'
-import { genFunctionArgs } from './dts'
 
 export function generateMarkdown (schema: Schema) {
   return _generateMarkdown(schema, '', '').join('\n')
 }
 
-export function _generateMarkdown (schema: Schema, title: string, level) {
+export function _generateMarkdown (schema: Schema, title: string, level: string) {
   const lines: string[] = []
 
   lines.push(`${level} ${title}`)

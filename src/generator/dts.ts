@@ -42,12 +42,12 @@ function _genTypes (schema: Schema, spaces: string): string[] {
     } else {
       let type: string
       if (val.type === 'array') {
-        const _type = getTsType(val.items.type)
+        const _type = getTsType(val.items?.type || 'any')
         type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
       } else if (val.type === 'function') {
         type = `(${genFunctionArgs(val.args)}) => any`
       } else {
-        type = getTsType(val.type)
+        type = getTsType(val.type || 'any')
       }
       buff.push(`${escapeKey(key)}: ${type},\n`)
     }
@@ -71,7 +71,7 @@ function getTsType (type: JSType | JSType[]): string {
 }
 
 export function genFunctionArgs (args: Schema['args']) {
-  return args.map((arg) => {
+  return args?.map((arg) => {
     let argStr = arg.name
     if (arg.optional) {
       argStr += '?'
@@ -83,7 +83,7 @@ export function genFunctionArgs (args: Schema['args']) {
       argStr += ' = ' + arg.default
     }
     return argStr
-  }).join(', ')
+  }).join(', ') || ''
 }
 
 function generateJSDoc (schema: Schema): string[] {
