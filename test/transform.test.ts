@@ -36,7 +36,7 @@ describe('transform (functions)', () => {
 
   it('infers correct types from defaults', () => {
     const result = transform(`
-      export function add (test = ['42', 2], append = false as const) {}
+      export function add (test = ['42', 2], append?: false) {}
     `)
 
     expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {

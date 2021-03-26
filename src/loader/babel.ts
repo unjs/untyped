@@ -179,8 +179,8 @@ const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
   NumericLiteral: 'number',
   ObjectExpression: 'object',
   FunctionExpression: 'function',
-  ArrowFunctionExpression: 'function'
-  // RegExpLiteral: 'RegExp
+  ArrowFunctionExpression: 'function',
+  RegExpLiteral: 'RegExp' as JSType
 }
 
 function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
@@ -191,27 +191,6 @@ function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   }
   if (e.type === 'AssignmentExpression') {
     return inferArgType(e.right, getCode)
-  }
-  if (e.type === 'TypeCastExpression' || e.type === 'TSAsExpression') {
-    if (e.typeAnnotation.type === 'TSTypeReference' && e.typeAnnotation.typeName.type === 'Identifier' && e.typeAnnotation.typeName.name === 'const') {
-      // Ignore 'as const' as it's not properly a type on its own
-      switch (e.expression.type) {
-        case 'BigIntLiteral':
-        case 'BooleanLiteral':
-        case 'DecimalLiteral':
-        case 'NullLiteral':
-        case 'NumericLiteral':
-        case 'RegExpLiteral':
-        case 'StringLiteral':
-          return { type: getCode(e.expression.loc) as JSType }
-
-        default:
-          return inferArgType(e.expression, getCode)
-      }
-    }
-    return {
-      type: getCode(e.typeAnnotation.loc) as JSType
-    }
   }
   if (e.type === 'NewExpression' && e.callee.type === 'Identifier') {
     return {
