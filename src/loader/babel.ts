@@ -8,6 +8,14 @@ type GetCodeFn = (loc: t.SourceLocation) => string
 export default function babelPluginUntyped () {
   return <PluginObj>{
     visitor: {
+      VariableDeclaration (p) {
+        const declaration = p.node.declarations[0]
+        if (declaration.id.type === 'Identifier' && declaration.init.type === 'FunctionExpression') {
+          const newDeclaration = t.functionDeclaration(declaration.id, declaration.init.params, declaration.init.body)
+          newDeclaration.returnType = declaration.init.returnType
+          p.replaceWith(newDeclaration)
+        }
+      },
       ObjectProperty (p) {
         if (p.node.leadingComments) {
           const schema = parseJSDocs(
@@ -80,6 +88,30 @@ export default function babelPluginUntyped () {
           // Infer type from default value
           if (param.type === 'AssignmentPattern') {
             Object.assign(arg, mergedTypes(arg, inferArgType(param.right, getCode)))
+            // if (param.right.type === 'TSAsExpression') {
+            //   arg.default = getCode(param.right.expression.loc)
+            // } else {
+            //   arg.default = getCode(param.right.loc)
+            // }
+            // if (param.right.type === 'TSAsExpression' && param.right.typeAnnotation.type === 'TSTypeReference' && param.right.typeAnnotation.typeName.type === 'Identifier' && param.right.typeAnnotation.typeName.name === 'const') {
+            //   // Ignore 'as const' as it's not properly a type on its own
+            //   switch (param.right.expression.type) {
+            //     case 'BigIntLiteral':
+            //     case 'BooleanLiteral':
+            //     case 'DecimalLiteral':
+            //     case 'NullLiteral':
+            //     case 'NumericLiteral':
+            //     case 'RegExpLiteral':
+            //     case 'StringLiteral':
+            //       arg.type = arg.type || getCode(param.right.expression.loc)
+            //       break
+
+            //     default:
+            //       arg.type = arg.type || getType(param.right.expression, getCode)
+            //   }
+            // } else {
+            //   arg.type = arg.type || getType(param.right, getCode)
+            // }
           }
           schema.args.push(arg)
         })
