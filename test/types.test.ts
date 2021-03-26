@@ -62,11 +62,11 @@ interface Untyped {
           args: [{
             name: 'test',
             type: 'Array<string | number>',
-            default: "['42', 2]"
+            optional: true
           }, {
             name: 'append',
             type: 'boolean',
-            default: 'false'
+            optional: true
           }]
         }
       }
