@@ -1,13 +1,5 @@
 import { transform } from '../src/loader/transform'
 
-function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
-  const [, result] = code.match(pattern)
-  expect(result).toBeDefined()
-  // eslint-disable-next-line
-  const obj = Function('"use strict";return (' + result.replace(/;$/, '') + ')')()
-  expect(obj).toMatchObject(expected)
-}
-
 describe('transform (functions)', () => {
   it('creates correct types for simple function', () => {
     const result = transform(`
@@ -19,16 +11,14 @@ describe('transform (functions)', () => {
         type: 'function',
         args: [{
           name: 'id',
-          type: 'string',
-          items: {}
+          type: 'string'
         }, {
           name: 'date',
           type: 'Date'
         }, {
           name: 'append',
           optional: true,
-          type: 'boolean',
-          items: {}
+          type: 'boolean'
         }]
       }
     })
@@ -84,8 +74,7 @@ describe('transform (functions)', () => {
         type: 'function',
         args: [{
           name: 'test',
-          type: 'string',
-          items: {}
+          type: 'string'
         }],
         returns: {
           type: 'string'
@@ -94,3 +83,11 @@ describe('transform (functions)', () => {
     }))
   })
 })
+
+function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
+  const [, result] = code.match(pattern)
+  expect(result).toBeDefined()
+  // eslint-disable-next-line
+  const obj = Function('"use strict";return (' + result.replace(/;$/, '') + ')')()
+  expect(obj).toMatchObject(expected)
+}
