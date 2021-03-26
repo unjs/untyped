@@ -1,6 +1,6 @@
 import { transform } from '../src/loader/transform'
 
-describe.skip('transform (functions)', () => {
+describe('transform (functions)', () => {
   it('creates correct types for simple function', () => {
     const result = transform(`
       export function add (id: string, date = new Date(), append?: boolean) {}
@@ -12,15 +12,19 @@ export const add = {
     type: "function",
     args: [{
       name: "id",
-      type: "string"
+      type: "string",
+      items: {}
     }, {
       name: "date",
       type: "Date",
-      default: "new Date()"
+      items: {
+        type: "Date"
+      }
     }, {
       name: "append",
+      optional: true,
       type: "boolean",
-      optional: true
+      items: {}
     }]
   }
 };
@@ -37,12 +41,16 @@ export const add = {
     type: "function",
     args: [{
       name: "test",
-      type: "Array<string | number>",
-      default: "['42', 2]"
+      type: "array",
+      items: {
+        type: ["string", "number"]
+      }
     }, {
       name: "append",
       type: "false",
-      default: "false"
+      items: {
+        type: "false"
+      }
     }]
   }
 };
@@ -58,8 +66,10 @@ export const add = {
 export const add = {
   $schema: {
     type: "function",
-    returns: "void",
-    args: []
+    args: [],
+    returns: {
+      type: "void"
+    }
   }
 };
 `.trim())
@@ -76,11 +86,14 @@ export const add = {
 export const bob = {
   $schema: {
     type: "function",
-    returns: "string",
     args: [{
       name: "test",
+      type: "string",
+      items: {}
+    }],
+    returns: {
       type: "string"
-    }]
+    }
   }
 };
 `.trim()))
