@@ -123,8 +123,30 @@ export default function babelPluginUntyped () {
           }
 
           if (param.type === 'AssignmentPattern') {
-            arg.default = getCode(param.right.loc)
-            arg.type = arg.type || getType(param.right, getCode)
+            if (param.right.type === 'TSAsExpression') {
+              arg.default = getCode(param.right.expression.loc)
+            } else {
+              arg.default = getCode(param.right.loc)
+            }
+            if (param.right.type === 'TSAsExpression' && param.right.typeAnnotation.type === 'TSTypeReference' && param.right.typeAnnotation.typeName.type === 'Identifier' && param.right.typeAnnotation.typeName.name === 'const') {
+              // Ignore 'as const' as it's not properly a type on its own
+              switch (param.right.expression.type) {
+                case 'BigIntLiteral':
+                case 'BooleanLiteral':
+                case 'DecimalLiteral':
+                case 'NullLiteral':
+                case 'NumericLiteral':
+                case 'RegExpLiteral':
+                case 'StringLiteral':
+                  arg.type = arg.type || getCode(param.right.expression.loc)
+                  break
+
+                default:
+                  arg.type = arg.type || getType(param.right.expression, getCode)
+              }
+            } else {
+              arg.type = arg.type || getType(param.right, getCode)
+            }
           }
           schema.args.push(arg)
         })

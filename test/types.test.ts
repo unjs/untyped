@@ -53,4 +53,29 @@ interface Untyped {
     }))
     expect(types).toMatch('"*key": string')
   })
+
+  it('functions', () => {
+    const types = generateTypes(resolveSchema({
+      add: {
+        $schema: {
+          type: 'function',
+          args: [{
+            name: 'test',
+            type: 'Array<string | number>',
+            default: "['42', 2]"
+          }, {
+            name: 'append',
+            type: 'boolean',
+            default: 'false'
+          }]
+        }
+      }
+    }))
+
+    expect(types).toBe(`
+interface Untyped {
+   add: (test?: Array<string | number>, append?: boolean) => any,
+}
+`.trim())
+  })
 })
