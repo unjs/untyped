@@ -36,13 +36,13 @@ interface Untyped {
 
     expect(types).toBe(`
 interface Untyped {
-   empty: any[],
+   empty: Array<any>,
 
   /** @default [1,2,3] */
-  numbers: number[],
+  numbers: Array<number>,
 
   /** @default [true,123] */
-  mixed: (boolean | number)[],
+  mixed: Array<boolean|number>,
 }
 `.trim())
   })

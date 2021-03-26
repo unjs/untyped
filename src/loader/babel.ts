@@ -1,57 +1,9 @@
 import type { PluginObj } from '@babel/core'
 import * as t from '@babel/types'
-import { Schema } from '../types'
+import { Schema, JSType, TypeDescriptor, FunctionArg } from '../types'
+import { normalizeTypes, mergedTypes, cachedFn } from '../utils'
 
-function getType (e: t.Expression, getCode: (loc: t.SourceLocation) => string) {
-  switch (e.type) {
-    case 'TypeCastExpression':
-    case 'TSAsExpression':
-      return getCode(e.typeAnnotation.loc)
-
-    case 'StringLiteral':
-      return 'string'
-
-    case 'BooleanLiteral':
-      return 'boolean'
-
-    case 'BigIntLiteral':
-      return 'BigInt'
-
-    case 'DecimalLiteral':
-    case 'NumericLiteral':
-      return 'number'
-
-    case 'NullLiteral':
-      return 'null'
-
-    case 'RegExpLiteral':
-      return 'RegExp'
-
-    case 'NewExpression':
-      return e.callee.type === 'Identifier' ? e.callee.name : 'any'
-
-    case 'ArrayExpression': {
-      const types = Array.from(new Set(e.elements.map(el => t.isExpression(el) && getType(el, getCode)))).filter(Boolean)
-      return `Array<${types.join(' | ')}>`
-    }
-
-    case 'TupleExpression': {
-      const types = e.elements.map(el => t.isExpression(el) ? getType(el, getCode) : 'any')
-      return `[${types.join(', ')}]`
-    }
-
-    case 'AssignmentExpression':
-      return getType(e.right, getCode)
-
-    case 'ArrowFunctionExpression':
-    case 'FunctionExpression':
-      return 'Function'
-
-    case 'ObjectExpression':
-      return 'Record<any, any>'
-  }
-  return 'any'
-}
+type GetCodeFn = (loc: t.SourceLocation) => string
 
 export default function babelPluginUntyped () {
   return <PluginObj>{
@@ -71,20 +23,20 @@ export default function babelPluginUntyped () {
             if (schemaProp && 'value' in schemaProp) {
               if (schemaProp.value.type === 'ObjectExpression') {
                 // Object has $schema
-                schemaProp.value.properties.push(...schemaToPropsAst(schema))
+                schemaProp.value.properties.push(...astify(schema).properties)
               } else {
                 // Object has $schema which is not an object
                 // SKIP
               }
             } else {
               // Object has not $schema
-              p.node.value.properties.unshift(buildObjectPropery('$schema', schemaToAst(schema)))
+              p.node.value.properties.unshift(astify({ $schema: schema }))
             }
           } else {
             // Literal value
             p.node.value = t.objectExpression([
               t.objectProperty(t.identifier('$default'), p.node.value),
-              t.objectProperty(t.identifier('$schema'), schemaToAst(schema))
+              t.objectProperty(t.identifier('$schema'), astify(schema))
             ])
           }
           p.node.leadingComments = []
@@ -97,47 +49,52 @@ export default function babelPluginUntyped () {
             .filter(c => c.type === 'CommentBlock')
             .map(c => c.value)
         )
-
         schema.type = 'function'
         schema.args = []
 
-        const code = this.file.code.split('\n')
-        const getCode = (loc: t.SourceLocation) => code[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
+        const _getLines = cachedFn(() => this.file.code.split('\n'))
+        const getCode: GetCodeFn = loc => _getLines()[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
 
         // Extract arguments
         p.node.params.forEach((param, index) => {
           if (param.loc.end.line !== param.loc.start.line) {
             return null
           }
-          if (param.type !== 'AssignmentPattern' && param.type !== 'Identifier') {
+          if (!t.isAssignmentPattern(param) && !t.isIdentifier(param)) {
             return null
           }
-          const _param = param.type === 'AssignmentPattern' ? param.left : param
-          const arg = {
-            // @ts-ignore TODO
-            name: _param.name || ('arg' + index),
-            type: getCode(_param.loc).split(':').slice(1).join(':').trim() || undefined,
-            default: undefined,
-            // @ts-ignore TODO
-            optional: _param.optional || undefined
+          const lparam = (t.isAssignmentPattern(param) ? param.left : param) as t.Identifier
+          if (!t.isIdentifier(lparam)) {
+            return null
+          }
+          const arg: FunctionArg = {
+            name: lparam.name || ('arg' + index),
+            optional: lparam.optional || undefined
           }
 
+          // Infer from type annotations
+          if (lparam.typeAnnotation) {
+            Object.assign(arg, mergedTypes(arg, inferAnnotationType(lparam.typeAnnotation, getCode)))
+          }
+
+          // Infer type from default value
           if (param.type === 'AssignmentPattern') {
-            arg.default = getCode(param.right.loc)
-            arg.type = arg.type || getType(param.right, getCode)
+            Object.assign(arg, mergedTypes(arg, inferArgType(param.right, getCode)))
           }
           schema.args.push(arg)
         })
 
+        // Return type annotation
         if (p.node.returnType?.type === 'TSTypeAnnotation') {
-          schema.returns = getCode(p.node.returnType.typeAnnotation.loc)
+          schema.returns = inferAnnotationType(p.node.returnType, getCode)
         }
 
         // Replace function with it's meta
-        const schemaAst = t.objectExpression([
-          buildObjectPropery('$schema', t.objectExpression(schemaToPropsAst(schema)))
-        ])
-        p.replaceWith(t.variableDeclaration('const', [t.variableDeclarator(t.identifier(p.node.id.name), schemaAst)]))
+        p.replaceWith(t.variableDeclaration('const', [
+          t.variableDeclarator(
+            t.identifier(p.node.id.name), astify({ $schema: schema })
+          )
+        ]))
       }
     }
   }
@@ -172,7 +129,7 @@ function parseJSDocs (input: string | string[]): Schema {
   return schema
 }
 
-function valToAstLiteral (val: any) {
+function astify (val: any) {
   if (typeof val === 'string') {
     return t.stringLiteral(val)
   }
@@ -182,42 +139,97 @@ function valToAstLiteral (val: any) {
   if (typeof val === 'number') {
     return t.numericLiteral(val)
   }
-  return null
+  if (val === null) {
+    return t.nullLiteral()
+  }
+  if (val === undefined) {
+    return t.identifier('undefined')
+  }
+  if (Array.isArray(val)) {
+    return t.arrayExpression(val.map(item => astify(item)))
+  }
+  return t.objectExpression(Object.getOwnPropertyNames(val)
+    .filter(key => val[key] !== undefined && val[key] !== null)
+    .map(key => t.objectProperty(t.identifier(key), astify(val[key])))
+  )
 }
 
-function buildObjectPropsAst (obj: any) {
-  const props = []
-  for (const key in obj) {
-    const astLiteral = valToAstLiteral(obj[key])
-    if (astLiteral) {
-      props.push(t.objectProperty(t.identifier(key), astLiteral))
+const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
+  StringLiteral: 'string',
+  BooleanLiteral: 'boolean',
+  BigIntLiteral: 'bigint',
+  DecimalLiteral: 'number',
+  NumericLiteral: 'number',
+  ObjectExpression: 'object',
+  FunctionExpression: 'function',
+  ArrowFunctionExpression: 'function'
+  // RegExpLiteral: 'RegExp
+}
+
+function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
+  if (AST_JSTYPE_MAP[e.type]) {
+    return {
+      type: AST_JSTYPE_MAP[e.type]
     }
   }
-  return props
-}
-
-function buildObjectPropery (name, val) {
-  return t.objectProperty(t.identifier(name), val)
-}
-
-function schemaToPropsAst (schema: Schema) {
-  const props = buildObjectPropsAst(schema)
-
-  if (schema.args) {
-    props.push(buildObjectPropery('args', t.arrayExpression(schema.args.map(
-      arg => t.objectExpression(buildObjectPropsAst(arg))
-    ))))
+  if (e.type === 'AssignmentExpression') {
+    return inferArgType(e.right, getCode)
   }
-
-  if (schema.tags) {
-    props.push(buildObjectPropery('tags', t.arrayExpression(schema.tags.map(
-      tag => t.stringLiteral(tag)
-    ))))
+  if (e.type === 'TypeCastExpression' || e.type === 'TSAsExpression') {
+    return {
+      type: getCode(e.typeAnnotation.loc) as JSType
+    }
   }
-
-  return props
+  if (e.type === 'NewExpression' && e.callee.type === 'Identifier') {
+    return {
+      type: e.callee.name as JSType
+    }
+  }
+  if (e.type === 'ArrayExpression' || e.type === 'TupleExpression') {
+    const itemTypes = e.elements
+      .filter(el => t.isExpression(el))
+      .flatMap(el => inferArgType(el as any, getCode).type)
+    return {
+      type: 'array',
+      items: { type: normalizeTypes(itemTypes) }
+    }
+  }
+  return {}
 }
 
-function schemaToAst (schema) {
-  return t.objectExpression(schemaToPropsAst(schema))
+function inferAnnotationType (ann: t.Identifier['typeAnnotation'], getCode: GetCodeFn): TypeDescriptor | null {
+  if (ann.type !== 'TSTypeAnnotation') { return null }
+  return inferTSType(ann.typeAnnotation, getCode)
+}
+
+function inferTSType (tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor | null {
+  if (tsType.type === 'TSParenthesizedType') {
+    return inferTSType(tsType.typeAnnotation, getCode)
+  }
+  if (tsType.type === 'TSTypeReference') {
+    if ('name' in tsType.typeName && tsType.typeName.name === 'Array') {
+      return {
+        type: 'array',
+        items: inferTSType(tsType.typeParameters.params[0], getCode)
+      }
+    }
+    return {
+      type: getCode(tsType.loc) as JSType
+    }
+  }
+  if (tsType.type === 'TSUnionType') {
+    return mergedTypes(...tsType.types.map(t => inferTSType(t, getCode)))
+  }
+  if (tsType.type === 'TSArrayType') {
+    return {
+      type: 'array',
+      items: inferTSType(tsType.elementType, getCode)
+    }
+  }
+  // if (tsType.type.endsWith('Keyword')) {
+  return {
+    type: getCode(tsType.loc) as JSType
+  }
+  // }
+  // return null
 }

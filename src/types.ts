@@ -23,10 +23,19 @@ export type JSType =
 // eslint-disable-next-line no-use-before-define
 export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue)
 
-export interface Schema {
-  id?: string,
+export interface TypeDescriptor {
   type?: JSType | JSType[]
-  items?: Schema
+  items?: TypeDescriptor | TypeDescriptor[]
+}
+
+export interface FunctionArg extends TypeDescriptor {
+  name?: string
+  default?: JSValue
+  optional?: boolean
+}
+
+export interface Schema extends TypeDescriptor {
+  id?: string,
   default?: JSValue
   resolve?: ResolveFn
   properties?: { [key: string]: Schema }
@@ -34,14 +43,8 @@ export interface Schema {
   description?: string
   $schema?: string
   tags?: string[]
-
-  returns?: string,
-  args?: {
-    name: string
-    type?: string,
-    default?: any
-    optional?: boolean
-  }[]
+  args?: FunctionArg[]
+  returns?: TypeDescriptor,
 }
 
 export interface InputObject {
