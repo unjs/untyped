@@ -64,4 +64,23 @@ export const add = {
 };
 `.trim())
   })
+
+  it('correctly handles a function assigned to a variable', () => {
+    const result = transform(`
+      export const bob = function add (test: string): string {}
+    `)
+
+    expect(result).toBe(`
+  export const bob = {
+    $schema: {
+    type: "function",
+    returns: "string",
+    args: [{
+      name: "test",
+      type: "string"
+    }]
+  }
+};
+`.trim())
+  })
 })

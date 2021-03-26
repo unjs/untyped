@@ -56,6 +56,14 @@ function getType (e: t.Expression, getCode: (loc: t.SourceLocation) => string) {
 export default function babelPluginUntyped () {
   return <PluginObj>{
     visitor: {
+      VariableDeclaration (p) {
+        const declaration = p.node.declarations[0]
+        if (declaration.id.type === 'Identifier' && declaration.init.type === 'FunctionExpression') {
+          const newDeclaration = t.functionDeclaration(declaration.id, declaration.init.params, declaration.init.body)
+          newDeclaration.returnType = declaration.init.returnType
+          p.replaceWith(newDeclaration)
+        }
+      },
       ObjectProperty (p) {
         if (p.node.leadingComments) {
           const schema = parseJSDocs(
