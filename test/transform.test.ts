@@ -71,8 +71,8 @@ export const add = {
     `)
 
     expect(result).toBe(`
-  export const bob = {
-    $schema: {
+export const bob = {
+  $schema: {
     type: "function",
     returns: "string",
     args: [{
