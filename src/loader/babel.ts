@@ -10,19 +10,13 @@ export default function babelPluginUntyped () {
     visitor: {
       VariableDeclaration (p) {
         const declaration = p.node.declarations[0]
-        if (declaration.id.type === 'Identifier') {
-          switch (declaration.init.type) {
-            case 'ArrowFunctionExpression':
-            case 'FunctionExpression': {
-              const newDeclaration = t.functionDeclaration(declaration.id, declaration.init.params, declaration.init.body as t.BlockStatement)
-              newDeclaration.returnType = declaration.init.returnType
-              p.replaceWith(newDeclaration)
-              break
-            }
-
-            default:
-              break
-          }
+        if (
+          t.isIdentifier(declaration.id) &&
+          (t.isFunctionExpression(declaration.init) || t.isArrowFunctionExpression(declaration.init))
+        ) {
+          const newDeclaration = t.functionDeclaration(declaration.id, declaration.init.params, declaration.init.body as t.BlockStatement)
+          newDeclaration.returnType = declaration.init.returnType
+          p.replaceWith(newDeclaration)
         }
       },
       ObjectProperty (p) {
