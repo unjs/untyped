@@ -88,7 +88,7 @@ export function mergedTypes (...types: TypeDescriptor[]): TypeDescriptor {
   if (types.length === 0) { return {} }
   if (types.length === 1) { return types[0] }
   return {
-    type: normalizeTypes(types.map(t => t.type).flat().filter(Boolean)),
+    type: normalizeTypes(types.map(t => t.type).flat().filter(Boolean)) as JSType,
     items: mergedTypes(...types.map(t => t.items).flat().filter(Boolean))
   }
 }

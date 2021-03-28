@@ -201,7 +201,9 @@ function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
       .flatMap(el => inferArgType(el as any, getCode).type)
     return {
       type: 'array',
-      items: { type: normalizeTypes(itemTypes) }
+      items: {
+        type: normalizeTypes(itemTypes) as JSType
+      }
     }
   }
   return {}

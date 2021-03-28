@@ -65,7 +65,7 @@ function _genTypes (schema: Schema, spaces: string): string[] {
 
 function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
   if (Array.isArray(type)) {
-    return normalizeTypes(type.map(t => getTsType(t))).join('|') || 'any'
+    return [].concat(normalizeTypes(type.map(t => getTsType(t)))).join('|') || 'any'
   }
   if (!type || !type.type) {
     return 'any'
