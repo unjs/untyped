@@ -84,7 +84,7 @@ export function genFunctionType (schema) {
 }
 
 export function genFunctionArgs (args: Schema['args']) {
-  return args.map((arg) => {
+  return args?.map((arg) => {
     let argStr = arg.name
     if (arg.optional || arg.default) {
       argStr += '?'
@@ -93,7 +93,7 @@ export function genFunctionArgs (args: Schema['args']) {
       argStr += `: ${getTsType(arg)}`
     }
     return argStr
-  }).join(', ')
+  }).join(', ') || ''
 }
 
 function generateJSDoc (schema: Schema): string[] {

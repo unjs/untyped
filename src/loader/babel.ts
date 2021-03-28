@@ -68,7 +68,7 @@ export default function babelPluginUntyped () {
 
         // Extract arguments
         p.node.params.forEach((param, index) => {
-          if (param.loc.end.line !== param.loc.start.line) {
+          if (param.loc?.end.line !== param.loc?.start.line) {
             return null
           }
           if (!t.isAssignmentPattern(param) && !t.isIdentifier(param)) {
@@ -92,6 +92,7 @@ export default function babelPluginUntyped () {
           if (param.type === 'AssignmentPattern') {
             Object.assign(arg, mergedTypes(arg, inferArgType(param.right, getCode)))
           }
+          schema.args = schema.args || []
           schema.args.push(arg)
         })
 
@@ -114,14 +115,17 @@ export default function babelPluginUntyped () {
 function parseJSDocs (input: string | string[]): Schema {
   const schema: Schema = {}
 
-  const lines = [].concat(input)
+  const lines = ([] as string[]).concat(input)
     .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
     .flat()
     .filter(Boolean)
 
   const comments: string[] = []
   while (lines.length && !lines[0].startsWith('@')) {
-    comments.push(lines.shift())
+    const comment = lines.shift()
+    if (comment) {
+      comments.push(comment)
+    }
   }
   if (comments.length === 1) {
     schema.title = comments[0]

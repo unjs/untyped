@@ -4,10 +4,10 @@ export function escapeKey (val: string): string {
   return /^\w+$/.test(val) ? val : `"${val}"`
 }
 
-export function getType (val: any): JSType | null {
+export function getType (val: unknown): JSType | undefined {
   const type = typeof val
   if (type === 'undefined' || val === null) {
-    return null
+    return undefined
   }
   if (Array.isArray(val)) {
     return 'array'
@@ -15,15 +15,19 @@ export function getType (val: any): JSType | null {
   return type
 }
 
-export function isObject (val: any): boolean {
+export function isObject (val: unknown): boolean {
   return val !== null && !Array.isArray(val) && typeof val === 'object'
 }
 
-export function unique (arr: any[]) {
+export function nonEmpty <T> (arr: T[]): Array<NonNullable<T>> {
+  return arr.filter(Boolean) as Array<NonNullable<T>>
+}
+
+export function unique <T> (arr: T[]) {
   return Array.from(new Set(arr))
 }
 
-export function joinPath (a, b = '', sep = '.') {
+export function joinPath (a: string, b = '', sep = '.') {
   return a ? a + sep + b : b
 }
 
@@ -45,29 +49,31 @@ function resolveRelative (path: string) {
   return '/' + rSegments.filter(Boolean).join('/')
 }
 
-export function setValue (obj, path, val) {
+export function setValue (obj: Record<string, any>, path: string, val: any) {
   const keys = path.split('.')
-  const key = keys.pop()
+  const _key = keys.pop()
   for (const key of keys) {
     if (!(key in obj)) {
       obj[key] = {}
     }
     obj = obj[key]
   }
-  obj[key] = val
+  if (_key) {
+    obj[_key] = val
+  }
 }
 
-export function getValue (obj: any, path: string) {
+export function getValue <V = any> (obj: Record<string, any>, path: string) {
   for (const key of path.split('.')) {
     if (!(key in obj)) {
       return undefined
     }
     obj = obj[key]
   }
-  return obj
+  return obj as V
 }
 
-export function getSchemaPath (schema: Schema, path) {
+export function getSchemaPath (schema: Schema, path: string) {
   for (const key of path.split('.')) {
     if (!schema.properties || !(key in schema.properties)) {
       return undefined
