@@ -1,5 +1,5 @@
-import type { Schema, JSType } from '../types'
-import { escapeKey, unique } from '../utils'
+import type { Schema, JSType, TypeDescriptor } from '../types'
+import { escapeKey, normalizeTypes } from '../utils'
 
 const TYPE_MAP: Record<JSType, string> = {
   array: 'any[]',
@@ -24,7 +24,8 @@ const SCHEMA_KEYS = [
   'type',
   'tags',
   'args',
-  'id'
+  'id',
+  'returns'
 ]
 
 export function generateTypes (schema: Schema, name: string = 'Untyped') {
@@ -42,12 +43,11 @@ function _genTypes (schema: Schema, spaces: string): string[] {
     } else {
       let type: string
       if (val.type === 'array') {
-        const _type = getTsType(val.items?.type || 'any')
-        type = _type.includes('|') ? `(${_type})[]` : `${_type}[]`
+        type = `Array<${getTsType(val.items)}>`
       } else if (val.type === 'function') {
-        type = `(${genFunctionArgs(val.args)}) => any`
+        type = genFunctionType(val)
       } else {
-        type = getTsType(val.type || 'any')
+        type = getTsType(val)
       }
       buff.push(`${escapeKey(key)}: ${type},\n`)
     }
@@ -63,24 +63,34 @@ function _genTypes (schema: Schema, spaces: string): string[] {
   return buff.map(i => spaces + i)
 }
 
-function getTsType (type: JSType | JSType[]): string {
+function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
   if (Array.isArray(type)) {
-    return unique(type.map(t => getTsType(t))).join(' | ') || 'any'
+    return normalizeTypes(type.map(t => getTsType(t))).join('|') || 'any'
   }
-  return (type && TYPE_MAP[type]) || 'any'
+  if (!type || !type.type) {
+    return 'any'
+  }
+  if (Array.isArray(type.type)) {
+    return type.type.map(t => TYPE_MAP[t]).join('|')
+  }
+  if (type.type === 'array') {
+    return `Array<${getTsType(type.items)}>`
+  }
+  return TYPE_MAP[type.type] || type.type
+}
+
+export function genFunctionType (schema) {
+  return `(${genFunctionArgs(schema.args)}) => ${getTsType(schema.returns)}`
 }
 
 export function genFunctionArgs (args: Schema['args']) {
   return args?.map((arg) => {
     let argStr = arg.name
-    if (arg.optional) {
+    if (arg.optional || arg.default) {
       argStr += '?'
     }
     if (arg.type) {
-      argStr += ': ' + arg.type
-    }
-    if (arg.default) {
-      argStr += ' = ' + arg.default
+      argStr += `: ${getTsType(arg)}`
     }
     return argStr
   }).join(', ') || ''

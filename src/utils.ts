@@ -1,4 +1,4 @@
-import type { Schema, JSType } from './types'
+import type { Schema, JSType, TypeDescriptor } from './types'
 
 export function escapeKey (val: string): string {
   return /^\w+$/.test(val) ? val : `"${val}"`
@@ -81,4 +81,32 @@ export function getSchemaPath (schema: Schema, path: string) {
     schema = schema.properties[key]
   }
   return schema
+}
+
+export function mergedTypes (...types: TypeDescriptor[]): TypeDescriptor {
+  types = types.filter(Boolean)
+  if (types.length === 0) { return {} }
+  if (types.length === 1) { return types[0] }
+  return {
+    type: normalizeTypes(types.map(t => t.type).flat().filter(Boolean)),
+    items: mergedTypes(...types.map(t => t.items).flat().filter(Boolean))
+  }
+}
+
+export function normalizeTypes (val: string[]) {
+  const arr = unique(val.filter(str => str))
+  if (!arr.length || arr.includes('any')) { return undefined }
+  return (arr.length > 1) ? arr : arr[0]
+}
+
+export function cachedFn (fn) {
+  let val
+  let resolved = false
+  return () => {
+    if (!resolved) {
+      val = fn()
+      resolved = true
+    }
+    return val
+  }
 }
