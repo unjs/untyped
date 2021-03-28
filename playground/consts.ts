@@ -1,5 +1,7 @@
 export const defaultReference = `
-export function add (id: String, date = new Date(), append?: Boolean) {}
+export function sendMessage (message: string, date = new Date(), flash?: boolean): string {
+  return 'OK'
+}
 
 export const config = {
     name: 'default',

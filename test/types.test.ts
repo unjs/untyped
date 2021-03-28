@@ -36,13 +36,13 @@ interface Untyped {
 
     expect(types).toBe(`
 interface Untyped {
-   empty: any[],
+   empty: Array<any>,
 
   /** @default [1,2,3] */
-  numbers: number[],
+  numbers: Array<number>,
 
   /** @default [true,123] */
-  mixed: (boolean | number)[],
+  mixed: Array<boolean|number>,
 }
 `.trim())
   })
@@ -52,5 +52,30 @@ interface Untyped {
       '*key': '123'
     }))
     expect(types).toMatch('"*key": string')
+  })
+
+  it('functions', () => {
+    const types = generateTypes(resolveSchema({
+      add: {
+        $schema: {
+          type: 'function',
+          args: [{
+            name: 'test',
+            type: 'Array<string | number>',
+            optional: true
+          }, {
+            name: 'append',
+            type: 'boolean',
+            optional: true
+          }]
+        }
+      }
+    }))
+
+    expect(types).toBe(`
+interface Untyped {
+   add: (test?: Array<string | number>, append?: boolean) => any,
+}
+`.trim())
   })
 })
