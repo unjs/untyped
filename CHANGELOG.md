@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/unjs/untyped/compare/v0.2.1...v0.2.2) (2021-03-28)
+
+
+### Features
+
+* improve function typing ([#2](https://github.com/unjs/untyped/issues/2)) ([76cb654](https://github.com/unjs/untyped/commit/76cb65406c688ff784004c9ba908ebc647f8fac4))
+
+
+### Bug Fixes
+
+* fix generated signuture ([786a6cf](https://github.com/unjs/untyped/commit/786a6cfdff5c9493702be4fe053f4ef0070be003))
+* generate id with / for jsonschema compatibility ([a4cdfd2](https://github.com/unjs/untyped/commit/a4cdfd2e299ac4b0755b61b1987b764d7de10168))
+* types improvements ([#3](https://github.com/unjs/untyped/issues/3)) ([0738d9b](https://github.com/unjs/untyped/commit/0738d9b15dde86ab572850d13feb999191df21bc))
+
 ### [0.2.1](https://github.com/unjs/untyped/compare/v0.0.5...v0.2.1) (2021-03-25)
 
 
