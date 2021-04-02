@@ -80,6 +80,9 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   }
 
   normalizeSchema(schema)
+  if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
+    setValue(ctx.defaults, id, schema.default)
+  }
   return schema
 }
 
@@ -97,7 +100,7 @@ function normalizeSchema (schema: Partial<Schema>): asserts schema is Schema {
       schema.items.type = 'any'
     }
   }
-  if (!('default' in schema) && (schema.type === 'object' || schema.type === 'any')) {
+  if (schema.default === undefined && (schema.type === 'object' || schema.type === 'any')) {
     schema.default = {}
   }
 }
