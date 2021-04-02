@@ -3,7 +3,8 @@ import { resolveSchema } from '../src'
 describe('resolveSchema', () => {
   it('direct value', () => {
     const schema = resolveSchema({
-      foo: 'bar'
+      foo: 'bar',
+      empty: {}
     })
     expect(schema).toMatchObject({
       type: 'object',
@@ -11,6 +12,10 @@ describe('resolveSchema', () => {
         foo: {
           type: 'string',
           default: 'bar'
+        },
+        empty: {
+          type: 'any',
+          default: {}
         }
       }
     })

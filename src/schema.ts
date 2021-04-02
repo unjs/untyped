@@ -97,4 +97,7 @@ function normalizeSchema (schema: Partial<Schema>): asserts schema is Schema {
       schema.items.type = 'any'
     }
   }
+  if (!('default' in schema) && (schema.type === 'object' || schema.type === 'any')) {
+    schema.default = {}
+  }
 }

@@ -7,6 +7,7 @@ export type JSValue =
   Function |
   Array<any> |
   undefined |
+  object |
   null
 
 export type JSType =
