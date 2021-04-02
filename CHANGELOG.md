@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/unjs/untyped/compare/v0.2.2...v0.2.3) (2021-04-02)
+
+
+### Bug Fixes
+
+* handle empty object type ([98e6172](https://github.com/unjs/untyped/commit/98e617262cf4dac19ebe8f3a588dd02b3b268e97))
+
 ### [0.2.2](https://github.com/unjs/untyped/compare/v0.2.1...v0.2.2) (2021-03-28)
 
 
