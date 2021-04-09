@@ -125,7 +125,9 @@ function generateJSDoc (schema: Schema): string[] {
 
   if (Array.isArray(schema.tags)) {
     for (const tag of schema.tags) {
-      buff.push('', tag)
+      if (tag !== '@untyped') {
+        buff.push('', tag)
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 export const defaultReference = `
+/** @untyped */
 export function sendMessage (message: string, date = new Date(), flash?: boolean): string {
   return 'OK'
 }

@@ -54,14 +54,17 @@ export default function babelPluginUntyped () {
         }
       },
       FunctionDeclaration (p) {
-        // TODO: find associated jsdoc
         const schema = parseJSDocs(
-          (p.node.leadingComments || [])
+          (p.parent.leadingComments || [])
             .filter(c => c.type === 'CommentBlock')
             .map(c => c.value)
         )
         schema.type = 'function'
         schema.args = []
+
+        if (!schema.tags.includes('@untyped')) {
+          return
+        }
 
         const _getLines = cachedFn(() => this.file.code.split('\n'))
         const getCode: GetCodeFn = loc => _getLines()[loc.start.line - 1].slice(loc.start.column, loc.end.column).trim() || ''
@@ -113,7 +116,11 @@ export default function babelPluginUntyped () {
 }
 
 function parseJSDocs (input: string | string[]): Schema {
-  const schema: Schema = {}
+  const schema: Schema = {
+    title: '',
+    description: '',
+    tags: []
+  }
 
   const lines = ([] as string[]).concat(input)
     .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
@@ -135,9 +142,8 @@ function parseJSDocs (input: string | string[]): Schema {
   }
 
   if (lines.length) {
-    schema.tags = []
     for (const line of lines) {
-      schema.tags.push(line)
+      schema.tags.push(line.trim())
     }
   }
 
