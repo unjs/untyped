@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/unjs/untyped/compare/v0.2.4...v0.2.5) (2021-04-09)
+
+
+### Features
+
+* only handle functions with [@untyped](https://github.com/untyped) tag ([a01f5a2](https://github.com/unjs/untyped/commit/a01f5a2fd2a04c7286ccdc5047581266cf21c587))
+
+
+### Bug Fixes
+
+* properly inject `$schema` property ([ded914e](https://github.com/unjs/untyped/commit/ded914ef52ec7ee0e41c8d8faaf3b23fb3f389e9))
+
 ### [0.2.4](https://github.com/unjs/untyped/compare/v0.2.3...v0.2.4) (2021-04-02)
 
 
