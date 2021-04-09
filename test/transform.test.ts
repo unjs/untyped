@@ -3,6 +3,7 @@ import { transform } from '../src/loader/transform'
 describe('transform (functions)', () => {
   it('creates correct types for simple function', () => {
     const result = transform(`
+      /** @untyped */
       export function add (id: string, date = new Date(), append?: boolean) {}
     `)
 
@@ -26,6 +27,7 @@ describe('transform (functions)', () => {
 
   it('infers correct types from defaults', () => {
     const result = transform(`
+      /** @untyped */
       export function add (test = ['42', 2], append?: false) {}
     `)
 
@@ -48,6 +50,7 @@ describe('transform (functions)', () => {
 
   it('correctly uses a defined return type', () => {
     const result = transform(`
+      /** @untyped */
       export function add (): void {}
     `)
 
@@ -64,8 +67,10 @@ describe('transform (functions)', () => {
 
   it('correctly handles a function assigned to a variable', () => {
     const results = [transform(`
+      /** @untyped */
       export const bob = function add (test: string): string {}
     `), transform(`
+      /** @untyped */
       export const bob = (test: string): string => {}
     `)]
 
