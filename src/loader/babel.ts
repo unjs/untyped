@@ -41,7 +41,7 @@ export default function babelPluginUntyped () {
               }
             } else {
               // Object has not $schema
-              p.node.value.properties.unshift(astify({ $schema: schema }))
+              p.node.value.properties.unshift(...astify({ $schema: schema }).properties)
             }
           } else {
             // Literal value
