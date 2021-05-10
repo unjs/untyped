@@ -6,7 +6,6 @@
   "license": "MIT",
   "sideEffects": false,
   "exports": {
-    "./": "./",
     ".": {
       "import": "./dist/untyped.mjs",
       "require": "./dist/untyped.js"
