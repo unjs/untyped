@@ -115,12 +115,12 @@ export default function babelPluginUntyped () {
   }
 }
 
-function clumpLines (lines: string[]) {
+function clumpLines (lines: string[], separator = ' ') {
   const clumps: string[] = []
   while (lines.length) {
     const line = lines.shift()
     if (line && clumps.length && clumps[clumps.length - 1]) {
-      clumps[clumps.length - 1] += ' ' + line
+      clumps[clumps.length - 1] += separator + line
     } else {
       clumps.push(line)
     }
@@ -149,7 +149,7 @@ function parseJSDocs (input: string | string[]): Schema {
     schema.description = comments.splice(1).join('\n')
   }
 
-  const tags = clumpLines(lines.slice(firstTag))
+  const tags = clumpLines(lines.slice(firstTag), '\n')
   for (const tag of tags) {
     schema.tags.push(tag.trim())
   }
