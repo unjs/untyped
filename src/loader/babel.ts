@@ -1,11 +1,15 @@
-import type { PluginObj } from '@babel/core'
+import type { ConfigAPI, PluginItem, PluginObj } from '@babel/core'
 import * as t from '@babel/types'
 import { Schema, JSType, TypeDescriptor, FunctionArg } from '../types'
 import { normalizeTypes, mergedTypes, cachedFn } from '../utils'
 
+import { version } from '../../package.json'
+
 type GetCodeFn = (loc: t.SourceLocation) => string
 
-export default function babelPluginUntyped () {
+export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
+  api.cache.using(() => version)
+
   return <PluginObj>{
     visitor: {
       VariableDeclaration (p) {
