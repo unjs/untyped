@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/unjs/untyped/compare/v0.2.6...v0.2.7) (2021-07-22)
+
+
+### Bug Fixes
+
+* don't split codeblocks with blank lines ([#13](https://github.com/unjs/untyped/issues/13)) ([85feb2f](https://github.com/unjs/untyped/commit/85feb2f26259aa74e7e09314a5cd28315c712e97))
+
 ### [0.2.6](https://github.com/unjs/untyped/compare/v0.2.5...v0.2.6) (2021-07-22)
 
 
