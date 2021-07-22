@@ -184,6 +184,34 @@ describe('transform (jsdoc)', () => {
       }
     })
   })
+
+  it('does not split within a codeblock', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @example
+         * \`\`\`js
+         * export default secretNumber = 42
+         *
+         * export default nothing = null
+         * \`\`\`
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          tags: [
+            '@example\n```js\nexport default secretNumber = 42\n\nexport default nothing = null\n```'
+          ]
+        }
+      }
+    })
+  })
 })
 
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {

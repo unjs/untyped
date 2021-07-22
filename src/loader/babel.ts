@@ -115,11 +115,19 @@ export default function babelPluginUntyped () {
   }
 }
 
+function containsIncompleteCodeblock (line = '') {
+  const codeDelimiters = line.split('\n').filter(line => line.startsWith('```')).length
+  return !!(codeDelimiters % 2)
+}
+
 function clumpLines (lines: string[], delimiters = [], separator = ' ') {
   const clumps: string[] = []
   while (lines.length) {
     const line = lines.shift()
-    if (line && !delimiters.includes(line[0]) && clumps.length && clumps[clumps.length - 1]) {
+    if (
+      (line && !delimiters.includes(line[0]) && clumps[clumps.length - 1]) ||
+      containsIncompleteCodeblock(clumps[clumps.length - 1])
+    ) {
       clumps[clumps.length - 1] += separator + line
     } else {
       clumps.push(line)
