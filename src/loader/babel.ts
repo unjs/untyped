@@ -149,9 +149,11 @@ function parseJSDocs (input: string | string[]): Schema {
     schema.description = comments.splice(1).join('\n')
   }
 
-  const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
-  for (const tag of tags) {
-    schema.tags.push(tag.trim())
+  if (firstTag >= 0) {
+    const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
+    for (const tag of tags) {
+      schema.tags.push(tag.trim())
+    }
   }
 
   return schema

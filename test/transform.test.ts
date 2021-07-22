@@ -152,6 +152,38 @@ describe('transform (jsdoc)', () => {
       }
     })
   })
+
+  it('correctly parses only tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @note This is a note.
+         * that is on two lines
+         * @example
+         * \`\`\`js
+         * export default secretNumber = 42
+         * \`\`\`
+         *
+         * @see https://nuxtjs.org
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          tags: [
+            '@note This is a note.\nthat is on two lines',
+            '@example\n```js\nexport default secretNumber = 42\n```',
+            '@see https://nuxtjs.org'
+          ]
+        }
+      }
+    })
+  })
 })
 
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
