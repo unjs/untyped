@@ -115,11 +115,11 @@ export default function babelPluginUntyped () {
   }
 }
 
-function clumpLines (lines: string[], separator = ' ') {
+function clumpLines (lines: string[], delimiters = [], separator = ' ') {
   const clumps: string[] = []
   while (lines.length) {
     const line = lines.shift()
-    if (line && clumps.length && clumps[clumps.length - 1]) {
+    if (line && !delimiters.includes(line[0]) && clumps.length && clumps[clumps.length - 1]) {
       clumps[clumps.length - 1] += separator + line
     } else {
       clumps.push(line)
@@ -140,7 +140,7 @@ function parseJSDocs (input: string | string[]): Schema {
     .flat()
 
   const firstTag = lines.findIndex(l => l.startsWith('@'))
-  const comments = clumpLines(lines.slice(0, firstTag))
+  const comments = clumpLines(lines.slice(0, firstTag >= 0 ? firstTag : undefined))
 
   if (comments.length === 1) {
     schema.title = comments[0]
@@ -149,7 +149,7 @@ function parseJSDocs (input: string | string[]): Schema {
     schema.description = comments.splice(1).join('\n')
   }
 
-  const tags = clumpLines(lines.slice(firstTag), '\n')
+  const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
   for (const tag of tags) {
     schema.tags.push(tag.trim())
   }
