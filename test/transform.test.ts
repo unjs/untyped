@@ -89,6 +89,103 @@ describe('transform (functions)', () => {
   })
 })
 
+describe('transform (jsdoc)', () => {
+  it('extracts title and description from jsdoc', () => {
+    const result = transform(`
+      export default {
+        /**
+         * Define the source directory of
+         * your Nuxt application.
+         *
+         * This property can be overwritten (for example, running \`nuxt ./my-app/\`
+         * will set the \`rootDir\` to the absolute path of \`./my-app/\` from the
+         * current/working directory.
+         *
+         * With more content in description.
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: 'Define the source directory of your Nuxt application.',
+          description: 'This property can be overwritten (for example, running `nuxt ./my-app/` will set the `rootDir` to the absolute path of `./my-app/` from the current/working directory.\nWith more content in description.',
+          tags: []
+        }
+      }
+    })
+  })
+
+  it('correctly parses tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * Define the source directory of your Nuxt application.
+         *
+         * This property can be overwritten.
+         * @note This is a note.
+         * that is on two lines
+         * @example
+         * \`\`\`js
+         * export default secretNumber = 42
+         * \`\`\`
+         *
+         * @see https://nuxtjs.org
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: 'Define the source directory of your Nuxt application.',
+          description: 'This property can be overwritten.',
+          tags: [
+            '@note This is a note.\nthat is on two lines',
+            '@example\n```js\nexport default secretNumber = 42\n```',
+            '@see https://nuxtjs.org'
+          ]
+        }
+      }
+    })
+  })
+
+  it('correctly parses only tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @note This is a note.
+         * that is on two lines
+         * @example
+         * \`\`\`js
+         * export default secretNumber = 42
+         * \`\`\`
+         *
+         * @see https://nuxtjs.org
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          tags: [
+            '@note This is a note.\nthat is on two lines',
+            '@example\n```js\nexport default secretNumber = 42\n```',
+            '@see https://nuxtjs.org'
+          ]
+        }
+      }
+    })
+  })
+})
+
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
   const [, result] = code.match(pattern)
   expect(result).toBeDefined()

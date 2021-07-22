@@ -115,6 +115,19 @@ export default function babelPluginUntyped () {
   }
 }
 
+function clumpLines (lines: string[], delimiters = [], separator = ' ') {
+  const clumps: string[] = []
+  while (lines.length) {
+    const line = lines.shift()
+    if (line && !delimiters.includes(line[0]) && clumps.length && clumps[clumps.length - 1]) {
+      clumps[clumps.length - 1] += separator + line
+    } else {
+      clumps.push(line)
+    }
+  }
+  return clumps.filter(Boolean)
+}
+
 function parseJSDocs (input: string | string[]): Schema {
   const schema: Schema = {
     title: '',
@@ -125,15 +138,10 @@ function parseJSDocs (input: string | string[]): Schema {
   const lines = ([] as string[]).concat(input)
     .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
     .flat()
-    .filter(Boolean)
 
-  const comments: string[] = []
-  while (lines.length && !lines[0].startsWith('@')) {
-    const comment = lines.shift()
-    if (comment) {
-      comments.push(comment)
-    }
-  }
+  const firstTag = lines.findIndex(l => l.startsWith('@'))
+  const comments = clumpLines(lines.slice(0, firstTag >= 0 ? firstTag : undefined))
+
   if (comments.length === 1) {
     schema.title = comments[0]
   } else if (comments.length > 1) {
@@ -141,9 +149,10 @@ function parseJSDocs (input: string | string[]): Schema {
     schema.description = comments.splice(1).join('\n')
   }
 
-  if (lines.length) {
-    for (const line of lines) {
-      schema.tags.push(line.trim())
+  if (firstTag >= 0) {
+    const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
+    for (const tag of tags) {
+      schema.tags.push(tag.trim())
     }
   }
 
