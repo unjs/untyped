@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/unjs/untyped/compare/v0.2.5...v0.2.6) (2021-07-22)
+
+
+### Bug Fixes
+
+* handle multiline tags, title, description ([#12](https://github.com/unjs/untyped/issues/12)) ([45b2f7d](https://github.com/unjs/untyped/commit/45b2f7d9d68fa954aefa36343a49ef5b9b186371))
+
 ### [0.2.5](https://github.com/unjs/untyped/compare/v0.2.4...v0.2.5) (2021-04-09)
 
 
