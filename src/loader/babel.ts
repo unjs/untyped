@@ -124,7 +124,7 @@ function containsIncompleteCodeblock (line = '') {
   return !!(codeDelimiters % 2)
 }
 
-function clumpLines (lines: string[], delimiters = [], separator = ' ') {
+function clumpLines (lines: string[], delimiters = [' '], separator = ' ') {
   const clumps: string[] = []
   while (lines.length) {
     const line = lines.shift()
@@ -148,7 +148,7 @@ function parseJSDocs (input: string | string[]): Schema {
   }
 
   const lines = ([] as string[]).concat(input)
-    .map(c => c.split('\n').map(l => l.replace(/^[\s*]+|[\s*]$/, '')))
+    .map(c => c.split('\n').map(l => l.replace(/(^\s*[*]+ )|([\s*]+$)/g, '')))
     .flat()
 
   const firstTag = lines.findIndex(l => l.startsWith('@'))
