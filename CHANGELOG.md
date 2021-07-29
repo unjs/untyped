@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/unjs/untyped/compare/v0.2.7...v0.2.8) (2021-07-29)
+
+
+### Bug Fixes
+
+* cache babel loader based on untyped version ([#14](https://github.com/unjs/untyped/issues/14)) ([bc6f679](https://github.com/unjs/untyped/commit/bc6f67938adc1475203f3f0feb0763d1966c0c1b))
+* preserve spacing at beginnings of lines ([#16](https://github.com/unjs/untyped/issues/16)) ([f8c07e7](https://github.com/unjs/untyped/commit/f8c07e75c99dae08a6565cf092bfce669632d8e0))
+
 ### [0.2.7](https://github.com/unjs/untyped/compare/v0.2.6...v0.2.7) (2021-07-22)
 
 
