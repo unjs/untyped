@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/unjs/untyped/compare/v0.2.8...v0.2.9) (2021-09-21)
+
+
+### Bug Fixes
+
+* **pkg:** use `.cjs` transform exports ([238b429](https://github.com/unjs/untyped/commit/238b4292a8e87e3c69bd7f2d8a1c033e1d7be827))
+
 ### [0.2.8](https://github.com/unjs/untyped/compare/v0.2.7...v0.2.8) (2021-07-29)
 
 
