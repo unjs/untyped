@@ -8,17 +8,12 @@
   "exports": {
     ".": {
       "import": "./dist/untyped.mjs",
-      "require": "./dist/untyped.js"
+      "require": "./dist/untyped.cjs"
     },
-    "./loader/babel": {
-      "require": "./dist/loader/babel.js"
-    },
-    "./loader/transform": {
-      "require": "./dist/loader/transform.js"
-    }
+    "./loader/babel": "./dist/loader/babel.cjs",
+    "./loader/transform": "./dist/loader/transform.cjs"
   },
-  "main": "./dist/untyped.js",
-  "module": "./dist/untyped.mjs",
+  "main": "./dist/untyped.cjs",
   "types": "./dist/untyped.d.ts",
   "files": [
     "dist"
