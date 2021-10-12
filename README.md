@@ -92,7 +92,7 @@ Output:
 
 
 ```js
-import { resolveSchema } from 'untyped'
+import { resolveSchema, generateTypes } from 'untyped'
 
 const types = generateTypes(resolveSchema(defaultPlanet))
 ```
@@ -115,6 +115,35 @@ interface Untyped {
     moons: string[],
   },
 }
+```
+
+### Generating markdown
+
+
+```js
+import { resolveSchema, generateTypes, generateMarkdown } from 'untyped'
+
+const markdown = generateMarkdown(generateTypes(resolveSchema(defaultPlanet)))
+```
+
+Output:
+
+```markdown
+# `name`
+- **Type**: `string`
+- **Default**: `"earth"`
+
+
+# `specs`
+
+## `gravity`
+- **Type**: `number`
+- **Default**: `9.8`
+
+
+## `moons`
+- **Type**: `array`
+- **Default**: `["moon"]`
 ```
 
 ## Contribution
