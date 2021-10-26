@@ -19,7 +19,7 @@ export function _generateMarkdown (schema: Schema, title: string, level: string)
   }
 
   // Type and default
-  lines.push(`- **Type**: \`${schema.type}\``)
+  lines.push(`- **Type**: \`${schema.tsType || schema.type}\``)
   if ('default' in schema) {
     lines.push(`- **Default**: \`${JSON.stringify(schema.default)}\``)
   }

@@ -108,6 +108,29 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
           schema.returns = inferAnnotationType(p.node.returnType, getCode)
         }
 
+        // Extract and apply any manual types
+        schema.tags = schema.tags?.filter((tag) => {
+          if (tag.startsWith('@returns')) {
+            const { type } = tag.match(/^@returns\s+\{(?<type>[^}]+)\}/)?.groups || {}
+            if (type) {
+              schema.returns = schema.returns || {}
+              schema.returns.tsType = type
+              return false
+            }
+          }
+          if (tag.startsWith('@param')) {
+            const { type, param } = tag.match(/^@param\s+\{(?<type>[^}]+)\}\s+(?<param>\w+)/)?.groups || {}
+            if (type && param) {
+              const arg = schema.args?.find(arg => arg.name === param)
+              if (arg) {
+                arg.tsType = type
+                return false
+              }
+            }
+          }
+          return true
+        })
+
         // Replace function with it's meta
         p.replaceWith(t.variableDeclaration('const', [
           t.variableDeclarator(
@@ -164,6 +187,10 @@ function parseJSDocs (input: string | string[]): Schema {
   if (firstTag >= 0) {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
     for (const tag of tags) {
+      if (tag.startsWith('@type')) {
+        schema.tsType = tag.match(/@type\s+\{([^}]+)\}/)?.[1]
+        continue
+      }
       schema.tags.push(tag.trim())
     }
   }
