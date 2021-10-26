@@ -25,7 +25,7 @@ export type JSType =
 export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue)
 
 export interface TypeDescriptor {
-  type?: JSType | JSType[]
+  type?: JSType | JSType[] | string | string[]
   items?: TypeDescriptor | TypeDescriptor[]
 }
 

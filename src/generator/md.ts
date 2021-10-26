@@ -10,7 +10,7 @@ export function _generateMarkdown (schema: Schema, title: string, level: string)
 
   lines.push(`${level} ${title}`)
 
-  if (schema.type === 'object') {
+  if ('properties' in schema) {
     for (const key in schema.properties) {
       const val = schema.properties[key] as Schema
       lines.push('', ..._generateMarkdown(val, `\`${key}\``, level + '#'))

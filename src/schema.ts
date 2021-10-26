@@ -100,7 +100,10 @@ function normalizeSchema (schema: Partial<Schema>): asserts schema is Schema {
       schema.items.type = 'any'
     }
   }
-  if (schema.default === undefined && (schema.type === 'object' || schema.type === 'any')) {
-    schema.default = {}
+  if (schema.default === undefined && ('properties' in schema || schema.type === 'object' || schema.type === 'any')) {
+    const propsWithDefaults = Object.entries(schema.properties || {})
+      .filter(([, prop]) => 'default' in prop)
+      .map(([key, value]) => [key, value.default])
+    schema.default = Object.fromEntries(propsWithDefaults)
   }
 }

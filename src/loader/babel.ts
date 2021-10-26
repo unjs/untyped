@@ -108,6 +108,29 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
           schema.returns = inferAnnotationType(p.node.returnType, getCode)
         }
 
+        // Extract and apply any manual types
+        schema.tags = schema.tags?.filter((tag) => {
+          if (tag.startsWith('@returns')) {
+            const { type } = tag.match(/^@returns\s+\{(?<type>[^}]+)\}/)?.groups || {}
+            if (type) {
+              schema.returns = schema.returns || {}
+              schema.returns.type = type
+              return false
+            }
+          }
+          if (tag.startsWith('@param')) {
+            const { type, param } = tag.match(/^@param\s+\{(?<type>[^}]+)\}\s+(?<param>\w+)/)?.groups || {}
+            if (type && param) {
+              const arg = schema.args?.find(arg => arg.name === param)
+              if (arg) {
+                arg.type = type
+                return false
+              }
+            }
+          }
+          return true
+        })
+
         // Replace function with it's meta
         p.replaceWith(t.variableDeclaration('const', [
           t.variableDeclarator(
@@ -164,6 +187,10 @@ function parseJSDocs (input: string | string[]): Schema {
   if (firstTag >= 0) {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
     for (const tag of tags) {
+      if (tag.startsWith('@type')) {
+        schema.type = tag.match(/@type\s+\{([^}]+)\}/)?.[1]
+        continue
+      }
       schema.tags.push(tag.trim())
     }
   }
@@ -196,7 +223,7 @@ function astify (val: any) {
   )
 }
 
-const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
+const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType | 'RegExp'>> = {
   StringLiteral: 'string',
   BooleanLiteral: 'boolean',
   BigIntLiteral: 'bigint',
@@ -205,7 +232,7 @@ const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
   ObjectExpression: 'object',
   FunctionExpression: 'function',
   ArrowFunctionExpression: 'function',
-  RegExpLiteral: 'RegExp' as JSType
+  RegExpLiteral: 'RegExp'
 }
 
 function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
@@ -219,7 +246,7 @@ function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   }
   if (e.type === 'NewExpression' && e.callee.type === 'Identifier') {
     return {
-      type: e.callee.name as JSType
+      type: e.callee.name
     }
   }
   if (e.type === 'ArrayExpression' || e.type === 'TupleExpression') {
@@ -229,7 +256,7 @@ function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
     return {
       type: 'array',
       items: {
-        type: normalizeTypes(itemTypes) as JSType
+        type: normalizeTypes(itemTypes)
       }
     }
   }
@@ -253,7 +280,7 @@ function inferTSType (tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor | nu
       }
     }
     return {
-      type: getCode(tsType.loc) as JSType
+      type: getCode(tsType.loc)
     }
   }
   if (tsType.type === 'TSUnionType') {
@@ -267,7 +294,7 @@ function inferTSType (tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor | nu
   }
   // if (tsType.type.endsWith('Keyword')) {
   return {
-    type: getCode(tsType.loc) as JSType
+    type: getCode(tsType.loc)
   }
   // }
   // return null
