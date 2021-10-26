@@ -64,16 +64,10 @@ function _genTypes (schema: Schema, spaces: string): string[] {
 }
 
 function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
-  if (!type) {
-    return 'any'
-  }
   if (Array.isArray(type)) {
     return [].concat(normalizeTypes(type.map(t => getTsType(t)))).join('|') || 'any'
   }
-  if (type.tsType) {
-    return type.tsType
-  }
-  if (!type.type) {
+  if (!type || !type.type) {
     return 'any'
   }
   if (Array.isArray(type.type)) {
@@ -95,7 +89,7 @@ export function genFunctionArgs (args: Schema['args']) {
     if (arg.optional || arg.default) {
       argStr += '?'
     }
-    if (arg.type || arg.tsType) {
+    if (arg.type) {
       argStr += `: ${getTsType(arg)}`
     }
     return argStr

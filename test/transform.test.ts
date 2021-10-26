@@ -65,6 +65,31 @@ describe('transform (functions)', () => {
     })
   })
 
+  it('correctly uses JSdoc return types', () => {
+    const result = transform(`
+      /**
+       * @untyped
+       * @param {number} a
+       * @param {number} b
+       * @returns {void}
+       */
+      export function add (a, b) {}
+    `)
+
+    expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {
+      $schema: {
+        type: 'function',
+        args: [
+          { name: 'a', type: 'number' },
+          { name: 'b', type: 'number' }
+        ],
+        returns: {
+          type: 'void'
+        }
+      }
+    })
+  })
+
   it('correctly handles a function assigned to a variable', () => {
     const results = [transform(`
       /** @untyped */
@@ -148,6 +173,27 @@ describe('transform (jsdoc)', () => {
             '@example\n```js\nexport default secretNumber = 42\n```',
             '@see https://nuxtjs.org'
           ]
+        }
+      }
+    })
+  })
+
+  it('correctly parses @type tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @type {'src' | 'root'}
+         */
+        srcDir: 'src'
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          type: "'src' | 'root'"
         }
       }
     })
