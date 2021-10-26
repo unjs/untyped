@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/unjs/untyped/compare/v0.2.9...v0.2.10) (2021-10-26)
+
+
+### Features
+
+* add support for `[@type](https://github.com/type)`, `[@param](https://github.com/param)` and `[@returns](https://github.com/returns)` typings ([#20](https://github.com/unjs/untyped/issues/20)) ([c5d5453](https://github.com/unjs/untyped/commit/c5d545317a2f49a3584ffc30650f767a763e0d15))
+
 ### [0.2.9](https://github.com/unjs/untyped/compare/v0.2.8...v0.2.9) (2021-09-21)
 
 
