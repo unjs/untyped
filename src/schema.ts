@@ -28,7 +28,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   if (!isObject(input)) {
     const schema = {
       type: getType(input),
-      default: input as JSValue
+      // Clone arrays to avoid mutation
+      default: Array.isArray(input) ? [...input] : input as JSValue
     }
     normalizeSchema(schema)
     ctx.resolveCache[id] = schema
@@ -86,8 +87,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   return schema
 }
 
-export function applyDefaults (ref: InputObject, input: InputObject) {
-  resolveSchema(ref, input)
+export function applyDefaults (defaults: InputObject, input: InputObject) {
+  resolveSchema(input, defaults)
   return input
 }
 
