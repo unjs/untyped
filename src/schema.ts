@@ -88,7 +88,7 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
 }
 
 export function applyDefaults (defaults: InputObject, input: InputObject) {
-  resolveSchema(input, defaults)
+  resolveSchema(defaults, input)
   return input
 }
 
