@@ -87,8 +87,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   return schema
 }
 
-export function applyDefaults (defaults: InputObject, input: InputObject) {
-  resolveSchema(defaults, input)
+export function applyDefaults (ref: InputObject, input: InputObject) {
+  resolveSchema(ref, input)
   return input
 }
 
