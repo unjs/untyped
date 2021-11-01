@@ -1,3 +1,4 @@
+import { pascalCase } from 'scule'
 import type { Schema, JSType, TypeDescriptor } from './types'
 
 export function escapeKey (val: string): string {
@@ -119,9 +120,20 @@ export function isJSType (val: unknown): val is JSType {
   return jsTypes.includes(val as any)
 }
 
-export function getTypeDescriptor (type: string | JSType) {
+const FRIENDLY_TYPE_RE = /typeof import\(['"](?<importName>[^'"]+)['"]\)(\[['"]|\.)(?<firstType>[^'"\s]+)(['"]\])?/g
+
+export function getTypeDescriptor (type: string | JSType): TypeDescriptor {
+  let markdownType = type
+  for (const match of type.matchAll(FRIENDLY_TYPE_RE)) {
+    const { importName, firstType } = match.groups || {}
+    if (importName && firstType) {
+      markdownType = markdownType.replace(match[0], pascalCase(importName) + pascalCase(firstType))
+    }
+  }
+
   return {
     ...isJSType(type) ? { type } : {},
-    tsType: type
+    tsType: type,
+    ...markdownType !== type ? { markdownType } : {}
   }
 }

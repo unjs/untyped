@@ -184,7 +184,11 @@ describe('transform (jsdoc)', () => {
         /**
          * @type {'src' | 'root'}
          */
-        srcDir: 'src'
+        srcDir: 'src',
+        /**
+         * @type {null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']}
+         */
+        posix: null
       }
     `)
     expectCodeToMatch(result, /export default ([\s\S]*)$/, {
@@ -194,6 +198,15 @@ describe('transform (jsdoc)', () => {
           title: '',
           description: '',
           tsType: "'src' | 'root'"
+        }
+      },
+      posix: {
+        $default: null,
+        $schema: {
+          title: '',
+          description: '',
+          tsType: "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
+          markdownType: 'null | PathPosix | NetSocket[\'PassThrough\']'
         }
       }
     })
