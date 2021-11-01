@@ -123,8 +123,12 @@ export function isJSType (val: unknown): val is JSType {
 const FRIENDLY_TYPE_RE = /typeof import\(['"](?<importName>[^'"]+)['"]\)(\[['"]|\.)(?<firstType>[^'"\s]+)(['"]\])?/g
 
 export function getTypeDescriptor (type: string | JSType): TypeDescriptor {
+  if (!type) {
+    return {}
+  }
+
   let markdownType = type
-  for (const match of type.matchAll(FRIENDLY_TYPE_RE)) {
+  for (const match of type.matchAll(FRIENDLY_TYPE_RE) || []) {
     const { importName, firstType } = match.groups || {}
     if (importName && firstType) {
       markdownType = markdownType.replace(match[0], pascalCase(importName) + pascalCase(firstType))

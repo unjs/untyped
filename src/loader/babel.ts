@@ -188,7 +188,13 @@ function parseJSDocs (input: string | string[]): Schema {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
     for (const tag of tags) {
       if (tag.startsWith('@type')) {
-        Object.assign(schema, getTypeDescriptor(tag.match(/@type\s+\{([^}]+)\}/)?.[1]))
+        const type = tag.match(/@type\s+\{([^}]+)\}/)?.[1]
+        Object.assign(schema, getTypeDescriptor(type))
+        const typedef = tags.find(t => t.match(/@typedef\s+\{([^}]+)\} (.*)/)?.[2] === type)
+        if (typedef) {
+          schema.markdownType = type
+          schema.tsType = typedef.match(/@typedef\s+\{([^}]+)\}/)?.[1]
+        }
         continue
       }
       schema.tags.push(tag.trim())

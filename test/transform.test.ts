@@ -212,6 +212,29 @@ describe('transform (jsdoc)', () => {
     })
   })
 
+  it('correctly parses @typedef tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @typedef {'src' | 'root'} HumanReadable
+         * @type {HumanReadable}
+         */
+        srcDir: 'src',
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          tsType: "'src' | 'root'",
+          markdownType: 'HumanReadable'
+        }
+      }
+    })
+  })
+
   it('correctly parses only tags', () => {
     const result = transform(`
       export default {
