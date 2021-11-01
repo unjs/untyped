@@ -22,6 +22,8 @@ const SCHEMA_KEYS = [
   'description',
   '$schema',
   'type',
+  'tsType',
+  'markdownType',
   'tags',
   'args',
   'id',
