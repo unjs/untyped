@@ -25,7 +25,12 @@ export type JSType =
 export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue)
 
 export interface TypeDescriptor {
-  type?: JSType | JSType[] | string | string[]
+  /** Used internally to handle schema types */
+  type?: JSType | JSType[]
+  /** Fully resolved correct TypeScript type for generated TS declarations */
+  tsType?: string
+  /** Human-readable type description for use in generated documentation */
+  markdownType?: string
   items?: TypeDescriptor | TypeDescriptor[]
 }
 

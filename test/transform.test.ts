@@ -15,7 +15,7 @@ describe('transform (functions)', () => {
           type: 'string'
         }, {
           name: 'date',
-          type: 'Date'
+          tsType: 'Date'
         }, {
           name: 'append',
           optional: true,
@@ -42,7 +42,7 @@ describe('transform (functions)', () => {
           }
         }, {
           name: 'append',
-          type: 'false'
+          tsType: 'false'
         }]
       }
     })
@@ -59,7 +59,7 @@ describe('transform (functions)', () => {
         type: 'function',
         args: [],
         returns: {
-          type: 'void'
+          tsType: 'void'
         }
       }
     })
@@ -84,7 +84,7 @@ describe('transform (functions)', () => {
           { name: 'b', type: 'number' }
         ],
         returns: {
-          type: 'void'
+          tsType: 'void'
         }
       }
     })
@@ -193,7 +193,7 @@ describe('transform (jsdoc)', () => {
         $schema: {
           title: '',
           description: '',
-          type: "'src' | 'root'"
+          tsType: "'src' | 'root'"
         }
       }
     })
