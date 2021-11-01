@@ -229,7 +229,7 @@ function astify (val: any) {
   )
 }
 
-const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
+const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType | 'RegExp'>> = {
   StringLiteral: 'string',
   BooleanLiteral: 'boolean',
   BigIntLiteral: 'bigint',
@@ -237,15 +237,13 @@ const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType>> = {
   NumericLiteral: 'number',
   ObjectExpression: 'object',
   FunctionExpression: 'function',
-  ArrowFunctionExpression: 'function'
-  // RegExpLiteral: 'RegExp'
+  ArrowFunctionExpression: 'function',
+  RegExpLiteral: 'RegExp'
 }
 
 function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   if (AST_JSTYPE_MAP[e.type]) {
-    return {
-      type: AST_JSTYPE_MAP[e.type]
-    }
+    return getTypeDescriptor(AST_JSTYPE_MAP[e.type])
   }
   if (e.type === 'AssignmentExpression') {
     return inferArgType(e.right, getCode)
