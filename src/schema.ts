@@ -28,7 +28,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   if (!isObject(input)) {
     const schema = {
       type: getType(input),
-      default: input as JSValue
+      // Clone arrays to avoid mutation
+      default: Array.isArray(input) ? [...input] : input as JSValue
     }
     normalizeSchema(schema)
     ctx.resolveCache[id] = schema
