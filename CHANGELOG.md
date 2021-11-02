@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/unjs/untyped/compare/v0.2.10...v0.2.11) (2021-11-02)
+
+
+### Bug Fixes
+
+* clone array defaults ([#21](https://github.com/unjs/untyped/issues/21)) ([4d8016d](https://github.com/unjs/untyped/commit/4d8016d256308a392c2c602bc1d285d378676989))
+
 ### [0.2.10](https://github.com/unjs/untyped/compare/v0.2.9...v0.2.10) (2021-10-26)
 
 
