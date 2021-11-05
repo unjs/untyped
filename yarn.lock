@@ -4482,7 +4482,7 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
-scule@^0.2.1:
+scule@latest:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/scule/-/scule-0.2.1.tgz#0c1dc847b18e07219ae9a3832f2f83224e2079dc"
   integrity sha512-M9gnWtn3J0W+UhJOHmBxBTwv8mZCan5i1Himp60t6vvZcor0wr+IM0URKmIglsWJ7bRujNAVVN77fp+uZaWoKg==

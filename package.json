@@ -45,14 +45,12 @@
     "marked": "latest",
     "monaco-editor": "latest",
     "prismjs": "latest",
+    "scule": "latest",
     "siroc": "latest",
     "standard-version": "latest",
     "ts-jest": "latest",
     "vite": "latest",
     "vite-plugin-windicss": "^0.9.5",
     "vue": "3"
-  },
-  "dependencies": {
-    "scule": "^0.2.1"
   }
 }
