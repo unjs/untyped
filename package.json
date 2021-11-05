@@ -1,6 +1,6 @@
 {
   "name": "untyped",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "",
   "repository": "unjs/untyped",
   "license": "MIT",
@@ -21,9 +21,9 @@
   "scripts": {
     "build": "siroc build",
     "dev": "jest --watch",
-    "playground": "vite playground",
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
+    "playground": "vite playground",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "yarn lint && jest"
   },

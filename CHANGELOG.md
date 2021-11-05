@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.12](https://github.com/unjs/untyped/compare/v0.2.11...v0.2.12) (2021-11-05)
+
+
+### Features
+
+* `tsType`, `type` and `markdownType` [#22](https://github.com/unjs/untyped/issues/22)) ([10f989b](https://github.com/unjs/untyped/commit/10f989b0caeaa51b5d6cab2deb53cbdca95bac40))
+
 ### [0.2.11](https://github.com/unjs/untyped/compare/v0.2.10...v0.2.11) (2021-11-02)
 
 
