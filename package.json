@@ -50,7 +50,7 @@
     "standard-version": "latest",
     "ts-jest": "latest",
     "vite": "latest",
-    "vite-plugin-windicss": "^0.9.5",
+    "vite-plugin-windicss": "^1.5.1",
     "vue": "3"
   }
 }
