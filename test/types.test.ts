@@ -66,6 +66,7 @@ interface Untyped {
           }, {
             name: 'append',
             type: 'boolean',
+            tsType: 'false',
             optional: true
           }]
         }
@@ -74,7 +75,7 @@ interface Untyped {
 
     expect(types).toBe(`
 interface Untyped {
-   add: (test?: Array<string | number>, append?: boolean) => any,
+   add: (test?: Array<string | number>, append?: false) => any,
 }
 `.trim())
   })

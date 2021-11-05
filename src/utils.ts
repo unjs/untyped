@@ -1,3 +1,4 @@
+import { pascalCase } from 'scule'
 import type { Schema, JSType, TypeDescriptor } from './types'
 
 export function escapeKey (val: string): string {
@@ -87,15 +88,17 @@ export function mergedTypes (...types: TypeDescriptor[]): TypeDescriptor {
   types = types.filter(Boolean)
   if (types.length === 0) { return {} }
   if (types.length === 1) { return types[0] }
+  const tsTypes = normalizeTypes(types.map(t => t.tsType).flat().filter(Boolean))
   return {
     type: normalizeTypes(types.map(t => t.type).flat().filter(Boolean)),
+    tsType: Array.isArray(tsTypes) ? tsTypes.join(' | ') : tsTypes,
     items: mergedTypes(...types.map(t => t.items).flat().filter(Boolean))
   }
 }
 
-export function normalizeTypes (val: string[]) {
+export function normalizeTypes<T extends string> (val: T[]) {
   const arr = unique(val.filter(str => str))
-  if (!arr.length || arr.includes('any')) { return undefined }
+  if (!arr.length || arr.includes('any' as any)) { return undefined }
   return (arr.length > 1) ? arr : arr[0]
 }
 
@@ -108,5 +111,33 @@ export function cachedFn (fn) {
       resolved = true
     }
     return val
+  }
+}
+
+const jsTypes: JSType[] = ['string', 'number', 'bigint', 'boolean', 'symbol', 'function', 'object', 'any', 'array']
+
+export function isJSType (val: unknown): val is JSType {
+  return jsTypes.includes(val as any)
+}
+
+const FRIENDLY_TYPE_RE = /typeof import\(['"](?<importName>[^'"]+)['"]\)(\[['"]|\.)(?<firstType>[^'"\s]+)(['"]\])?/g
+
+export function getTypeDescriptor (type: string | JSType): TypeDescriptor {
+  if (!type) {
+    return {}
+  }
+
+  let markdownType = type
+  for (const match of type.matchAll(FRIENDLY_TYPE_RE) || []) {
+    const { importName, firstType } = match.groups || {}
+    if (importName && firstType) {
+      markdownType = markdownType.replace(match[0], pascalCase(importName) + pascalCase(firstType))
+    }
+  }
+
+  return {
+    ...isJSType(type) ? { type } : {},
+    tsType: type,
+    ...markdownType !== type ? { markdownType } : {}
   }
 }

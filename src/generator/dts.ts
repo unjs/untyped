@@ -22,6 +22,8 @@ const SCHEMA_KEYS = [
   'description',
   '$schema',
   'type',
+  'tsType',
+  'markdownType',
   'tags',
   'args',
   'id',
@@ -67,7 +69,13 @@ function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
   if (Array.isArray(type)) {
     return [].concat(normalizeTypes(type.map(t => getTsType(t)))).join('|') || 'any'
   }
-  if (!type || !type.type) {
+  if (!type) {
+    return 'any'
+  }
+  if (type.tsType) {
+    return type.tsType
+  }
+  if (!type.type) {
     return 'any'
   }
   if (Array.isArray(type.type)) {
@@ -89,7 +97,7 @@ export function genFunctionArgs (args: Schema['args']) {
     if (arg.optional || arg.default) {
       argStr += '?'
     }
-    if (arg.type) {
+    if (arg.type || arg.tsType) {
       argStr += `: ${getTsType(arg)}`
     }
     return argStr

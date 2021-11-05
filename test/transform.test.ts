@@ -15,7 +15,7 @@ describe('transform (functions)', () => {
           type: 'string'
         }, {
           name: 'date',
-          type: 'Date'
+          tsType: 'Date'
         }, {
           name: 'append',
           optional: true,
@@ -42,7 +42,7 @@ describe('transform (functions)', () => {
           }
         }, {
           name: 'append',
-          type: 'false'
+          tsType: 'false'
         }]
       }
     })
@@ -59,7 +59,7 @@ describe('transform (functions)', () => {
         type: 'function',
         args: [],
         returns: {
-          type: 'void'
+          tsType: 'void'
         }
       }
     })
@@ -84,7 +84,7 @@ describe('transform (functions)', () => {
           { name: 'b', type: 'number' }
         ],
         returns: {
-          type: 'void'
+          tsType: 'void'
         }
       }
     })
@@ -184,7 +184,11 @@ describe('transform (jsdoc)', () => {
         /**
          * @type {'src' | 'root'}
          */
-        srcDir: 'src'
+        srcDir: 'src',
+        /**
+         * @type {null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']}
+         */
+        posix: null
       }
     `)
     expectCodeToMatch(result, /export default ([\s\S]*)$/, {
@@ -193,7 +197,39 @@ describe('transform (jsdoc)', () => {
         $schema: {
           title: '',
           description: '',
-          type: "'src' | 'root'"
+          tsType: "'src' | 'root'"
+        }
+      },
+      posix: {
+        $default: null,
+        $schema: {
+          title: '',
+          description: '',
+          tsType: "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
+          markdownType: 'null | PathPosix | NetSocket[\'PassThrough\']'
+        }
+      }
+    })
+  })
+
+  it('correctly parses @typedef tags', () => {
+    const result = transform(`
+      export default {
+        /**
+         * @typedef {'src' | 'root'} HumanReadable
+         * @type {HumanReadable}
+         */
+        srcDir: 'src',
+      }
+    `)
+    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+      srcDir: {
+        $default: 'src',
+        $schema: {
+          title: '',
+          description: '',
+          tsType: "'src' | 'root'",
+          markdownType: 'HumanReadable'
         }
       }
     })

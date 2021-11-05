@@ -1,7 +1,7 @@
 import type { ConfigAPI, PluginItem, PluginObj } from '@babel/core'
 import * as t from '@babel/types'
 import { Schema, JSType, TypeDescriptor, FunctionArg } from '../types'
-import { normalizeTypes, mergedTypes, cachedFn } from '../utils'
+import { normalizeTypes, mergedTypes, cachedFn, getTypeDescriptor } from '../utils'
 
 import { version } from '../../package.json'
 
@@ -114,7 +114,7 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
             const { type } = tag.match(/^@returns\s+\{(?<type>[^}]+)\}/)?.groups || {}
             if (type) {
               schema.returns = schema.returns || {}
-              schema.returns.type = type
+              Object.assign(schema.returns, getTypeDescriptor(type))
               return false
             }
           }
@@ -123,7 +123,7 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
             if (type && param) {
               const arg = schema.args?.find(arg => arg.name === param)
               if (arg) {
-                arg.type = type
+                Object.assign(arg, getTypeDescriptor(type))
                 return false
               }
             }
@@ -188,7 +188,13 @@ function parseJSDocs (input: string | string[]): Schema {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
     for (const tag of tags) {
       if (tag.startsWith('@type')) {
-        schema.type = tag.match(/@type\s+\{([^}]+)\}/)?.[1]
+        const type = tag.match(/@type\s+\{([^}]+)\}/)?.[1]
+        Object.assign(schema, getTypeDescriptor(type))
+        const typedef = tags.find(t => t.match(/@typedef\s+\{([^}]+)\} (.*)/)?.[2] === type)
+        if (typedef) {
+          schema.markdownType = type
+          schema.tsType = typedef.match(/@typedef\s+\{([^}]+)\}/)?.[1]
+        }
         continue
       }
       schema.tags.push(tag.trim())
@@ -237,17 +243,13 @@ const AST_JSTYPE_MAP: Partial<Record<t.Expression['type'], JSType | 'RegExp'>> =
 
 function inferArgType (e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   if (AST_JSTYPE_MAP[e.type]) {
-    return {
-      type: AST_JSTYPE_MAP[e.type]
-    }
+    return getTypeDescriptor(AST_JSTYPE_MAP[e.type])
   }
   if (e.type === 'AssignmentExpression') {
     return inferArgType(e.right, getCode)
   }
   if (e.type === 'NewExpression' && e.callee.type === 'Identifier') {
-    return {
-      type: e.callee.name
-    }
+    return getTypeDescriptor(e.callee.name)
   }
   if (e.type === 'ArrayExpression' || e.type === 'TupleExpression') {
     const itemTypes = e.elements
@@ -279,9 +281,7 @@ function inferTSType (tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor | nu
         items: inferTSType(tsType.typeParameters.params[0], getCode)
       }
     }
-    return {
-      type: getCode(tsType.loc)
-    }
+    return getTypeDescriptor((getCode(tsType.loc)))
   }
   if (tsType.type === 'TSUnionType') {
     return mergedTypes(...tsType.types.map(t => inferTSType(t, getCode)))
@@ -293,9 +293,7 @@ function inferTSType (tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor | nu
     }
   }
   // if (tsType.type.endsWith('Keyword')) {
-  return {
-    type: getCode(tsType.loc)
-  }
+  return getTypeDescriptor(getCode(tsType.loc))
   // }
   // return null
 }

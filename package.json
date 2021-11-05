@@ -45,6 +45,7 @@
     "marked": "latest",
     "monaco-editor": "latest",
     "prismjs": "latest",
+    "scule": "latest",
     "siroc": "latest",
     "standard-version": "latest",
     "ts-jest": "latest",
