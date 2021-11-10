@@ -40,7 +40,9 @@ function _genTypes (schema: Schema, spaces: string): string[] {
   for (const key in schema.properties) {
     const val = schema.properties[key] as Schema
     buff.push(...generateJSDoc(val))
-    if (val.type === 'object' && !val.tsType) {
+    if (val.tsType) {
+      buff.push(`${escapeKey(key)}: ${val.tsType},\n`)
+    } else if (val.type === 'object') {
       buff.push(`${escapeKey(key)}: {`, ..._genTypes(val, spaces + ' '), '},\n')
     } else {
       let type: string
