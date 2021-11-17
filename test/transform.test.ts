@@ -231,7 +231,7 @@ describe('transform (jsdoc)', () => {
       export default {
         /**
          * @typedef {'src' | 'root'} HumanReadable
-         * @type {HumanReadable}
+         * @type {Array<HumanReadable>}
          */
         srcDir: 'src',
       }
@@ -242,8 +242,8 @@ describe('transform (jsdoc)', () => {
         $schema: {
           title: '',
           description: '',
-          tsType: "'src' | 'root'",
-          markdownType: 'HumanReadable'
+          tsType: "Array<'src' | 'root'>",
+          markdownType: 'Array<HumanReadable>'
         }
       }
     })

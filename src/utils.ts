@@ -120,7 +120,7 @@ export function isJSType (val: unknown): val is JSType {
   return jsTypes.includes(val as any)
 }
 
-const FRIENDLY_TYPE_RE = /typeof import\(['"](?<importName>[^'"]+)['"]\)(\[['"]|\.)(?<firstType>[^'"\s]+)(['"]\])?/g
+const FRIENDLY_TYPE_RE = /(typeof )?import\(['"](?<importName>[^'"]+)['"]\)(\[['"]|\.)(?<firstType>[^'"\s]+)(['"]\])?/g
 
 export function getTypeDescriptor (type: string | JSType): TypeDescriptor {
   if (!type) {
