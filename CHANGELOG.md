@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/unjs/untyped/compare/v0.2.13...v0.3.0) (2021-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* extract top-level type imports (#26)
+
+### Features
+
+* extract top-level type imports ([#26](https://github.com/unjs/untyped/issues/26)) ([33c76fc](https://github.com/unjs/untyped/commit/33c76fccf39f66ac880e6de37e7bf9f7b1296f52))
+
+
+### Bug Fixes
+
+* improve custom `tsType` handling ([#25](https://github.com/unjs/untyped/issues/25)) ([696214d](https://github.com/unjs/untyped/commit/696214d4512ecb905aa2ed592499d6f5dcbc7b7e))
+
 ### [0.2.13](https://github.com/unjs/untyped/compare/v0.2.12...v0.2.13) (2021-11-10)
 
 
