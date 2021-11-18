@@ -187,7 +187,7 @@ function parseJSDocs (input: string | string[]): Schema {
   if (firstTag >= 0) {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
     const typedefs = tags.reduce((typedefs, tag) => {
-      const { 1: typedef, 2: alias } = tag.match(/@typedef\s+\{([\S\s]+)\} (.*)/) || []
+      const { typedef, alias } = tag.match(/@typedef\s+\{(?<typedef>[\S\s]+)\} (?<alias>.*)/)?.groups || {}
       if (typedef && alias) {
         typedefs[typedef] = alias
       }
