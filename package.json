@@ -39,7 +39,7 @@
     "@vitejs/plugin-vue": "latest",
     "@vue/compiler-sfc": "latest",
     "eslint": "latest",
-    "hljs": "^6.2.3",
+    "hljs": "latest",
     "jest": "latest",
     "json-schema": "latest",
     "marked": "latest",
@@ -50,7 +50,7 @@
     "standard-version": "latest",
     "ts-jest": "latest",
     "vite": "latest",
-    "vite-plugin-windicss": "^1.5.1",
+    "vite-plugin-windicss": "latest",
     "vue": "3"
   }
 }
