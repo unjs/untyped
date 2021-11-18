@@ -59,7 +59,7 @@ function extractTypeImports (declarations: string) {
 }
 
 export function generateTypes (schema: Schema, name: string = 'Untyped') {
-  return extractTypeImports(`interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}')
+  return extractTypeImports(`export interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}')
 }
 
 function _genTypes (schema: Schema, spaces: string): string[] {
