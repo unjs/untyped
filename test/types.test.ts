@@ -79,4 +79,46 @@ interface Untyped {
 }
 `.trim())
   })
+
+  it('extracts type imports to top-level', () => {
+    const types = generateTypes(resolveSchema({
+      test: {
+        foo: {
+          $schema: {
+            tsType: 'typeof import("vue").VueConfig'
+          }
+        },
+        bar: {
+          $schema: {
+            tsType: 'typeof import("vue")["VueConfig"]'
+          }
+        },
+        baz: {
+          $schema: {
+            tsType: 'typeof import("vue").OtherImport'
+          }
+        },
+        quf: {
+          $schema: {
+            tsType: 'typeof import("other-lib").VueConfig'
+          }
+        }
+      }
+    }))
+    expect(types).toBe(`
+import type { VueConfig, OtherImport } from 'vue'
+import type { VueConfig as VueConfig0 } from 'other-lib'
+interface Untyped {
+   test: {
+    foo: VueConfig,
+
+    bar: VueConfig,
+
+    baz: OtherImport,
+
+    quf: VueConfig0,
+  },
+}
+`.trim())
+  })
 })

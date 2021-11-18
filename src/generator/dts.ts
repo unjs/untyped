@@ -30,8 +30,36 @@ const SCHEMA_KEYS = [
   'returns'
 ]
 
+const DECLARATION_RE = /typeof import\(['"](?<source>[^)]+)['"]\)(\.(?<type>\w+)|\[['"](?<type1>\w+)['"]\])/g
+
+function extractTypeImports (declarations: string) {
+  const typeImports: Record<string, Set<string>> = {}
+  const aliases = new Set<string>()
+  const imports = []
+  for (const match of declarations.matchAll(DECLARATION_RE)) {
+    const { source, type1, type = type1 } = match.groups || {}
+    typeImports[source] = typeImports[source] || new Set()
+    typeImports[source].add(type)
+  }
+  for (const source in typeImports) {
+    const sourceImports = []
+    for (const type of typeImports[source]) {
+      let count = 0
+      let alias = type
+      while (aliases.has(alias)) {
+        alias = `${type}${count++}`
+      }
+      aliases.add(alias)
+      sourceImports.push(alias === type ? type : `${type} as ${alias}`)
+      declarations = declarations.replace(new RegExp(`typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`, 'g'), alias)
+    }
+    imports.push(`import type { ${sourceImports.join(', ')} } from '${source}'`)
+  }
+  return [...imports, declarations].join('\n')
+}
+
 export function generateTypes (schema: Schema, name: string = 'Untyped') {
-  return `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
+  return extractTypeImports(`interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}')
 }
 
 function _genTypes (schema: Schema, spaces: string): string[] {
