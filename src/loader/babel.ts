@@ -111,7 +111,7 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
         // Extract and apply any manual types
         schema.tags = schema.tags?.filter((tag) => {
           if (tag.startsWith('@returns')) {
-            const { type } = tag.match(/^@returns\s+\{(?<type>.+)\}/)?.groups || {}
+            const { type } = tag.match(/^@returns\s+\{(?<type>[\S\s]+)\}/)?.groups || {}
             if (type) {
               schema.returns = schema.returns || {}
               Object.assign(schema.returns, getTypeDescriptor(type))
@@ -119,7 +119,7 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
             }
           }
           if (tag.startsWith('@param')) {
-            const { type, param } = tag.match(/^@param\s+\{(?<type>.+)\}\s+(?<param>\w+)/)?.groups || {}
+            const { type, param } = tag.match(/^@param\s+\{(?<type>[\S\s]+)\}\s+(?<param>\w+)/)?.groups || {}
             if (type && param) {
               const arg = schema.args?.find(arg => arg.name === param)
               if (arg) {
@@ -186,14 +186,22 @@ function parseJSDocs (input: string | string[]): Schema {
 
   if (firstTag >= 0) {
     const tags = clumpLines(lines.slice(firstTag), ['@'], '\n')
+    const typedefs = tags.reduce((typedefs, tag) => {
+      const { typedef, alias } = tag.match(/@typedef\s+\{(?<typedef>[\S\s]+)\} (?<alias>.*)/)?.groups || {}
+      if (typedef && alias) {
+        typedefs[typedef] = alias
+      }
+      return typedefs
+    }, {} as Record<string, string>)
     for (const tag of tags) {
       if (tag.startsWith('@type')) {
-        const type = tag.match(/@type\s+\{(.+)\}/)?.[1]
+        const type = tag.match(/@type\s+\{([\S\s]+)\}/)?.[1]
+        // Skip typedefs
+        if (!type) { continue }
         Object.assign(schema, getTypeDescriptor(type))
-        const typedef = tags.find(t => t.match(/@typedef\s+\{(.+)\} (.*)/)?.[2] === type)
-        if (typedef) {
+        for (const typedef in typedefs) {
           schema.markdownType = type
-          schema.tsType = typedef.match(/@typedef\s+\{(.+)\}/)?.[1]
+          schema.tsType = schema.tsType.replace(new RegExp(typedefs[typedef], 'g'), typedef)
         }
         continue
       }

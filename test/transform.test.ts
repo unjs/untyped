@@ -188,7 +188,13 @@ describe('transform (jsdoc)', () => {
         /**
          * @type {null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']}
          */
-        posix: null
+        posix: null,
+        /**
+         * @type {null | {
+         *   foo: 'bar' | 'baz'
+         * }}
+         */
+        multiline: null
       }
     `)
     expectCodeToMatch(result, /export default ([\s\S]*)$/, {
@@ -208,6 +214,14 @@ describe('transform (jsdoc)', () => {
           tsType: "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
           markdownType: 'null | PathPosix | NetSocket[\'PassThrough\']'
         }
+      },
+      multiline: {
+        $default: null,
+        $schema: {
+          title: '',
+          description: '',
+          tsType: "null | {\n  foo: 'bar' | 'baz'\n}"
+        }
       }
     })
   })
@@ -217,7 +231,7 @@ describe('transform (jsdoc)', () => {
       export default {
         /**
          * @typedef {'src' | 'root'} HumanReadable
-         * @type {HumanReadable}
+         * @type {Array<HumanReadable>}
          */
         srcDir: 'src',
       }
@@ -228,8 +242,8 @@ describe('transform (jsdoc)', () => {
         $schema: {
           title: '',
           description: '',
-          tsType: "'src' | 'root'",
-          markdownType: 'HumanReadable'
+          tsType: "Array<'src' | 'root'>",
+          markdownType: 'Array<HumanReadable>'
         }
       }
     })
