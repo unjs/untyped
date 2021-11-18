@@ -13,9 +13,9 @@
 <script>
 import 'prismjs/themes/prism.css'
 import { defineComponent, ref } from 'vue'
-import marked from 'marked'
+import { marked } from 'marked'
 import prism from 'prismjs'
-import { safeComputed } from '../utils'
+import { safeComputed } from '../composables/utils'
 
 export default defineComponent({
   props: {

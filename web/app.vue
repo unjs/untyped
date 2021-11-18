@@ -78,10 +78,8 @@
 </template>
 
 <script>
-import 'virtual:windi.css'
 import { defineComponent, defineAsyncComponent } from 'vue'
 import { resolveSchema, generateTypes, applyDefaults, generateMarkdown } from '../src'
-import { evaluateSource, persistedState, safeComputed, asyncImport } from './utils'
 import { defaultReference, defaultInput } from './consts'
 import LoadingComponent from './components/loading.vue'
 import Tabs from './components/tabs.vue'

@@ -23,7 +23,8 @@
     "dev": "jest --watch",
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
-    "playground": "vite playground",
+    "web": "nuxi dev web",
+    "web:build": "cd web && nuxi build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "yarn lint && jest"
   },
@@ -36,7 +37,6 @@
     "@types/babel__traverse": "latest",
     "@types/jest": "latest",
     "@types/node": "latest",
-    "@vitejs/plugin-vue": "latest",
     "@vue/compiler-sfc": "latest",
     "eslint": "latest",
     "hljs": "latest",
@@ -44,13 +44,12 @@
     "json-schema": "latest",
     "marked": "latest",
     "monaco-editor": "latest",
+    "nuxt-windicss": "^2.0.12",
+    "nuxt3": "^3.0.0-27287661.1e0e881",
     "prismjs": "latest",
     "scule": "latest",
     "siroc": "latest",
     "standard-version": "latest",
-    "ts-jest": "latest",
-    "vite": "latest",
-    "vite-plugin-windicss": "latest",
-    "vue": "3"
+    "ts-jest": "latest"
   }
 }
