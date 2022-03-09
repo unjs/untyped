@@ -6,12 +6,14 @@ export interface GenerateTypesOptions {
  addExport?: boolean
  addDefaults?: boolean
  defaultDescrption?: string
+ indentation?: number
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
   interfaceName: 'Untyped',
   addExport: true,
-  addDefaults: true
+  addDefaults: true,
+  indentation: 0
 }
 
 const TYPE_MAP: Record<JSType, string> = {
@@ -73,8 +75,12 @@ function extractTypeImports (declarations: string) {
 
 export function generateTypes (schema: Schema, opts: GenerateTypesOptions = {}) {
   opts = { ...GenerateTypesDefaults, ...opts }
-  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, ' ', opts).join('\n ') + '\n}'
-  return extractTypeImports(opts.addExport ? `export ${interfaceCode}` : interfaceCode)
+  const baseIden = ' '.repeat(opts.indentation)
+  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, baseIden + ' ', opts).join('\n ') + `\n${baseIden}}`
+  if (!opts.addExport) {
+    return baseIden + interfaceCode
+  }
+  return extractTypeImports(baseIden + `export ${interfaceCode}`)
 }
 
 function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions): string[] {
