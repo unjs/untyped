@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { resolveSchema, generateTypes } from '../src'
 
 describe('resolveSchema', () => {

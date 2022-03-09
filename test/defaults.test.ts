@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { applyDefaults } from '../src'
 
 describe('applyDefaults', () => {

@@ -7,7 +7,7 @@ import { version } from '../../package.json'
 
 type GetCodeFn = (loc: t.SourceLocation) => string
 
-export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
+const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
   api.cache.using(() => version)
 
   return <PluginObj>{
@@ -141,6 +141,8 @@ export default <PluginItem> function babelPluginUntyped (api: ConfigAPI) {
     }
   }
 }
+
+export default babelPluginUntyped
 
 function containsIncompleteCodeblock (line = '') {
   const codeDelimiters = line.split('\n').filter(line => line.startsWith('```')).length

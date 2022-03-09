@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { transform } from '../src/loader/transform'
 
 describe('transform (functions)', () => {
