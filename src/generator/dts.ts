@@ -1,6 +1,14 @@
 import type { Schema, JSType, TypeDescriptor } from '../types'
 import { escapeKey, normalizeTypes } from '../utils'
 
+export interface GenerateTypesOptions {
+ addExport?: boolean
+}
+
+const GenerateTypesDefaults: GenerateTypesOptions = {
+  addExport: true
+}
+
 const TYPE_MAP: Record<JSType, string> = {
   array: 'any[]',
   bigint: 'bigint',
@@ -58,8 +66,10 @@ function extractTypeImports (declarations: string) {
   return [...imports, declarations].join('\n')
 }
 
-export function generateTypes (schema: Schema, name: string = 'Untyped') {
-  return extractTypeImports(`export interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}')
+export function generateTypes (schema: Schema, name: string = 'Untyped', opts?: GenerateTypesOptions) {
+  opts = { ...GenerateTypesDefaults, ...opts }
+  const interfaceCode = `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
+  return extractTypeImports(opts.addExport ? `export ${interfaceCode}` : interfaceCode)
 }
 
 function _genTypes (schema: Schema, spaces: string): string[] {
