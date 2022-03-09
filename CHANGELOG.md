@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/unjs/untyped/compare/v0.3.0...v0.4.0) (2022-03-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **dts:** move interfaceName to options object
+* update transform subpath exports
+* update repo and dependencies
+
+### Features
+
+* **dts:** allow disable default comments ([7862f3b](https://github.com/unjs/untyped/commit/7862f3b35b018e6b3d8d5c64ff23f9eb1988d7d9))
+* **dts:** allow disable export generation ([f8d5f56](https://github.com/unjs/untyped/commit/f8d5f569cbeb4c53d1e95c184110358caac5a74b))
+* **dts:** default description for values ([9e2e6b4](https://github.com/unjs/untyped/commit/9e2e6b4b785f2b368669fbcc524c92efee6f0b37))
+* **dts:** initial indentation ([f4f40b9](https://github.com/unjs/untyped/commit/f4f40b911b3dab7f9b6a5133a388f92086cbc90c))
+
+
+* **dts:** move interfaceName to options object ([a573e3b](https://github.com/unjs/untyped/commit/a573e3bae4fac27c2628b0108e6cbeba7d4245b0))
+* update repo and dependencies ([614cdaa](https://github.com/unjs/untyped/commit/614cdaa852ebd114e13f2ce73f8790abe175ac2b))
+* update transform subpath exports ([c9e0e56](https://github.com/unjs/untyped/commit/c9e0e5622749668bb5be00b3b9e06d9f619dddc5))
+
 ## [0.3.0](https://github.com/unjs/untyped/compare/v0.2.13...v0.3.0) (2021-11-18)
 
 
