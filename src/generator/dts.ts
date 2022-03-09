@@ -3,10 +3,12 @@ import { escapeKey, normalizeTypes } from '../utils'
 
 export interface GenerateTypesOptions {
  addExport?: boolean
+ addDefaults?: boolean
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
-  addExport: true
+  addExport: true,
+  addDefaults: true
 }
 
 const TYPE_MAP: Record<JSType, string> = {
@@ -68,20 +70,20 @@ function extractTypeImports (declarations: string) {
 
 export function generateTypes (schema: Schema, name: string = 'Untyped', opts?: GenerateTypesOptions) {
   opts = { ...GenerateTypesDefaults, ...opts }
-  const interfaceCode = `interface ${name} {\n  ` + _genTypes(schema, ' ').join('\n ') + '\n}'
+  const interfaceCode = `interface ${name} {\n  ` + _genTypes(schema, ' ', opts).join('\n ') + '\n}'
   return extractTypeImports(opts.addExport ? `export ${interfaceCode}` : interfaceCode)
 }
 
-function _genTypes (schema: Schema, spaces: string): string[] {
+function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions): string[] {
   const buff: string[] = []
 
   for (const key in schema.properties) {
     const val = schema.properties[key] as Schema
-    buff.push(...generateJSDoc(val))
+    buff.push(...generateJSDoc(val, opts))
     if (val.tsType) {
       buff.push(`${escapeKey(key)}: ${val.tsType},\n`)
     } else if (val.type === 'object') {
-      buff.push(`${escapeKey(key)}: {`, ..._genTypes(val, spaces + ' '), '},\n')
+      buff.push(`${escapeKey(key)}: {`, ..._genTypes(val, spaces + ' ', opts), '},\n')
     } else {
       let type: string
       if (val.type === 'array') {
@@ -144,7 +146,7 @@ export function genFunctionArgs (args: Schema['args']) {
   }).join(', ') || ''
 }
 
-function generateJSDoc (schema: Schema): string[] {
+function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
   let buff = []
 
   if (schema.title) {
@@ -156,6 +158,7 @@ function generateJSDoc (schema: Schema): string[] {
   }
 
   if (
+    opts.addDefaults &&
     schema.type !== 'object' && schema.type !== 'any' &&
     !(Array.isArray(schema.default) && schema.default.length === 0)
   ) {
