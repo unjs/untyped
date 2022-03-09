@@ -2,12 +2,14 @@ import type { Schema, JSType, TypeDescriptor } from '../types'
 import { escapeKey, normalizeTypes } from '../utils'
 
 export interface GenerateTypesOptions {
+ interfaceName?: string
  addExport?: boolean
  addDefaults?: boolean
  defaultDescrption?: string
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
+  interfaceName: 'Untyped',
   addExport: true,
   addDefaults: true
 }
@@ -69,9 +71,9 @@ function extractTypeImports (declarations: string) {
   return [...imports, declarations].join('\n')
 }
 
-export function generateTypes (schema: Schema, name: string = 'Untyped', opts?: GenerateTypesOptions) {
+export function generateTypes (schema: Schema, opts: GenerateTypesOptions = {}) {
   opts = { ...GenerateTypesDefaults, ...opts }
-  const interfaceCode = `interface ${name} {\n  ` + _genTypes(schema, ' ', opts).join('\n ') + '\n}'
+  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, ' ', opts).join('\n ') + '\n}'
   return extractTypeImports(opts.addExport ? `export ${interfaceCode}` : interfaceCode)
 }
 
