@@ -14,7 +14,7 @@ const GenerateTypesDefaults: GenerateTypesOptions = {
   interfaceName: 'Untyped',
   addExport: true,
   addDefaults: true,
-  allowExtraKeys: false,
+  allowExtraKeys: undefined,
   indentation: 0
 }
 
@@ -113,7 +113,7 @@ function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions):
     buff.push(last.substr(0, last.length - 1))
   }
 
-  if (!buff.length || opts.allowExtraKeys) {
+  if (opts.allowExtraKeys === true || (!buff.length && opts.allowExtraKeys !== false)) {
     buff.push('[key: string]: any')
   }
 
