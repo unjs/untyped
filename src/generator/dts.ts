@@ -4,6 +4,7 @@ import { escapeKey, normalizeTypes } from '../utils'
 export interface GenerateTypesOptions {
  addExport?: boolean
  addDefaults?: boolean
+ defaultDescrption?: string
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
@@ -155,6 +156,8 @@ function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
 
   if (schema.description) {
     buff.push(schema.description)
+  } else if (opts.defaultDescrption && schema.type !== 'object') {
+    buff.push(opts.defaultDescrption)
   }
 
   if (
