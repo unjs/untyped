@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/unjs/untyped/compare/v0.4.0...v0.4.1) (2022-03-09)
+
+
+### Features
+
+* **dts:** allowExtraKeys ([38eb888](https://github.com/unjs/untyped/commit/38eb8888044e1b8a1aff6e1da6a51fa76daece4b))
+
 ## [0.4.0](https://github.com/unjs/untyped/compare/v0.3.0...v0.4.0) (2022-03-09)
 
 
