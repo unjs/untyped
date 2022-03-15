@@ -34,10 +34,14 @@
     "web": "nuxi dev web",
     "web:build": "cd web && nuxi build"
   },
+  "dependencies": {
+    "@babel/core": "^7.17.7",
+    "@babel/standalone": "^7.17.7",
+    "@babel/types": "^7.17.0",
+    "scule": "^0.2.1"
+  },
   "devDependencies": {
-    "@babel/standalone": "latest",
     "@babel/template": "latest",
-    "@babel/types": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
@@ -52,7 +56,6 @@
     "nuxt-windicss": "latest",
     "nuxt3": "latest",
     "prismjs": "latest",
-    "scule": "latest",
     "standard-version": "latest",
     "unbuild": "latest",
     "vitest": "latest"

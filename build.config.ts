@@ -8,12 +8,7 @@ export default defineBuildConfig({
     './src/loader/transform'
   ],
   rollup: {
-    inlineDependencies: true,
+    // inlineDependencies: true,
     emitCJS: true
-  },
-  externals: [
-    '@babel/core',
-    '@babel/types',
-    '@babel/standalone'
-  ]
+  }
 })
