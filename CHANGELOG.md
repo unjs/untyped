@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/unjs/untyped/compare/v0.4.2...v0.4.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* **pkg:** add implicit dependencies ([c3f77bc](https://github.com/unjs/untyped/commit/c3f77bc6a5000c165b331052ba5db2aa84ed0460)), closes [#29](https://github.com/unjs/untyped/issues/29)
+
 ### [0.4.2](https://github.com/unjs/untyped/compare/v0.4.1...v0.4.2) (2022-03-09)
 
 
