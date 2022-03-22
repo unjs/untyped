@@ -159,6 +159,8 @@ describe('transform (jsdoc)', () => {
          * \`\`\`
          *
          * @see https://nuxtjs.org
+         * @requires nuxt@1.2.3
+         * @requires pkg2
          */
         srcDir: 'src'
       }
@@ -173,7 +175,11 @@ describe('transform (jsdoc)', () => {
             '@note This is a note.\nthat is on two lines',
             '@example\n```js\nexport default secretNumber = 42\n```',
             '@see https://nuxtjs.org'
-          ]
+          ],
+          $constraints: {
+            nuxt: '1.2.3',
+            pkg2: '*'
+          }
         }
       }
     })
