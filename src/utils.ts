@@ -54,19 +54,25 @@ export function setValue (obj: Record<string, any>, path: string, val: any) {
   const keys = path.split('.')
   const _key = keys.pop()
   for (const key of keys) {
+    if (!obj || typeof obj !== 'object') {
+      return
+    }
     if (!(key in obj)) {
       obj[key] = {}
     }
     obj = obj[key]
   }
   if (_key) {
+    if (!obj || typeof obj !== 'object') {
+      return
+    }
     obj[_key] = val
   }
 }
 
 export function getValue <V = any> (obj: Record<string, any>, path: string) {
   for (const key of path.split('.')) {
-    if (!(key in obj)) {
+    if (!obj || typeof obj !== 'object' || !(key in obj)) {
       return undefined
     }
     obj = obj[key]
