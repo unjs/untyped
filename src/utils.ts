@@ -66,7 +66,7 @@ export function setValue (obj: Record<string, any>, path: string, val: any) {
 
 export function getValue <V = any> (obj: Record<string, any>, path: string) {
   for (const key of path.split('.')) {
-    if (!(key in obj)) {
+    if (!obj || typeof obj !== 'object' || !(key in obj)) {
       return undefined
     }
     obj = obj[key]
