@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/unjs/untyped/compare/v0.4.3...v0.4.4) (2022-03-31)
+
+
+### Bug Fixes
+
+* check for object type when recursing into a property ([#31](https://github.com/unjs/untyped/issues/31)) ([13bd920](https://github.com/unjs/untyped/commit/13bd920fcdba82f23914f2c43d0eb0d5c591e987))
+
 ### [0.4.3](https://github.com/unjs/untyped/compare/v0.4.2...v0.4.3) (2022-03-15)
 
 
