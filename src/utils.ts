@@ -63,6 +63,9 @@ export function setValue (obj: Record<string, any>, path: string, val: any) {
     obj = obj[key]
   }
   if (_key) {
+    if (!obj || typeof obj !== 'object') {
+      return
+    }
     obj[_key] = val
   }
 }
