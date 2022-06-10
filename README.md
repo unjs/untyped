@@ -123,7 +123,7 @@ interface Untyped {
 ```js
 import { resolveSchema, generateTypes, generateMarkdown } from 'untyped'
 
-const markdown = generateMarkdown(generateTypes(resolveSchema(defaultPlanet)))
+const markdown = generateMarkdown(resolveSchema(defaultPlanet))
 ```
 
 Output:
