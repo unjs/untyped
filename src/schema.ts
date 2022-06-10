@@ -3,12 +3,14 @@ import type { InputObject, InputValue, JSValue, Schema } from './types'
 
 interface _ResolveCtx {
   root: InputObject
-  defaults?: InputObject,
+  defaults?: InputObject
+  limiter?: (constraints: Record<string, string>) => boolean
   resolveCache: Record<string, Schema>
 }
 
-export function resolveSchema (obj: InputObject, defaults?: InputObject) {
+export function resolveSchema (obj: InputObject, defaults?: InputObject, resolveOptions?: Pick<_ResolveCtx, 'limiter'>) {
   const schema = _resolveSchema(obj, '', {
+    ...resolveOptions,
     root: obj,
     defaults,
     resolveCache: {}
@@ -42,6 +44,10 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   // Clone to avoid mutation
   const node = { ...input as any } as InputObject
 
+  if (ctx.limiter && '$constraints' in node && !ctx.limiter(node.$constraints)) {
+    return undefined
+  }
+
   const schema: Schema = ctx.resolveCache[id] = {
     ...node.$schema,
     id: '#' + id.replace(/\./g, '/')
@@ -50,12 +56,15 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   // Resolve children
   for (const key in node) {
     // Ignore special keys
-    if (key === '$resolve' || key === '$schema' || key === '$default') {
+    if (key === '$resolve' || key === '$schema' || key === '$default' || key === '$constraints') {
       continue
     }
     schema.properties = schema.properties || {}
     if (!schema.properties[key]) {
-      schema.properties[key] = _resolveSchema(node[key], joinPath(id, key), ctx)
+      const value = _resolveSchema(node[key], joinPath(id, key), ctx)
+      if (value !== undefined) {
+        schema.properties[key] = _resolveSchema(node[key], joinPath(id, key), ctx)
+      }
     }
   }
 

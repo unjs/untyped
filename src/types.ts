@@ -48,6 +48,7 @@ export interface Schema extends TypeDescriptor {
   title?: string
   description?: string
   $schema?: string
+  $constraints?: Record<string, string>
   tags?: string[]
   args?: FunctionArg[]
   returns?: TypeDescriptor,

@@ -38,6 +38,7 @@ const SCHEMA_KEYS = [
   'title',
   'description',
   '$schema',
+  '$constraints',
   'type',
   'tsType',
   'markdownType',
@@ -186,6 +187,9 @@ function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
   for (const key in schema) {
     if (!SCHEMA_KEYS.includes(key)) {
       buff.push('', `@${key} ${schema[key]}`)
+    }
+    if (key === '$constraints') {
+      buff.push(...Object.entries(schema[key]).map(([pkg, version]) => `@requires ${pkg}@${version}`))
     }
   }
 

@@ -121,6 +121,46 @@ describe('resolveSchema', () => {
     })
   })
 
+  it('with constraints', () => {
+    const schema = resolveSchema({
+      foo: {
+        $default: '123',
+        $resolve: val => parseInt(val),
+        $constraints: { test: 'bar' }
+      },
+      bar: {
+        $default: '123',
+        $resolve: val => parseInt(val),
+        $constraints: { test: 'baz' }
+      },
+      qux: {
+        $default: '123',
+        $resolve: val => parseInt(val)
+      }
+    }, undefined, { limiter: constraints => constraints.test === 'bar' })
+
+    expect(schema).toMatchObject({
+      default: {
+        foo: 123,
+        qux: 123
+      },
+      id: '#',
+      properties: {
+        foo: {
+          default: 123,
+          id: '#foo',
+          type: 'number'
+        },
+        qux: {
+          default: 123,
+          id: '#qux',
+          type: 'number'
+        }
+      },
+      type: 'object'
+    })
+  })
+
   it('array', () => {
     const schema = resolveSchema({
       empty: [],

@@ -196,6 +196,14 @@ function parseJSDocs (input: string | string[]): Schema {
       return typedefs
     }, {} as Record<string, string>)
     for (const tag of tags) {
+      if (tag.startsWith('@requires')) {
+        const { pkg, version } = tag.match(/^@requires\s+(?<pkg>([^\s/][^@\s/]+\/)*[^\s/][^@\s]+)(@(?<version>.+))?$/)?.groups || {}
+        if (pkg) {
+          schema.$constraints = schema.$constraints || {}
+          schema.$constraints[pkg] = version || '*'
+        }
+        continue
+      }
       if (tag.startsWith('@type')) {
         const type = tag.match(/@type\s+\{([\S\s]+)\}/)?.[1]
         // Skip typedefs

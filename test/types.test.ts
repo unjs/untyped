@@ -9,7 +9,10 @@ describe('resolveSchema', () => {
           $default: 'test value',
           $schema: {
             title: 'Test',
-            description: 'this is test'
+            description: 'this is test',
+            $constraints: {
+              nuxt: '^1'
+            }
           }
         }
       }
@@ -21,6 +24,7 @@ export interface Untyped {
      * Test
      * this is test
      * @default "test value"
+     * @requires nuxt@^1
     */
     foo: string,
   },
