@@ -6,26 +6,25 @@
 [![Codecov][codecov-src]][codecov-href]
 [![bundle][bundle-src]][bundle-href]
 
-
-
 **▶️ Check [online playground](https://untyped.unjs.io)**
 
-
-## Usage
-
-### Install package
-
-Install `untyped` npm package:
+## Install
 
 ```sh
 yarn add untyped
-# or
-npm i untyped
 ```
 
-### Define reference object
+```sh
+pnpm add untyped
+```
 
-First we have to define a reference object that describes types, defaults and normalizer
+```sh
+npm i --save untyped
+```
+
+## Usage
+
+First we have to define a reference object that describes types, defaults, and a `$resolve` method (normalizer).
 
 ```js
 const defaultPlanet = {
@@ -45,7 +44,11 @@ const defaultPlanet = {
 }
 ```
 
-### Resolving Schema
+## API
+
+<a name="resolving-schema"></a>
+
+### `resolveSchema`
 
 ```js
 import { resolveSchema } from 'untyped'
@@ -88,8 +91,9 @@ Output:
 }
 ```
 
-### Generating types
+<a name="generating-types"></a>
 
+### `generateTypes`
 
 ```js
 import { resolveSchema, generateTypes } from 'untyped'
@@ -117,11 +121,12 @@ interface Untyped {
 }
 ```
 
-### Generating markdown
+<a name="generating-markdown"></a>
 
+### `generateMarkdown`
 
 ```js
-import { resolveSchema, generateTypes, generateMarkdown } from 'untyped'
+import { resolveSchema, generateMarkdown } from 'untyped'
 
 const markdown = generateMarkdown(resolveSchema(defaultPlanet))
 ```
@@ -146,7 +151,9 @@ Output:
 - **Default**: `["moon"]`
 ```
 
-## Contribution
+---
+
+## Contributing
 
 - Clone repository
 - Install dependencies with `yarn install`
