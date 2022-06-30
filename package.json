@@ -54,7 +54,7 @@
     "marked": "latest",
     "monaco-editor": "latest",
     "nuxt-windicss": "latest",
-    "nuxt3": "latest",
+    "nuxt": "npm:nuxt3@latest",
     "prismjs": "latest",
     "standard-version": "latest",
     "unbuild": "latest",
