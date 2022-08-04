@@ -1,28 +1,28 @@
 import { reactive, watch, computed } from 'vue'
 
 const globalKeys = Object.getOwnPropertyNames(globalThis)
-  .filter(key => key[0].toLocaleLowerCase() === key[0] && key !== 'console')
+  .filter(key => key[0].toLocaleLowerCase() === key[0] && key !== 'console' && key !== 'module')
 
 export function evaluateSource (src) {
   // Basic commonjs transform
   src = src
-    .replace('export default', 'module.exports = ')
-    .replace(/export (const|let|var) (\w+) ?= ?/g, 'exports.$2 = ')
-    .replace(/export (function|class) (\w+)/g, 'exports.$2 = $1 $2 ')
+    .replace('export default', '_module._exports = ')
+    .replace(/export (const|let|var) (\w+) ?= ?/g, '_exports.$2 = ')
+    .replace(/export (function|class) (\w+)/g, '_exports.$2 = $1 $2 ')
 
   // eslint-disable-next-line no-new-func
   const fn = Function(`
-    const exports = {};
-    const module = { exports }
+    const _exports = {};
+    const _module = { _exports }
     const sandbox = {
-      module,
-      exports,
+      _module,
+      _exports,
       ${globalKeys.map(key => `"${key}": {}`).join(',')}
     }
     with (sandbox) {
       ${src};
     };
-    return sandbox.module.exports;
+    return sandbox._module._exports;
   `)
 
   return fn.call({})
