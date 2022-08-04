@@ -8,6 +8,7 @@ export interface GenerateTypesOptions {
  defaultDescrption?: string
  indentation?: number
  allowExtraKeys?: boolean
+ partial?: boolean,
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
@@ -15,6 +16,7 @@ const GenerateTypesDefaults: GenerateTypesOptions = {
   addExport: true,
   addDefaults: true,
   allowExtraKeys: undefined,
+  partial: false,
   indentation: 0
 }
 
@@ -92,9 +94,9 @@ function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions):
     const val = schema.properties[key] as Schema
     buff.push(...generateJSDoc(val, opts))
     if (val.tsType) {
-      buff.push(`${escapeKey(key)}: ${val.tsType},\n`)
+      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: ${val.tsType},\n`)
     } else if (val.type === 'object') {
-      buff.push(`${escapeKey(key)}: {`, ..._genTypes(val, spaces + ' ', opts), '},\n')
+      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: {`, ..._genTypes(val, spaces + ' ', opts), '},\n')
     } else {
       let type: string
       if (val.type === 'array') {
@@ -104,7 +106,7 @@ function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions):
       } else {
         type = getTsType(val)
       }
-      buff.push(`${escapeKey(key)}: ${type},\n`)
+      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: ${type},\n`)
     }
   }
 

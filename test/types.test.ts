@@ -14,18 +14,41 @@ describe('resolveSchema', () => {
         }
       }
     }))
-    expect(types).toBe(`
-export interface Untyped {
-   test: {
-    /**
-     * Test
-     * this is test
-     * @default "test value"
-    */
-    foo: string,
-  },
-}
-`.trim())
+    expect(types).toMatchInlineSnapshot(`
+      "export interface Untyped {
+         test: {
+          /**
+           * Test
+           * this is test
+           * @default \\"test value\\"
+          */
+          foo: string,
+        },
+      }"
+    `)
+  })
+  it('withOptions', () => {
+    const types = generateTypes(resolveSchema({
+      test: {
+        a: 123,
+        foo: { bar: 123, baz: { x: 123 } }
+      }
+    }), { partial: true, addDefaults: false, addExport: false })
+    expect(types).toMatchInlineSnapshot(`
+      "interface Untyped {
+         test?: {
+          a?: number,
+
+          foo?: {
+             bar?: number,
+
+             baz?: {
+                 x?: number,
+             },
+          },
+        },
+      }"
+    `)
   })
 
   it('array', () => {
@@ -35,17 +58,17 @@ export interface Untyped {
       mixed: [true, 123]
     }))
 
-    expect(types).toBe(`
-export interface Untyped {
-   empty: Array<any>,
+    expect(types).toMatchInlineSnapshot(`
+      "export interface Untyped {
+         empty: Array<any>,
 
-  /** @default [1,2,3] */
-  numbers: Array<number>,
+        /** @default [1,2,3] */
+        numbers: Array<number>,
 
-  /** @default [true,123] */
-  mixed: Array<boolean|number>,
-}
-`.trim())
+        /** @default [true,123] */
+        mixed: Array<boolean|number>,
+      }"
+    `)
   })
 
   it('escapeKey', () => {
@@ -106,20 +129,20 @@ export interface Untyped {
         }
       }
     }))
-    expect(types).toBe(`
-import type { VueConfig, OtherImport } from 'vue'
-import type { VueConfig as VueConfig0 } from 'other-lib'
-export interface Untyped {
-   test: {
-    foo: VueConfig,
+    expect(types).toMatchInlineSnapshot(`
+      "import type { VueConfig, OtherImport } from 'vue'
+      import type { VueConfig as VueConfig0 } from 'other-lib'
+      export interface Untyped {
+         test: {
+          foo: VueConfig,
 
-    bar: VueConfig,
+          bar: VueConfig,
 
-    baz: OtherImport,
+          baz: OtherImport,
 
-    quf: VueConfig0,
-  },
-}
-`.trim())
+          quf: VueConfig0,
+        },
+      }"
+    `)
   })
 })
