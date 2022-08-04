@@ -6,26 +6,24 @@
 [![Codecov][codecov-src]][codecov-href]
 [![bundle][bundle-src]][bundle-href]
 
-
-
 **▶️ Check [online playground](https://untyped.unjs.io)**
 
+## Install
+
+```sh
+# npm
+npm i untyped
+
+# yarn
+yarn add untyped
+
+# pnpm
+pnpm add untyped
+```
 
 ## Usage
 
-### Install package
-
-Install `untyped` npm package:
-
-```sh
-yarn add untyped
-# or
-npm i untyped
-```
-
-### Define reference object
-
-First we have to define a reference object that describes types, defaults and normalizer
+First we have to define a reference object that describes types, defaults, and a `$resolve` method (normalizer).
 
 ```js
 const defaultPlanet = {
@@ -45,7 +43,9 @@ const defaultPlanet = {
 }
 ```
 
-### Resolving Schema
+## API
+
+### `resolveSchema`
 
 ```js
 import { resolveSchema } from 'untyped'
@@ -87,9 +87,7 @@ Output:
   "type": "object"
 }
 ```
-
-### Generating types
-
+### `generateTypes`
 
 ```js
 import { resolveSchema, generateTypes } from 'untyped'
@@ -117,11 +115,10 @@ interface Untyped {
 }
 ```
 
-### Generating markdown
-
+### `generateMarkdown`
 
 ```js
-import { resolveSchema, generateTypes, generateMarkdown } from 'untyped'
+import { resolveSchema, generateMarkdown } from 'untyped'
 
 const markdown = generateMarkdown(resolveSchema(defaultPlanet))
 ```
@@ -146,10 +143,12 @@ Output:
 - **Default**: `["moon"]`
 ```
 
-## Contribution
+## 💻 Development
 
-- Clone repository
-- Install dependencies with `yarn install`
+- Clone this repository
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
+- Install dependencies using `yarn install`
+- Run interactive tests using `yarn dev`
 - Use `yarn web` to start playground website
 - Use `yarn test` before push to ensure all tests and lint checks passing
 
