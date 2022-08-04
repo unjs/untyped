@@ -45,8 +45,6 @@ const defaultPlanet = {
 
 ## API
 
-<a name="resolving-schema"></a>
-
 ### `resolveSchema`
 
 ```js
