@@ -32,7 +32,7 @@
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "yarn lint && vitest",
     "web": "nuxi dev web",
-    "web:build": "cd web && nuxi build"
+    "web:build": "nuxi generate web"
   },
   "dependencies": {
     "@babel/core": "^7.18.10",
