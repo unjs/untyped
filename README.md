@@ -11,15 +11,14 @@
 ## Install
 
 ```sh
+# npm
+npm i untyped
+
+# yarn
 yarn add untyped
-```
 
-```sh
+# pnpm
 pnpm add untyped
-```
-
-```sh
-npm i --save untyped
 ```
 
 ## Usage
@@ -90,9 +89,6 @@ Output:
   "type": "object"
 }
 ```
-
-<a name="generating-types"></a>
-
 ### `generateTypes`
 
 ```js
@@ -121,8 +117,6 @@ interface Untyped {
 }
 ```
 
-<a name="generating-markdown"></a>
-
 ### `generateMarkdown`
 
 ```js
@@ -150,8 +144,6 @@ Output:
 - **Type**: `array`
 - **Default**: `["moon"]`
 ```
-
----
 
 ## Contributing
 
