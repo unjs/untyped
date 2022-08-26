@@ -27,7 +27,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.18.13.tgz#6aff7b350a1e8c3e40b029e46cbe78e24a913483"
   integrity sha512-5yUzC5LqyTFp2HLmDoxGQelcdYgSpP9xsnMWBphAscOdFrHSAVbLNzWiy32sVNDqJRDiJK6klfDnAgu6PAGSHw==
 
-"@babel/core@^7.1.0", "@babel/core@^7.18.10", "@babel/core@^7.18.13", "@babel/core@^7.18.6":
+"@babel/core@^7.1.0", "@babel/core@^7.18.13", "@babel/core@^7.18.6":
   version "7.18.13"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.18.13.tgz#9be8c44512751b05094a4d3ab05fc53a47ce00ac"
   integrity sha512-ZisbOvRRusFktksHSG6pjj1CSvkPkcZq/KHD45LAkVP/oiHJkNBZWfpvlLmX8OtHDG8IuzsFlVRWo08w7Qxn0A==
@@ -240,7 +240,7 @@
     "@babel/helper-plugin-utils" "^7.18.9"
     "@babel/plugin-syntax-typescript" "^7.18.6"
 
-"@babel/standalone@^7.18.11", "@babel/standalone@^7.18.13":
+"@babel/standalone@^7.18.13":
   version "7.18.13"
   resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.18.13.tgz#380fd841d95bfd55435282f323136c1ad2469b86"
   integrity sha512-5hjvvFkaXyfQri+s4CAZtx6FTKclfTNd2QN2RwgzCVJhnYYgKh4YFBCnNJSxurzvpSKD2NmpCkoWAkMc+j9y+g==
@@ -2334,9 +2334,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.202:
-  version "1.4.231"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.231.tgz#ae6de219c20aa690bc3d217ff151b208a9bd8ed6"
-  integrity sha512-E8WsUC60chToZUfxvVUXBb1U/mR/Df3GFX+mO3edtQnRTUt6L2XgpqBVWcGD/xrzQdINL1g/CEBPPn0YJ86Y6Q==
+  version "1.4.232"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.232.tgz#67a0a874b0057662244230d18d3a9847c135a9d9"
+  integrity sha512-nd+FW8xHjM+PxNWG44nKnwHaBDdVpJUZuI2sS2JJPt/QpdombnmoCRWEEQNnzaktdIQhsNWdD+dlqxwO8Bn99g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6573,13 +6573,13 @@ unstorage@^0.5.6:
     ws "^8.8.1"
 
 untyped@^0.4.4, untyped@^0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/untyped/-/untyped-0.4.5.tgz#2a93c62a36e1cf7e0d440042a90d54df0a2cdf9f"
-  integrity sha512-buq9URfOj4xAnVfu6BYNKzHZLHAzsCbHsDc/kHy66ESMqRpj00oD9qWf2M2qm0pC0DigsVxRF3uhOa5HJtrwGA==
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/untyped/-/untyped-0.4.6.tgz#2d999d8f034b535aa345c7e32d903e17615e25cb"
+  integrity sha512-nt+Wm+Kr5Ee8looglz8sKFg17HeSasegGw9XeMLic4sOgFVlVrBIvf+JVHGRWEIlEkHxV3o2wyzv+jAaYl6ksQ==
   dependencies:
-    "@babel/core" "^7.18.10"
-    "@babel/standalone" "^7.18.11"
-    "@babel/types" "^7.18.10"
+    "@babel/core" "^7.18.13"
+    "@babel/standalone" "^7.18.13"
+    "@babel/types" "^7.18.13"
     scule "^0.3.2"
 
 update-browserslist-db@^1.0.5:
@@ -6682,7 +6682,7 @@ vite-plugin-windicss@^1.8.7:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@0.22.1, vitest@latest:
+vitest@0.22.1, vitest@^0.22.1:
   version "0.22.1"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.22.1.tgz#3122e6024bf782ee9aca53034017af7adb009c32"
   integrity sha512-+x28YTnSLth4KbXg7MCzoDAzPJlJex7YgiZbUh6YLp0/4PqVZ7q7/zyfdL0OaPtKTpNiQFPpMC8Y2MSzk8F7dw==
