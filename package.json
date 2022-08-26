@@ -29,7 +29,7 @@
     "dev": "vitest",
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
-    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
+    "release": "yarn lint && yarn test && standard-version && git push --follow-tags && npm publish",
     "test": "vitest --coverage",
     "web": "nuxi dev web",
     "web:build": "nuxi generate web"
