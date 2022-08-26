@@ -380,41 +380,6 @@ describe('transform (jsdoc)', () => {
     `)
   })
 
-  it('correctly parses tags', () => {
-    const result = transform(`
-      export default {
-        /**
-         * Define the source directory of your Nuxt application.
-         *
-         * This property can be overwritten.
-         * @note This is a note.
-         * that is on two lines
-         * @example
-         * \`\`\`js
-         * export default secretNumber = 42
-         * \`\`\`
-         *
-         * @see https://nuxtjs.org
-         */
-        srcDir: 'src'
-      }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
-      srcDir: {
-        $default: 'src',
-        $schema: {
-          title: 'Define the source directory of your Nuxt application.',
-          description: 'This property can be overwritten.',
-          tags: [
-            '@note This is a note.\nthat is on two lines',
-            '@example\n```js\nexport default secretNumber = 42\n```',
-            '@see https://nuxtjs.org'
-          ]
-        }
-      }
-    })
-  })
-
   it('support define function', () => {
     const result = transform(`
       export default defineUntypedSchema({
