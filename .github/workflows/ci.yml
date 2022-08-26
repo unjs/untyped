@@ -21,5 +21,5 @@ jobs:
       - run: yarn install
       - run: yarn lint
       - run: yarn build
-      - run: yarn vitest --coverage
+      - run: yarn test
       - uses: codecov/codecov-action@v3

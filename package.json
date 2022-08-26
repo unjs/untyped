@@ -30,7 +30,7 @@
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "yarn lint && vitest run --coverage",
+    "test": "vitest --coverage",
     "web": "nuxi dev web",
     "web:build": "nuxi generate web"
   },
