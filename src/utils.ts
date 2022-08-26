@@ -1,5 +1,9 @@
 import { pascalCase } from 'scule'
-import type { Schema, JSType, TypeDescriptor } from './types'
+import type { Schema, JSType, TypeDescriptor, SchemaDefinition } from './types'
+
+export function defineUntypedSchema (options: SchemaDefinition) {
+  return options
+}
 
 export function escapeKey (val: string): string {
   return /^\w+$/.test(val) ? val : `"${val}"`

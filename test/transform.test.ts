@@ -379,6 +379,41 @@ describe('transform (jsdoc)', () => {
       };"
     `)
   })
+
+  it('support define function', () => {
+    const result = transform(`
+      export default defineUntypedSchema({
+        /**
+         * @type {'src' | 'root'}
+         */
+        srcDir: 'src',
+        multiline: {
+          $resolve(val) {
+            return val || false
+          }
+        }
+      })
+    `)
+    expect(result).toMatchInlineSnapshot(`
+      "export default defineUntypedSchema({
+        srcDir: {
+          $default: 'src',
+          $schema: {
+            title: \\"\\",
+            description: \\"\\",
+            tags: [],
+            tsType: \\"'src' | 'root'\\"
+          }
+        },
+        multiline: {
+          $resolve(val) {
+            return val || false;
+          }
+
+        }
+      });"
+    `)
+  })
 })
 
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {

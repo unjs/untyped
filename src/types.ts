@@ -54,9 +54,12 @@ export interface Schema extends TypeDescriptor {
 }
 
 export interface InputObject {
-  [key: string]: any
   $schema?: Schema
   $resolve?: ResolveFn
+  $default?: any
+  [key: string]: any
 }
 
 export type InputValue = InputObject | JSValue
+
+export type SchemaDefinition = { [x:string]: JSValue | InputObject | SchemaDefinition }
