@@ -58,6 +58,6 @@
     "prismjs": "latest",
     "standard-version": "latest",
     "unbuild": "latest",
-    "vitest": "latest"
+    "vitest": "^0.22.1"
   }
 }
