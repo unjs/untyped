@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.6](https://github.com/unjs/untyped/compare/v0.4.5...v0.4.6) (2022-08-26)
+
+
+### Bug Fixes
+
+* **loader:** support type assertion ([#45](https://github.com/unjs/untyped/issues/45)) ([d93f6bd](https://github.com/unjs/untyped/commit/d93f6bda5a5883e6035f9ff342d39583c2d8fbca))
+
 ### [0.4.5](https://github.com/unjs/untyped/compare/v0.4.4...v0.4.5) (2022-08-04)
 
 ### [0.4.4](https://github.com/unjs/untyped/compare/v0.4.3...v0.4.4) (2022-03-31)
