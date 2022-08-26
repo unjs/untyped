@@ -31,8 +31,12 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
               .map(c => c.value)
           )
 
-          if (p.node.value.type === 'ObjectExpression') {
-            const schemaProp = p.node.value.properties.find(prop =>
+          const valueNode = (p.node.value.type === 'TSTypeAssertion' || p.node.value.type === 'TSAsExpression')
+            ? p.node.value.expression
+            : p.node.value
+
+          if (valueNode.type === 'ObjectExpression') {
+            const schemaProp = valueNode.properties.find(prop =>
               ('key' in prop) && prop.key.type === 'Identifier' && prop.key.name === '$schema'
             )
             if (schemaProp && 'value' in schemaProp) {
@@ -45,12 +49,12 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
               }
             } else {
               // Object has not $schema
-              p.node.value.properties.unshift(...astify({ $schema: schema }).properties)
+              valueNode.properties.unshift(...astify({ $schema: schema }).properties)
             }
           } else {
             // Literal value
             p.node.value = t.objectExpression([
-              t.objectProperty(t.identifier('$default'), p.node.value),
+              t.objectProperty(t.identifier('$default'), valueNode),
               t.objectProperty(t.identifier('$schema'), astify(schema))
             ])
           }

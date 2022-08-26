@@ -309,10 +309,80 @@ describe('transform (jsdoc)', () => {
       }
     })
   })
+
+  it('correctly parses type assertion', () => {
+    const result = transform(`
+      import type { InputObject } from 'untyped'
+      export default {
+        /**
+         * @typedef {'src' | 'root'} HumanReadable
+         * @type {Array<HumanReadable>}
+         */
+        srcDir: <InputObject>{
+          $resolve(val, get) {
+            return val ?? 'src'
+          }
+        }
+      }
+    `)
+    expect(result).toMatchInlineSnapshot(`
+      "export default {
+        srcDir: {
+          $schema: {
+            title: \\"\\",
+            description: \\"\\",
+            tags: [],
+            tsType: \\"Array<'src' | 'root'>\\",
+            markdownType: \\"Array<HumanReadable>\\"
+          },
+
+          $resolve(val, get) {
+            return val ?? 'src';
+          }
+
+        }
+      };"
+    `)
+  })
+
+  it('correctly parses type as assertion', () => {
+    const result = transform(`
+      import type { InputObject } from 'untyped'
+      export default {
+        /**
+         * @typedef {'src' | 'root'} HumanReadable
+         * @type {Array<HumanReadable>}
+         */
+        srcDir: {
+          $resolve(val, get) {
+            return val ?? 'src'
+          }
+        } as InputObject
+      }
+    `)
+    expect(result).toMatchInlineSnapshot(`
+      "export default {
+        srcDir: {
+          $schema: {
+            title: \\"\\",
+            description: \\"\\",
+            tags: [],
+            tsType: \\"Array<'src' | 'root'>\\",
+            markdownType: \\"Array<HumanReadable>\\"
+          },
+
+          $resolve(val, get) {
+            return val ?? 'src';
+          }
+
+        }
+      };"
+    `)
+  })
 })
 
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
-  const [, result] = code.match(pattern)
+  const [, result] = code.match(pattern) || []
   expect(result).toBeDefined()
   // eslint-disable-next-line
   const obj = Function('"use strict";return (' + result.replace(/;$/, '') + ')')()
