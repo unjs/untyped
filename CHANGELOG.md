@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.7](https://github.com/unjs/untyped/compare/v0.4.6...v0.4.7) (2022-08-26)
+
+
+### Features
+
+* `defineUntypedSchema` and `SchemaDefinition` ([#46](https://github.com/unjs/untyped/issues/46)) ([806a2a9](https://github.com/unjs/untyped/commit/806a2a9ed1d54710e1c2a21b5c09df23dd5a9cea))
+
 ### [0.4.6](https://github.com/unjs/untyped/compare/v0.4.5...v0.4.6) (2022-08-26)
 
 
