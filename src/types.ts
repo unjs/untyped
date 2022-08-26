@@ -62,4 +62,4 @@ export interface InputObject {
 
 export type InputValue = InputObject | JSValue
 
-export type SchemaDefinition<T> = { [x:string]: JSValue | InputObject | SchemaDefinition<T> }
+export type SchemaDefinition = { [x:string]: JSValue | InputObject | SchemaDefinition }

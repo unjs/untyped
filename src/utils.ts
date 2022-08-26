@@ -1,7 +1,7 @@
 import { pascalCase } from 'scule'
 import type { Schema, JSType, TypeDescriptor, SchemaDefinition } from './types'
 
-export function defineUntypedSchema<T = any> (options: SchemaDefinition<T>) {
+export function defineUntypedSchema (options: SchemaDefinition) {
   return options
 }
 
