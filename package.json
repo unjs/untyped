@@ -46,7 +46,7 @@
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
     "@types/node": "latest",
-    "@vitest/coverage-c8": "^0.22.1",
+    "@vitest/coverage-c8": "^0.23.0",
     "@vue/compiler-sfc": "latest",
     "eslint": "latest",
     "hljs": "latest",
@@ -58,6 +58,6 @@
     "prismjs": "latest",
     "standard-version": "latest",
     "unbuild": "latest",
-    "vitest": "^0.22.1"
+    "vitest": "^0.23.0"
   }
 }
