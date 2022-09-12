@@ -22,7 +22,7 @@ export type JSType =
   'array'
 
 // eslint-disable-next-line no-use-before-define
-export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue)
+export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue | Promise<JSValue>)
 
 export interface TypeDescriptor {
   /** Used internally to handle schema types */
@@ -55,7 +55,7 @@ export interface Schema extends TypeDescriptor {
 
 export interface InputObject {
   $schema?: Schema
-  $resolve?: ResolveFn
+  $resolve?: ResolveFn | Promise<ResolveFn>
   $default?: any
   [key: string]: any
 }

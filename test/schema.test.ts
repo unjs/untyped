@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { resolveSchema } from '../src'
 
 describe('resolveSchema', () => {
-  it('direct value', () => {
-    const schema = resolveSchema({
+  it('direct value', async () => {
+    const schema = await resolveSchema({
       foo: 'bar',
       empty: {}
     })
@@ -22,8 +22,8 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('nested value', () => {
-    const schema = resolveSchema({
+  it('nested value', async () => {
+    const schema = await resolveSchema({
       foo: { bar: 123 }
     })
     expect(schema).toMatchObject({
@@ -41,8 +41,8 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $default', () => {
-    const schema = resolveSchema({
+  it('with $default', async () => {
+    const schema = await resolveSchema({
       foo: { $default: 'bar' }
     })
     expect(schema).toMatchObject({
@@ -55,8 +55,8 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $schema', () => {
-    const schema = resolveSchema({
+  it('with $schema', async () => {
+    const schema = await resolveSchema({
       foo: { $schema: { title: 'this is foo' } }
     })
     expect(schema).toMatchObject({
@@ -68,8 +68,8 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $resolve', () => {
-    const schema = resolveSchema({
+  it('with $resolve', async () => {
+    const schema = await resolveSchema({
       foo: { $default: '123', $resolve: val => parseInt(val) }
     })
     expect(schema).toMatchObject({
@@ -82,10 +82,10 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $resolve (dependency order-1)', () => {
-    const schema = resolveSchema({
+  it('with $resolve (dependency order-1)', async () => {
+    const schema = await resolveSchema({
       foo: { $resolve: () => 'foo' },
-      bar: { $resolve: (val, get) => get('foo') + (val || 'bar') }
+      bar: { $resolve: async (val, get) => await get('foo') + (val || 'bar') }
     })
     expect(schema).toMatchObject({
       properties: {
@@ -96,10 +96,10 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('with $resolve (dependency order-2)', () => {
-    const schema = resolveSchema({
+  it('with $resolve (dependency order-2)', async () => {
+    const schema = await resolveSchema({
       nested: {
-        foo: { $resolve: (val, get) => get('rootDir') + (val || 'bar') }
+        foo: { $resolve: async (val, get) => await get('rootDir') + (val || 'bar') }
       },
       rootDir: { $resolve: () => 'root/' }
     })
@@ -121,8 +121,8 @@ describe('resolveSchema', () => {
     })
   })
 
-  it('array', () => {
-    const schema = resolveSchema({
+  it('array', async () => {
+    const schema = await resolveSchema({
       empty: [],
       numbers: [1, 2, 3],
       mixed: [true, 123],
