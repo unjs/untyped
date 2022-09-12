@@ -35,9 +35,9 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/core": "^7.18.13",
-    "@babel/standalone": "^7.18.13",
-    "@babel/types": "^7.18.13",
+    "@babel/core": "^7.19.0",
+    "@babel/standalone": "^7.19.0",
+    "@babel/types": "^7.19.0",
     "scule": "^0.3.2"
   },
   "devDependencies": {
@@ -46,7 +46,7 @@
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
     "@types/node": "latest",
-    "@vitest/coverage-c8": "^0.23.0",
+    "@vitest/coverage-c8": "^0.23.2",
     "@vue/compiler-sfc": "latest",
     "eslint": "latest",
     "hljs": "latest",
@@ -58,6 +58,6 @@
     "prismjs": "latest",
     "standard-version": "latest",
     "unbuild": "latest",
-    "vitest": "^0.23.0"
+    "vitest": "^0.23.2"
   }
 }
