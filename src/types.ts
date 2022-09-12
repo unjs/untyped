@@ -55,7 +55,7 @@ export interface Schema extends TypeDescriptor {
 
 export interface InputObject {
   $schema?: Schema
-  $resolve?: ResolveFn | Promise<ResolveFn>
+  $resolve?: ResolveFn
   $default?: any
   [key: string]: any
 }
