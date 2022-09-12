@@ -7,8 +7,8 @@ interface _ResolveCtx {
   resolveCache: Record<string, Schema>
 }
 
-export function resolveSchema (obj: InputObject, defaults?: InputObject) {
-  const schema = _resolveSchema(obj, '', {
+export async function resolveSchema (obj: InputObject, defaults?: InputObject) {
+  const schema = await _resolveSchema(obj, '', {
     root: obj,
     defaults,
     resolveCache: {}
@@ -18,7 +18,7 @@ export function resolveSchema (obj: InputObject, defaults?: InputObject) {
   return schema
 }
 
-function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schema {
+async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Promise<Schema> {
   // Check cache
   if (id in ctx.resolveCache) {
     return ctx.resolveCache[id]
@@ -55,7 +55,7 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
     }
     schema.properties = schema.properties || {}
     if (!schema.properties[key]) {
-      schema.properties[key] = _resolveSchema(node[key], joinPath(id, key), ctx)
+      schema.properties[key] = await _resolveSchema(node[key], joinPath(id, key), ctx)
     }
   }
 
@@ -67,8 +67,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
     schema.default = node.$default
   }
   if (typeof node.$resolve === 'function') {
-    schema.default = node.$resolve(schema.default, (key) => {
-      return _resolveSchema(getValue(ctx.root, key), key, ctx).default
+    schema.default = await node.$resolve(schema.default, async (key) => {
+      return (await _resolveSchema(getValue(ctx.root, key), key, ctx)).default
     })
   }
   if (ctx.defaults) {
@@ -87,8 +87,8 @@ function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Schem
   return schema
 }
 
-export function applyDefaults (ref: InputObject, input: InputObject) {
-  resolveSchema(ref, input)
+export async function applyDefaults (ref: InputObject, input: InputObject) {
+  await resolveSchema(ref, input)
   return input
 }
 

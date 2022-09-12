@@ -50,7 +50,7 @@ const defaultPlanet = {
 ```js
 import { resolveSchema } from 'untyped'
 
-const schema = resolveSchema(defaultPlanet)
+const schema = await resolveSchema(defaultPlanet)
 ```
 
 Output:
@@ -92,7 +92,7 @@ Output:
 ```js
 import { resolveSchema, generateTypes } from 'untyped'
 
-const types = generateTypes(resolveSchema(defaultPlanet))
+const types = generateTypes(await resolveSchema(defaultPlanet))
 ```
 
 Output:
@@ -120,7 +120,7 @@ interface Untyped {
 ```js
 import { resolveSchema, generateMarkdown } from 'untyped'
 
-const markdown = generateMarkdown(resolveSchema(defaultPlanet))
+const markdown = generateMarkdown(await resolveSchema(defaultPlanet))
 ```
 
 Output:

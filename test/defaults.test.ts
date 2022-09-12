@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { applyDefaults } from '../src'
 
 describe('applyDefaults', () => {
-  it('basic', () => {
+  it('basic', async () => {
     const ref = {
       name: 'default',
       empty: {},
@@ -20,7 +20,7 @@ describe('applyDefaults', () => {
       }
     }
 
-    const applied = applyDefaults(ref, input)
+    const applied = await applyDefaults(ref, input)
 
     expect(applied).toMatchObject({
       name: 'custom',

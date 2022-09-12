@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { resolveSchema, generateTypes } from '../src'
 
 describe('resolveSchema', () => {
-  it('basic', () => {
-    const types = generateTypes(resolveSchema({
+  it('basic', async () => {
+    const types = generateTypes(await resolveSchema({
       test: {
         foo: {
           $default: 'test value',
@@ -27,8 +27,8 @@ describe('resolveSchema', () => {
       }"
     `)
   })
-  it('withOptions', () => {
-    const types = generateTypes(resolveSchema({
+  it('withOptions', async () => {
+    const types = generateTypes(await resolveSchema({
       test: {
         a: 123,
         foo: { bar: 123, baz: { x: 123 } }
@@ -51,8 +51,8 @@ describe('resolveSchema', () => {
     `)
   })
 
-  it('array', () => {
-    const types = generateTypes(resolveSchema({
+  it('array', async () => {
+    const types = generateTypes(await resolveSchema({
       empty: [],
       numbers: [1, 2, 3],
       mixed: [true, 123]
@@ -71,15 +71,15 @@ describe('resolveSchema', () => {
     `)
   })
 
-  it('escapeKey', () => {
-    const types = generateTypes(resolveSchema({
+  it('escapeKey', async () => {
+    const types = generateTypes(await resolveSchema({
       '*key': '123'
     }))
     expect(types).toMatch('"*key": string')
   })
 
-  it('functions', () => {
-    const types = generateTypes(resolveSchema({
+  it('functions', async () => {
+    const types = generateTypes(await resolveSchema({
       add: {
         $schema: {
           type: 'function',
@@ -104,8 +104,8 @@ export interface Untyped {
 `.trim())
   })
 
-  it('extracts type imports to top-level', () => {
-    const types = generateTypes(resolveSchema({
+  it('extracts type imports to top-level', async () => {
+    const types = generateTypes(await resolveSchema({
       test: {
         foo: {
           $schema: {
