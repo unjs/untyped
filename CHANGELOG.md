@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/unjs/untyped/compare/v0.4.7...v0.5.0) (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* `resolveSchema` and `applyDefaults` returns a Promise now.
+* `get` function passed to `$resolve` also returns a Promise.
+
+### Features
+
+* allow async `$resolve` ([#50](https://github.com/unjs/untyped/issues/50)) ([bf5fb1c](https://github.com/unjs/untyped/commit/bf5fb1c6ab183fcc7a6dd5fcbfc0ba3db1c51a14))
+
 ### [0.4.7](https://github.com/unjs/untyped/compare/v0.4.6...v0.4.7) (2022-08-26)
 
 
