@@ -38,9 +38,9 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/core": "^7.19.0",
-    "@babel/standalone": "^7.19.0",
-    "@babel/types": "^7.19.0",
+    "@babel/core": "^7.20.2",
+    "@babel/standalone": "^7.20.4",
+    "@babel/types": "^7.20.2",
     "scule": "^1.0.0"
   },
   "devDependencies": {
