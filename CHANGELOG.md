@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/unjs/untyped/compare/v0.5.0...v1.0.0) (2022-11-15)
+
 ## [0.5.0](https://github.com/unjs/untyped/compare/v0.4.7...v0.5.0) (2022-09-12)
 
 
