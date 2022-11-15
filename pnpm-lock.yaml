@@ -1,10 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@babel/core': ^7.19.0
-  '@babel/standalone': ^7.19.0
+  '@babel/core': ^7.20.2
+  '@babel/standalone': ^7.20.4
   '@babel/template': ^7.18.10
-  '@babel/types': ^7.19.0
+  '@babel/types': ^7.20.2
   '@types/babel__standalone': latest
   '@types/babel__traverse': latest
   '@types/node': ^18.11.9
