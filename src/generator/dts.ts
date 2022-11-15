@@ -1,5 +1,5 @@
-import type { Schema, JSType, TypeDescriptor } from '../types'
-import { escapeKey, normalizeTypes } from '../utils'
+import type { Schema, JSType, TypeDescriptor } from "../types";
+import { escapeKey, normalizeTypes } from "../utils";
 
 export interface GenerateTypesOptions {
  interfaceName?: string
@@ -12,201 +12,201 @@ export interface GenerateTypesOptions {
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
-  interfaceName: 'Untyped',
+  interfaceName: "Untyped",
   addExport: true,
   addDefaults: true,
   allowExtraKeys: undefined,
   partial: false,
   indentation: 0
-}
+};
 
 const TYPE_MAP: Record<JSType, string> = {
-  array: 'any[]',
-  bigint: 'bigint',
-  boolean: 'boolean',
-  number: 'number',
-  object: 'any',
-  any: 'any',
-  string: 'string',
-  symbol: 'Symbol',
-  function: 'Function'
-}
+  array: "any[]",
+  bigint: "bigint",
+  boolean: "boolean",
+  number: "number",
+  object: "any",
+  any: "any",
+  string: "string",
+  symbol: "Symbol",
+  function: "Function"
+};
 
-const SCHEMA_KEYS = [
-  'items',
-  'default',
-  'resolve',
-  'properties',
-  'title',
-  'description',
-  '$schema',
-  'type',
-  'tsType',
-  'markdownType',
-  'tags',
-  'args',
-  'id',
-  'returns'
-]
+const SCHEMA_KEYS = new Set([
+  "items",
+  "default",
+  "resolve",
+  "properties",
+  "title",
+  "description",
+  "$schema",
+  "type",
+  "tsType",
+  "markdownType",
+  "tags",
+  "args",
+  "id",
+  "returns"
+]);
 
-const DECLARATION_RE = /typeof import\(['"](?<source>[^)]+)['"]\)(\.(?<type>\w+)|\[['"](?<type1>\w+)['"]\])/g
+const DECLARATION_RE = /typeof import\(["'](?<source>[^)]+)["']\)(\.(?<type>\w+)|\[["'](?<type1>\w+)["']])/g;
 
 function extractTypeImports (declarations: string) {
-  const typeImports: Record<string, Set<string>> = {}
-  const aliases = new Set<string>()
-  const imports = []
+  const typeImports: Record<string, Set<string>> = {};
+  const aliases = new Set<string>();
+  const imports = [];
   for (const match of declarations.matchAll(DECLARATION_RE)) {
-    const { source, type1, type = type1 } = match.groups || {}
-    typeImports[source] = typeImports[source] || new Set()
-    typeImports[source].add(type)
+    const { source, type1, type = type1 } = match.groups || {};
+    typeImports[source] = typeImports[source] || new Set();
+    typeImports[source].add(type);
   }
   for (const source in typeImports) {
-    const sourceImports = []
+    const sourceImports = [];
     for (const type of typeImports[source]) {
-      let count = 0
-      let alias = type
+      let count = 0;
+      let alias = type;
       while (aliases.has(alias)) {
-        alias = `${type}${count++}`
+        alias = `${type}${count++}`;
       }
-      aliases.add(alias)
-      sourceImports.push(alias === type ? type : `${type} as ${alias}`)
-      declarations = declarations.replace(new RegExp(`typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`, 'g'), alias)
+      aliases.add(alias);
+      sourceImports.push(alias === type ? type : `${type} as ${alias}`);
+      declarations = declarations.replace(new RegExp(`typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`, "g"), alias);
     }
-    imports.push(`import type { ${sourceImports.join(', ')} } from '${source}'`)
+    imports.push(`import type { ${sourceImports.join(", ")} } from '${source}'`);
   }
-  return [...imports, declarations].join('\n')
+  return [...imports, declarations].join("\n");
 }
 
 export function generateTypes (schema: Schema, opts: GenerateTypesOptions = {}) {
-  opts = { ...GenerateTypesDefaults, ...opts }
-  const baseIden = ' '.repeat(opts.indentation)
-  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, baseIden + ' ', opts).join('\n ') + `\n${baseIden}}`
+  opts = { ...GenerateTypesDefaults, ...opts };
+  const baseIden = " ".repeat(opts.indentation);
+  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, baseIden + " ", opts).join("\n ") + `\n${baseIden}}`;
   if (!opts.addExport) {
-    return baseIden + interfaceCode
+    return baseIden + interfaceCode;
   }
-  return extractTypeImports(baseIden + `export ${interfaceCode}`)
+  return extractTypeImports(baseIden + `export ${interfaceCode}`);
 }
 
 function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions): string[] {
-  const buff: string[] = []
+  const buff: string[] = [];
 
   for (const key in schema.properties) {
-    const val = schema.properties[key] as Schema
-    buff.push(...generateJSDoc(val, opts))
+    const val = schema.properties[key] as Schema;
+    buff.push(...generateJSDoc(val, opts));
     if (val.tsType) {
-      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: ${val.tsType},\n`)
-    } else if (val.type === 'object') {
-      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: {`, ..._genTypes(val, spaces + ' ', opts), '},\n')
+      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: ${val.tsType},\n`);
+    } else if (val.type === "object") {
+      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: {`, ..._genTypes(val, spaces + " ", opts), "},\n");
     } else {
-      let type: string
-      if (val.type === 'array') {
-        type = `Array<${getTsType(val.items)}>`
-      } else if (val.type === 'function') {
-        type = genFunctionType(val)
+      let type: string;
+      if (val.type === "array") {
+        type = `Array<${getTsType(val.items)}>`;
+      } else if (val.type === "function") {
+        type = genFunctionType(val);
       } else {
-        type = getTsType(val)
+        type = getTsType(val);
       }
-      buff.push(`${escapeKey(key)}${opts.partial ? '?' : ''}: ${type},\n`)
+      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: ${type},\n`);
     }
   }
 
-  if (buff.length) {
-    const last = buff.pop() || ''
-    buff.push(last.substr(0, last.length - 1))
+  if (buff.length > 0) {
+    const last = buff.pop() || "";
+    buff.push(last.slice(0, Math.max(0, last.length - 1)));
   }
 
-  if (opts.allowExtraKeys === true || (!buff.length && opts.allowExtraKeys !== false)) {
-    buff.push('[key: string]: any')
+  if (opts.allowExtraKeys === true || (buff.length === 0 && opts.allowExtraKeys !== false)) {
+    buff.push("[key: string]: any");
   }
 
-  return buff.map(i => spaces + i)
+  return buff.map(i => spaces + i);
 }
 
 function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
   if (Array.isArray(type)) {
-    return [].concat(normalizeTypes(type.map(t => getTsType(t)))).join('|') || 'any'
+    return [normalizeTypes(type.map(t => getTsType(t)))].flat().join("|") || "any";
   }
   if (!type) {
-    return 'any'
+    return "any";
   }
   if (type.tsType) {
-    return type.tsType
+    return type.tsType;
   }
   if (!type.type) {
-    return 'any'
+    return "any";
   }
   if (Array.isArray(type.type)) {
-    return type.type.map(t => TYPE_MAP[t]).join('|')
+    return type.type.map(t => TYPE_MAP[t]).join("|");
   }
-  if (type.type === 'array') {
-    return `Array<${getTsType(type.items)}>`
+  if (type.type === "array") {
+    return `Array<${getTsType(type.items)}>`;
   }
-  return TYPE_MAP[type.type] || type.type
+  return TYPE_MAP[type.type] || type.type;
 }
 
 export function genFunctionType (schema) {
-  return `(${genFunctionArgs(schema.args)}) => ${getTsType(schema.returns)}`
+  return `(${genFunctionArgs(schema.args)}) => ${getTsType(schema.returns)}`;
 }
 
-export function genFunctionArgs (args: Schema['args']) {
+export function genFunctionArgs (args: Schema["args"]) {
   return args?.map((arg) => {
-    let argStr = arg.name
+    let argStr = arg.name;
     if (arg.optional || arg.default) {
-      argStr += '?'
+      argStr += "?";
     }
     if (arg.type || arg.tsType) {
-      argStr += `: ${getTsType(arg)}`
+      argStr += `: ${getTsType(arg)}`;
     }
-    return argStr
-  }).join(', ') || ''
+    return argStr;
+  }).join(", ") || "";
 }
 
 function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
-  let buff = []
+  let buff = [];
 
   if (schema.title) {
-    buff.push(schema.title)
+    buff.push(schema.title);
   }
 
   if (schema.description) {
-    buff.push(schema.description)
-  } else if (opts.defaultDescrption && schema.type !== 'object') {
-    buff.push(opts.defaultDescrption)
+    buff.push(schema.description);
+  } else if (opts.defaultDescrption && schema.type !== "object") {
+    buff.push(opts.defaultDescrption);
   }
 
   if (
     opts.addDefaults &&
-    schema.type !== 'object' && schema.type !== 'any' &&
+    schema.type !== "object" && schema.type !== "any" &&
     !(Array.isArray(schema.default) && schema.default.length === 0)
   ) {
-    const stringified = JSON.stringify(schema.default)
+    const stringified = JSON.stringify(schema.default);
     if (stringified) {
-      buff.push(`@default ${stringified.replace(/\*\//g, '*\\/')}`)
+      buff.push(`@default ${stringified.replace(/\*\//g, "*\\/")}`);
     }
   }
 
   for (const key in schema) {
-    if (!SCHEMA_KEYS.includes(key)) {
-      buff.push('', `@${key} ${schema[key]}`)
+    if (!SCHEMA_KEYS.has(key)) {
+      buff.push("", `@${key} ${schema[key]}`);
     }
   }
 
   if (Array.isArray(schema.tags)) {
     for (const tag of schema.tags) {
-      if (tag !== '@untyped') {
-        buff.push('', tag)
+      if (tag !== "@untyped") {
+        buff.push("", tag);
       }
     }
   }
 
   // Normalize new lines in values
-  buff = buff.map(i => i.split('\n')).flat()
+  buff = buff.flatMap(i => i.split("\n"));
 
-  if (buff.length) {
+  if (buff.length > 0) {
     return buff.length === 1
-      ? ['/** ' + buff[0] + ' */']
-      : ['/**', ...buff.map(i => ` * ${i}`), '*/']
+      ? ["/** " + buff[0] + " */"]
+      : ["/**", ...buff.map(i => ` * ${i}`), "*/"];
   }
 
-  return []
+  return [];
 }

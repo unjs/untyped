@@ -11,15 +11,15 @@ export type JSValue =
   null
 
 export type JSType =
-  'string' |
-  'number' |
-  'bigint' |
-  'boolean' |
-  'symbol' |
-  'function' |
-  'object' |
-  'any' |
-  'array'
+  "string" |
+  "number" |
+  "bigint" |
+  "boolean" |
+  "symbol" |
+  "function" |
+  "object" |
+  "any" |
+  "array"
 
 // eslint-disable-next-line no-use-before-define
 export type ResolveFn = ((value: any, get: (key: string) => any) => JSValue | Promise<JSValue>)

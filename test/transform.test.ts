@@ -1,72 +1,72 @@
-import { describe, it, expect } from 'vitest'
-import { transform } from '../src/loader/transform'
+import { describe, it, expect } from "vitest";
+import { transform } from "../src/loader/transform";
 
-describe('transform (functions)', () => {
-  it('creates correct types for simple function', () => {
+describe("transform (functions)", () => {
+  it("creates correct types for simple function", () => {
     const result = transform(`
       /** @untyped */
       export function add (id: string, date = new Date(), append?: boolean) {}
-    `)
+    `);
 
-    expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {
+    expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
-        type: 'function',
+        type: "function",
         args: [{
-          name: 'id',
-          type: 'string'
+          name: "id",
+          type: "string"
         }, {
-          name: 'date',
-          tsType: 'Date'
+          name: "date",
+          tsType: "Date"
         }, {
-          name: 'append',
+          name: "append",
           optional: true,
-          type: 'boolean'
+          type: "boolean"
         }]
       }
-    })
-  })
+    });
+  });
 
-  it('infers correct types from defaults', () => {
+  it("infers correct types from defaults", () => {
     const result = transform(`
       /** @untyped */
       export function add (test = ['42', 2], append?: false) {}
-    `)
+    `);
 
-    expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {
+    expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
-        type: 'function',
+        type: "function",
         args: [{
-          name: 'test',
-          type: 'array',
+          name: "test",
+          type: "array",
           items: {
-            type: ['string', 'number']
+            type: ["string", "number"]
           }
         }, {
-          name: 'append',
-          tsType: 'false'
+          name: "append",
+          tsType: "false"
         }]
       }
-    })
-  })
+    });
+  });
 
-  it('correctly uses a defined return type', () => {
+  it("correctly uses a defined return type", () => {
     const result = transform(`
       /** @untyped */
       export function add (): void {}
-    `)
+    `);
 
-    expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {
+    expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
-        type: 'function',
+        type: "function",
         args: [],
         returns: {
-          tsType: 'void'
+          tsType: "void"
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly uses JSdoc return types', () => {
+  it("correctly uses JSdoc return types", () => {
     const result = transform(`
       /**
        * @untyped
@@ -75,48 +75,50 @@ describe('transform (functions)', () => {
        * @returns {void}
        */
       export function add (a, b) {}
-    `)
+    `);
 
-    expectCodeToMatch(result, /export const add = ([\s\S]*)$/, {
+    expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
-        type: 'function',
+        type: "function",
         args: [
-          { name: 'a', type: 'number' },
-          { name: 'b', type: 'number' }
+          { name: "a", type: "number" },
+          { name: "b", type: "number" }
         ],
         returns: {
-          tsType: 'void'
+          tsType: "void"
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly handles a function assigned to a variable', () => {
+  it("correctly handles a function assigned to a variable", () => {
     const results = [transform(`
       /** @untyped */
       export const bob = function add (test: string): string {}
     `), transform(`
       /** @untyped */
       export const bob = (test: string): string => {}
-    `)]
+    `)];
 
-    results.forEach(result => expectCodeToMatch(result, /export const bob = ([\s\S]*)$/, {
-      $schema: {
-        type: 'function',
-        args: [{
-          name: 'test',
-          type: 'string'
-        }],
-        returns: {
-          type: 'string'
+    for (const result of results) {
+      expectCodeToMatch(result, /export const bob = ([\S\s]*)$/, {
+        $schema: {
+          type: "function",
+          args: [{
+            name: "test",
+            type: "string"
+          }],
+          returns: {
+            type: "string"
+          }
         }
-      }
-    }))
-  })
-})
+      });
+    }
+  });
+});
 
-describe('transform (jsdoc)', () => {
-  it('extracts title and description from jsdoc', () => {
+describe("transform (jsdoc)", () => {
+  it("extracts title and description from jsdoc", () => {
     const result = transform(`
       export default {
         /**
@@ -131,20 +133,20 @@ describe('transform (jsdoc)', () => {
          */
         srcDir: 'src'
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: 'Define the source directory of your Nuxt application.',
-          description: 'This property can be overwritten (for example, running `nuxt ./my-app/` will set the `rootDir` to the absolute path of `./my-app/` from the current/working directory.\nWith more content in description.',
+          title: "Define the source directory of your Nuxt application.",
+          description: "This property can be overwritten (for example, running `nuxt ./my-app/` will set the `rootDir` to the absolute path of `./my-app/` from the current/working directory.\nWith more content in description.",
           tags: []
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly parses tags', () => {
+  it("correctly parses tags", () => {
     const result = transform(`
       export default {
         /**
@@ -162,24 +164,24 @@ describe('transform (jsdoc)', () => {
          */
         srcDir: 'src'
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: 'Define the source directory of your Nuxt application.',
-          description: 'This property can be overwritten.',
+          title: "Define the source directory of your Nuxt application.",
+          description: "This property can be overwritten.",
           tags: [
-            '@note This is a note.\nthat is on two lines',
-            '@example\n```js\nexport default secretNumber = 42\n```',
-            '@see https://nuxtjs.org'
+            "@note This is a note.\nthat is on two lines",
+            "@example\n```js\nexport default secretNumber = 42\n```",
+            "@see https://nuxtjs.org"
           ]
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly parses @type tags', () => {
+  it("correctly parses @type tags", () => {
     const result = transform(`
       export default {
         /**
@@ -197,37 +199,37 @@ describe('transform (jsdoc)', () => {
          */
         multiline: null
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tsType: "'src' | 'root'"
         }
       },
       posix: {
         $default: null,
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tsType: "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
-          markdownType: 'null | PathPosix | NetSocket[\'PassThrough\']'
+          markdownType: "null | PathPosix | NetSocket['PassThrough']"
         }
       },
       multiline: {
         $default: null,
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tsType: "null | {\n  foo: 'bar' | 'baz'\n}"
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly parses @typedef tags', () => {
+  it("correctly parses @typedef tags", () => {
     const result = transform(`
       export default {
         /**
@@ -236,21 +238,21 @@ describe('transform (jsdoc)', () => {
          */
         srcDir: 'src',
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tsType: "Array<'src' | 'root'>",
-          markdownType: 'Array<HumanReadable>'
+          markdownType: "Array<HumanReadable>"
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly parses only tags', () => {
+  it("correctly parses only tags", () => {
     const result = transform(`
       export default {
         /**
@@ -265,24 +267,24 @@ describe('transform (jsdoc)', () => {
          */
         srcDir: 'src'
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tags: [
-            '@note This is a note.\nthat is on two lines',
-            '@example\n```js\nexport default secretNumber = 42\n```',
-            '@see https://nuxtjs.org'
+            "@note This is a note.\nthat is on two lines",
+            "@example\n```js\nexport default secretNumber = 42\n```",
+            "@see https://nuxtjs.org"
           ]
         }
       }
-    })
-  })
+    });
+  });
 
-  it('does not split within a codeblock', () => {
+  it("does not split within a codeblock", () => {
     const result = transform(`
       export default {
         /**
@@ -295,22 +297,22 @@ describe('transform (jsdoc)', () => {
          */
         srcDir: 'src'
       }
-    `)
-    expectCodeToMatch(result, /export default ([\s\S]*)$/, {
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
       srcDir: {
-        $default: 'src',
+        $default: "src",
         $schema: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
           tags: [
-            '@example\n```js\nexport default secretNumber = 42\n\nexport default nothing = null\n```'
+            "@example\n```js\nexport default secretNumber = 42\n\nexport default nothing = null\n```"
           ]
         }
       }
-    })
-  })
+    });
+  });
 
-  it('correctly parses type assertion', () => {
+  it("correctly parses type assertion", () => {
     const result = transform(`
       import type { InputObject } from 'untyped'
       export default {
@@ -324,7 +326,7 @@ describe('transform (jsdoc)', () => {
           }
         }
       }
-    `)
+    `);
     expect(result).toMatchInlineSnapshot(`
       "export default {
         srcDir: {
@@ -335,17 +337,15 @@ describe('transform (jsdoc)', () => {
             tsType: \\"Array<'src' | 'root'>\\",
             markdownType: \\"Array<HumanReadable>\\"
           },
-
           $resolve(val, get) {
             return val ?? 'src';
           }
-
         }
       };"
-    `)
-  })
+    `);
+  });
 
-  it('correctly parses type as assertion', () => {
+  it("correctly parses type as assertion", () => {
     const result = transform(`
       import type { InputObject } from 'untyped'
       export default {
@@ -359,7 +359,7 @@ describe('transform (jsdoc)', () => {
           }
         } as InputObject
       }
-    `)
+    `);
     expect(result).toMatchInlineSnapshot(`
       "export default {
         srcDir: {
@@ -370,17 +370,15 @@ describe('transform (jsdoc)', () => {
             tsType: \\"Array<'src' | 'root'>\\",
             markdownType: \\"Array<HumanReadable>\\"
           },
-
           $resolve(val, get) {
             return val ?? 'src';
           }
-
         }
       };"
-    `)
-  })
+    `);
+  });
 
-  it('support define function', () => {
+  it("support define function", () => {
     const result = transform(`
       export default defineUntypedSchema({
         /**
@@ -393,7 +391,7 @@ describe('transform (jsdoc)', () => {
           }
         }
       })
-    `)
+    `);
     expect(result).toMatchInlineSnapshot(`
       "export default defineUntypedSchema({
         srcDir: {
@@ -409,17 +407,16 @@ describe('transform (jsdoc)', () => {
           $resolve(val) {
             return val || false;
           }
-
         }
       });"
-    `)
-  })
-})
+    `);
+  });
+});
 
 function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
-  const [, result] = code.match(pattern) || []
-  expect(result).toBeDefined()
-  // eslint-disable-next-line
-  const obj = Function('"use strict";return (' + result.replace(/;$/, '') + ')')()
-  expect(obj).toMatchObject(expected)
+  const [, result] = code.match(pattern) || [];
+  expect(result).toBeDefined();
+  // eslint-disable-next-line no-new-func, unicorn/new-for-builtins
+  const obj = Function("\"use strict\";return (" + result.replace(/;$/, "") + ")")();
+  expect(obj).toMatchObject(expected);
 }

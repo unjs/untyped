@@ -147,10 +147,10 @@ Output:
 
 - Clone this repository
 - Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
-- Install dependencies using `yarn install`
-- Run interactive tests using `yarn dev`
-- Use `yarn web` to start playground website
-- Use `yarn test` before push to ensure all tests and lint checks passing
+- Install dependencies using `pnpm install`
+- Run interactive tests using `pnpm dev`
+- Use `pnpm web` to start playground website
+- Use `pnpm test` before push to ensure all tests and lint checks passing
 
 ## License
 

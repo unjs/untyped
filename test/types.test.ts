@@ -1,19 +1,19 @@
-import { describe, it, expect } from 'vitest'
-import { resolveSchema, generateTypes } from '../src'
+import { describe, it, expect } from "vitest";
+import { resolveSchema, generateTypes } from "../src";
 
-describe('resolveSchema', () => {
-  it('basic', async () => {
+describe("resolveSchema", () => {
+  it("basic", async () => {
     const types = generateTypes(await resolveSchema({
       test: {
         foo: {
-          $default: 'test value',
+          $default: "test value",
           $schema: {
-            title: 'Test',
-            description: 'this is test'
+            title: "Test",
+            description: "this is test"
           }
         }
       }
-    }))
+    }));
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
          test: {
@@ -25,15 +25,15 @@ describe('resolveSchema', () => {
           foo: string,
         },
       }"
-    `)
-  })
-  it('withOptions', async () => {
+    `);
+  });
+  it("withOptions", async () => {
     const types = generateTypes(await resolveSchema({
       test: {
         a: 123,
         foo: { bar: 123, baz: { x: 123 } }
       }
-    }), { partial: true, addDefaults: false, addExport: false })
+    }), { partial: true, addDefaults: false, addExport: false });
     expect(types).toMatchInlineSnapshot(`
       "interface Untyped {
          test?: {
@@ -48,15 +48,15 @@ describe('resolveSchema', () => {
           },
         },
       }"
-    `)
-  })
+    `);
+  });
 
-  it('array', async () => {
+  it("array", async () => {
     const types = generateTypes(await resolveSchema({
       empty: [],
       numbers: [1, 2, 3],
       mixed: [true, 123]
-    }))
+    }));
 
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
@@ -68,67 +68,67 @@ describe('resolveSchema', () => {
         /** @default [true,123] */
         mixed: Array<boolean|number>,
       }"
-    `)
-  })
+    `);
+  });
 
-  it('escapeKey', async () => {
+  it("escapeKey", async () => {
     const types = generateTypes(await resolveSchema({
-      '*key': '123'
-    }))
-    expect(types).toMatch('"*key": string')
-  })
+      "*key": "123"
+    }));
+    expect(types).toMatch("\"*key\": string");
+  });
 
-  it('functions', async () => {
+  it("functions", async () => {
     const types = generateTypes(await resolveSchema({
       add: {
         $schema: {
-          type: 'function',
+          type: "function",
           args: [{
-            name: 'test',
-            type: 'Array<string | number>',
+            name: "test",
+            type: "Array<string | number>",
             optional: true
           }, {
-            name: 'append',
-            type: 'boolean',
-            tsType: 'false',
+            name: "append",
+            type: "boolean",
+            tsType: "false",
             optional: true
           }]
         }
       }
-    }))
+    }));
 
     expect(types).toBe(`
 export interface Untyped {
    add: (test?: Array<string | number>, append?: false) => any,
 }
-`.trim())
-  })
+`.trim());
+  });
 
-  it('extracts type imports to top-level', async () => {
+  it("extracts type imports to top-level", async () => {
     const types = generateTypes(await resolveSchema({
       test: {
         foo: {
           $schema: {
-            tsType: 'typeof import("vue").VueConfig'
+            tsType: "typeof import(\"vue\").VueConfig"
           }
         },
         bar: {
           $schema: {
-            tsType: 'typeof import("vue")["VueConfig"]'
+            tsType: "typeof import(\"vue\")[\"VueConfig\"]"
           }
         },
         baz: {
           $schema: {
-            tsType: 'typeof import("vue").OtherImport'
+            tsType: "typeof import(\"vue\").OtherImport"
           }
         },
         quf: {
           $schema: {
-            tsType: 'typeof import("other-lib").VueConfig'
+            tsType: "typeof import(\"other-lib\").VueConfig"
           }
         }
       }
-    }))
+    }));
     expect(types).toMatchInlineSnapshot(`
       "import type { VueConfig, OtherImport } from 'vue'
       import type { VueConfig as VueConfig0 } from 'other-lib'
@@ -143,6 +143,6 @@ export interface Untyped {
           quf: VueConfig0,
         },
       }"
-    `)
-  })
-})
+    `);
+  });
+});

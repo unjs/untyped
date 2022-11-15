@@ -8,15 +8,18 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./babel-plugin": {
       "import": "./dist/babel.mjs",
-      "require": "./dist/babel.cjs"
+      "require": "./dist/babel.cjs",
+      "types": "./dist/babel.d.ts"
     },
     "./transform": {
       "import": "./dist/transform.mjs",
-      "require": "./dist/transform.cjs"
+      "require": "./dist/transform.cjs",
+      "types": "./dist/transform.d.ts"
     }
   },
   "main": "./dist/index.cjs",
@@ -28,9 +31,9 @@
     "build": "unbuild",
     "dev": "vitest",
     "lint": "eslint --ext .js,.ts .",
-    "prepack": "yarn build",
-    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "yarn lint && vitest run --coverage",
+    "prepack": "pnpm build",
+    "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
+    "test": "pnpm lint && vitest run --coverage",
     "web": "nuxi dev web",
     "web:build": "nuxi generate web"
   },
@@ -38,26 +41,27 @@
     "@babel/core": "^7.19.0",
     "@babel/standalone": "^7.19.0",
     "@babel/types": "^7.19.0",
-    "scule": "^0.3.2"
+    "scule": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/template": "latest",
-    "@nuxtjs/eslint-config-typescript": "latest",
+    "@babel/template": "^7.18.10",
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
-    "@types/node": "latest",
-    "@vitest/coverage-c8": "^0.23.2",
-    "@vue/compiler-sfc": "latest",
-    "eslint": "latest",
-    "hljs": "latest",
-    "json-schema": "latest",
-    "marked": "latest",
-    "monaco-editor": "latest",
+    "@types/node": "^18.11.9",
+    "@vitest/coverage-c8": "^0.25.2",
+    "@vue/compiler-sfc": "^3.2.45",
+    "eslint": "^8.27.0",
+    "eslint-config-unjs": "^0.0.2",
+    "hljs": "^6.2.3",
+    "json-schema": "^0.4.0",
+    "marked": "^4.2.2",
+    "monaco-editor": "^0.34.1",
     "nuxt": "npm:nuxt3@latest",
-    "nuxt-windicss": "latest",
-    "prismjs": "latest",
-    "standard-version": "latest",
-    "unbuild": "latest",
-    "vitest": "^0.23.2"
+    "nuxt-windicss": "^2.5.3",
+    "prismjs": "^1.29.0",
+    "standard-version": "^9.5.0",
+    "typescript": "^4.8.4",
+    "unbuild": "^0.9.4",
+    "vitest": "^0.25.2"
   }
 }
