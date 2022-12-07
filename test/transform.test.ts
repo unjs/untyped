@@ -251,6 +251,34 @@ describe("transform (jsdoc)", () => {
       }
     });
   });
+  it("correctly parses @typedef tags on multiple lines", () => {
+    const result = transform(`
+      export default {
+        /**
+         * Icons to be added to Social Icons in footer.
+         *
+         * @typedef {object} IconLink
+         * @property {string} icon - Icon name
+         * @property {string} href - Link when clicking on the icon
+         * @property {number} label - Label of the icon
+         *
+         * @type {IconLink[]}
+         */
+        iconLinks: []
+      }
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
+      iconLinks: {
+        $default: [],
+        $schema: {
+          title: "Icons to be added to Social Icons in footer.",
+          description: "",
+          tsType: "Array<IconLink>",
+          markdownType: "Array<IconLink>"
+        }
+      }
+    });
+  });
 
   it("correctly parses only tags", () => {
     const result = transform(`
