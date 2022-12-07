@@ -63,6 +63,15 @@ export function safeComputed (fn) {
   })
 }
 
+export function asyncComputed (fn) {
+  const state = ref(undefined)
+  const computedPromise = safeComputed(fn)
+  watch(computedPromise, val => {
+    val.then(r => state.value = r)
+  })
+  return state
+}
+
 export function asyncImport ({ loader, loading, error }) {
   const m = reactive(loading || {})
   loader().then(res => Object.assign(m, res)).catch((err) => {

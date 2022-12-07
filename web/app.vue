@@ -113,12 +113,12 @@ export default defineComponent({
 
     const transpiledRef = safeComputed(() => loader.transform(state.ref))
     const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value))
-    const schema = safeComputed(async () => await resolveSchema(referenceObj.value))
+    const schema = asyncComputed(async () => await resolveSchema(referenceObj.value))
     const types = safeComputed(() => generateTypes(schema.value))
     const markdown = safeComputed(() => generateMarkdown(schema.value))
 
     const inputObj = safeComputed(() => evaluateSource(state.input))
-    const resolvedInput = safeComputed(async () => await applyDefaults(referenceObj.value, inputObj.value))
+    const resolvedInput = asyncComputed(async () => await applyDefaults(referenceObj.value, inputObj.value))
 
     return {
       state,

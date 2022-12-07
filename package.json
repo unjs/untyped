@@ -56,7 +56,7 @@
     "json-schema": "^0.4.0",
     "marked": "^4.2.4",
     "monaco-editor": "^0.34.1",
-    "nuxt": "npm:nuxt3@latest",
+    "nuxt": "^3.0.0",
     "nuxt-windicss": "^2.6.0",
     "prismjs": "^1.29.0",
     "standard-version": "^9.5.0",
