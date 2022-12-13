@@ -18,14 +18,14 @@ describe("resolveSchema", () => {
     );
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
-         test: {
-          /**
-           * Test
-           * this is test
-           * @default \\"test value\\"
-          */
-          foo: string,
-        },
+       test: {
+        /**
+         * Test
+         * this is test
+         * @default \\"test value\\"
+        */
+        foo: string,
+       },
       }"
     `);
   });
@@ -41,17 +41,17 @@ describe("resolveSchema", () => {
     );
     expect(types).toMatchInlineSnapshot(`
       "interface Untyped {
-         test?: {
-          a?: number,
+       test?: {
+        a?: number,
 
-          foo?: {
-             bar?: number,
+        foo?: {
+         bar?: number,
 
-             baz?: {
-                 x?: number,
-             },
-          },
+         baz?: {
+          x?: number,
+         },
         },
+       },
       }"
     `);
   });
@@ -82,23 +82,23 @@ describe("resolveSchema", () => {
 
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
-         empty: Array<any>,
+       empty: Array<any>,
 
-        /** @default [1,2,3] */
-        numbers: Array<number>,
+       /** @default [1,2,3] */
+       numbers: Array<number>,
 
-        /** @default [true,123] */
-        mixed: Array<boolean|number>,
+       /** @default [true,123] */
+       mixed: Array<boolean|number>,
 
-        /** @default [{\\"foo\\":[123]}] */
-        object: Array<{
-          [key: string]: any
-        }>,
+       /** @default [{\\"foo\\":[123]}] */
+       object: Array<{
+        [key: string]: any
+       }>,
 
-        manual: Array<{
-          /** This is foo prop */  
-          foo: number,
-        }>,
+       manual: Array<{
+        /** This is foo prop */
+        foo: number,
+       }>,
       }"
     `);
   });
@@ -139,7 +139,7 @@ describe("resolveSchema", () => {
     expect(types).toBe(
       `
 export interface Untyped {
-   add: (test?: Array<string | number>, append?: false) => any,
+ add: (test?: Array<string | number>, append?: false) => any,
 }
 `.trim()
     );
@@ -176,15 +176,15 @@ export interface Untyped {
       "import type { VueConfig, OtherImport } from 'vue'
       import type { VueConfig as VueConfig0 } from 'other-lib'
       export interface Untyped {
-         test: {
-          foo: VueConfig,
+       test: {
+        foo: VueConfig,
 
-          bar: VueConfig,
+        bar: VueConfig,
 
-          baz: OtherImport,
+        baz: OtherImport,
 
-          quf: VueConfig0,
-        },
+        quf: VueConfig0,
+       },
       }"
     `);
   });

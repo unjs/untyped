@@ -90,8 +90,10 @@ export function generateTypes(schema: Schema, opts: GenerateTypesOptions = {}) {
   opts = { ...GenerateTypesDefaults, ...opts };
   const baseIden = " ".repeat(opts.indentation);
   const interfaceCode =
-    `interface ${opts.interfaceName} {\n  ` +
-    _genTypes(schema, baseIden + " ", opts).join("\n ") +
+    `interface ${opts.interfaceName} {\n` +
+    _genTypes(schema, baseIden + " ", opts)
+      .map((l) => (l.trim().length > 0 ? l : ""))
+      .join("\n") +
     `\n${baseIden}}`;
   if (!opts.addExport) {
     return baseIden + interfaceCode;
@@ -116,7 +118,7 @@ function _genTypes(
     } else if (val.type === "object") {
       buff.push(
         `${escapeKey(key)}${opts.partial ? "?" : ""}: {`,
-        ..._genTypes(val, spaces + " ", opts),
+        ..._genTypes(val, spaces, opts),
         "},\n"
       );
     } else {
@@ -144,7 +146,7 @@ function _genTypes(
     buff.push("[key: string]: any");
   }
 
-  return buff.map((i) => spaces + i);
+  return buff.flatMap((l) => l.split("\n")).map((l) => spaces + l);
 }
 
 function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
@@ -169,7 +171,7 @@ function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
     return `Array<${getTsType(type.items)}>`;
   }
   if (type.type === "object") {
-    return `{\n` + _genTypes(type, "    ", {}).join("  \n") + `\n  }`;
+    return `{\n` + _genTypes(type, " ", {}).join("\n") + `\n}`;
   }
   return TYPE_MAP[type.type] || type.type;
 }
