@@ -47,7 +47,7 @@
     "@babel/template": "^7.18.10",
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
-    "@types/node": "^18.11.13",
+    "@types/node": "^18.11.14",
     "@vitest/coverage-c8": "^0.25.7",
     "@vue/compiler-sfc": "^3.2.45",
     "eslint": "^8.29.0",
