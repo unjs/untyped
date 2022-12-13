@@ -7,7 +7,7 @@ import {
   joinPath,
   nonEmpty,
 } from "./utils";
-import type { InputObject, InputValue, JSValue, Schema } from "./types";
+import type { InputObject, InputValue, JSType, JSValue, Schema } from "./types";
 
 interface _ResolveCtx {
   root: InputObject;
@@ -119,7 +119,7 @@ function normalizeSchema(schema: Partial<Schema>): asserts schema is Schema {
       if (schema.items.type.length === 0) {
         schema.items.type = "any";
       } else if (schema.items.type.length === 1) {
-        schema.items.type = schema.items.type[0];
+        schema.items.type = schema.items.type[0] as JSType;
       }
     }
   }
