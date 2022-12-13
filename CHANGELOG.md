@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/unjs/untyped/compare/v1.0.0...v1.1.0) (2022-12-13)
+
+
+### Features
+
+* support dts generation for array of objects ([6120fdf](https://github.com/unjs/untyped/commit/6120fdf7d2a0e9fb88c79cca1fd5ad3236eb0ac3))
+
+
+### Bug Fixes
+
+* improve dts code indentation ([eefe4c9](https://github.com/unjs/untyped/commit/eefe4c9d8cffec986c75295d95ee9788acf00b59))
+* **schema:** resolve single array types as with single type ([1c68a80](https://github.com/unjs/untyped/commit/1c68a80f06fa67fe7942dbdc79b57af1fce02e26))
+
 ## [1.0.0](https://github.com/unjs/untyped/compare/v0.5.0...v1.0.0) (2022-11-15)
 
 ## [0.5.0](https://github.com/unjs/untyped/compare/v0.4.7...v0.5.0) (2022-09-12)
