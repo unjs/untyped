@@ -62,7 +62,21 @@ describe("resolveSchema", () => {
         empty: [],
         numbers: [1, 2, 3],
         mixed: [true, 123],
-        object: [{ foo: 123 }],
+        object: [{ foo: [123] }],
+        manual: {
+          $schema: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                foo: {
+                  type: "number",
+                  description: "This is foo prop",
+                },
+              },
+            },
+          },
+        },
       })
     );
 
@@ -76,8 +90,15 @@ describe("resolveSchema", () => {
         /** @default [true,123] */
         mixed: Array<boolean|number>,
 
-        /** @default [{\\"foo\\":123}] */
-        object: Array<any>,
+        /** @default [{\\"foo\\":[123]}] */
+        object: Array<{
+          [key: string]: any
+        }>,
+
+        manual: Array<{
+          /** This is foo prop */  
+          foo: number,
+        }>,
       }"
     `);
   });

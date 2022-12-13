@@ -25,7 +25,7 @@ const TYPE_MAP: Record<JSType, string> = {
   bigint: "bigint",
   boolean: "boolean",
   number: "number",
-  object: "any",
+  object: "", // Will be precisely defined
   any: "any",
   string: "string",
   symbol: "Symbol",
@@ -167,6 +167,9 @@ function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
   }
   if (type.type === "array") {
     return `Array<${getTsType(type.items)}>`;
+  }
+  if (type.type === "object") {
+    return `{\n` + _genTypes(type, "    ", {}).join("  \n") + `\n  }`;
   }
   return TYPE_MAP[type.type] || type.type;
 }
