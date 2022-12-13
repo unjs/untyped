@@ -130,6 +130,7 @@ describe("resolveSchema", () => {
       empty: [],
       numbers: [1, 2, 3],
       mixed: [true, 123],
+      objects: [{ foo: "bar" }],
       resolved: {
         $default: ["d"],
         // eslint-disable-next-line unicorn/prefer-spread
@@ -149,7 +150,14 @@ describe("resolveSchema", () => {
           type: "array",
           default: [1, 2, 3],
           items: {
-            type: ["number"],
+            type: "number",
+          },
+        },
+        objects: {
+          type: "array",
+          default: [{ foo: "bar" }],
+          items: {
+            type: "object",
           },
         },
         mixed: {
@@ -163,7 +171,7 @@ describe("resolveSchema", () => {
           default: ["r", "d"],
           type: "array",
           items: {
-            type: ["string"],
+            type: "string",
           },
         },
       },

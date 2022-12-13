@@ -115,8 +115,12 @@ function normalizeSchema(schema: Partial<Schema>): asserts schema is Schema {
     schema.items = {
       type: nonEmpty(unique((schema.default as any[]).map((i) => getType(i)))),
     };
-    if (schema.items.type && schema.items.type.length === 0) {
-      schema.items.type = "any";
+    if (schema.items.type) {
+      if (schema.items.type.length === 0) {
+        schema.items.type = "any";
+      } else if (schema.items.type.length === 1) {
+        schema.items.type = schema.items.type[0];
+      }
     }
   }
   if (

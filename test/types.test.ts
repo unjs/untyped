@@ -62,6 +62,7 @@ describe("resolveSchema", () => {
         empty: [],
         numbers: [1, 2, 3],
         mixed: [true, 123],
+        object: [{ foo: 123 }],
       })
     );
 
@@ -74,6 +75,9 @@ describe("resolveSchema", () => {
 
         /** @default [true,123] */
         mixed: Array<boolean|number>,
+
+        /** @default [{\\"foo\\":123}] */
+        object: Array<any>,
       }"
     `);
   });
