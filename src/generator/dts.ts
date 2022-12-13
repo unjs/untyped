@@ -2,13 +2,13 @@ import type { Schema, JSType, TypeDescriptor } from "../types";
 import { escapeKey, normalizeTypes } from "../utils";
 
 export interface GenerateTypesOptions {
- interfaceName?: string
- addExport?: boolean
- addDefaults?: boolean
- defaultDescrption?: string
- indentation?: number
- allowExtraKeys?: boolean
- partial?: boolean,
+  interfaceName?: string;
+  addExport?: boolean;
+  addDefaults?: boolean;
+  defaultDescrption?: string;
+  indentation?: number;
+  allowExtraKeys?: boolean;
+  partial?: boolean;
 }
 
 const GenerateTypesDefaults: GenerateTypesOptions = {
@@ -17,7 +17,7 @@ const GenerateTypesDefaults: GenerateTypesOptions = {
   addDefaults: true,
   allowExtraKeys: undefined,
   partial: false,
-  indentation: 0
+  indentation: 0,
 };
 
 const TYPE_MAP: Record<JSType, string> = {
@@ -29,7 +29,7 @@ const TYPE_MAP: Record<JSType, string> = {
   any: "any",
   string: "string",
   symbol: "Symbol",
-  function: "Function"
+  function: "Function",
 };
 
 const SCHEMA_KEYS = new Set([
@@ -46,12 +46,13 @@ const SCHEMA_KEYS = new Set([
   "tags",
   "args",
   "id",
-  "returns"
+  "returns",
 ]);
 
-const DECLARATION_RE = /typeof import\(["'](?<source>[^)]+)["']\)(\.(?<type>\w+)|\[["'](?<type1>\w+)["']])/g;
+const DECLARATION_RE =
+  /typeof import\(["'](?<source>[^)]+)["']\)(\.(?<type>\w+)|\[["'](?<type1>\w+)["']])/g;
 
-function extractTypeImports (declarations: string) {
+function extractTypeImports(declarations: string) {
   const typeImports: Record<string, Set<string>> = {};
   const aliases = new Set<string>();
   const imports = [];
@@ -70,33 +71,54 @@ function extractTypeImports (declarations: string) {
       }
       aliases.add(alias);
       sourceImports.push(alias === type ? type : `${type} as ${alias}`);
-      declarations = declarations.replace(new RegExp(`typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`, "g"), alias);
+      declarations = declarations.replace(
+        new RegExp(
+          `typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`,
+          "g"
+        ),
+        alias
+      );
     }
-    imports.push(`import type { ${sourceImports.join(", ")} } from '${source}'`);
+    imports.push(
+      `import type { ${sourceImports.join(", ")} } from '${source}'`
+    );
   }
   return [...imports, declarations].join("\n");
 }
 
-export function generateTypes (schema: Schema, opts: GenerateTypesOptions = {}) {
+export function generateTypes(schema: Schema, opts: GenerateTypesOptions = {}) {
   opts = { ...GenerateTypesDefaults, ...opts };
   const baseIden = " ".repeat(opts.indentation);
-  const interfaceCode = `interface ${opts.interfaceName} {\n  ` + _genTypes(schema, baseIden + " ", opts).join("\n ") + `\n${baseIden}}`;
+  const interfaceCode =
+    `interface ${opts.interfaceName} {\n  ` +
+    _genTypes(schema, baseIden + " ", opts).join("\n ") +
+    `\n${baseIden}}`;
   if (!opts.addExport) {
     return baseIden + interfaceCode;
   }
   return extractTypeImports(baseIden + `export ${interfaceCode}`);
 }
 
-function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions): string[] {
+function _genTypes(
+  schema: Schema,
+  spaces: string,
+  opts: GenerateTypesOptions
+): string[] {
   const buff: string[] = [];
 
   for (const key in schema.properties) {
     const val = schema.properties[key] as Schema;
     buff.push(...generateJSDoc(val, opts));
     if (val.tsType) {
-      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: ${val.tsType},\n`);
+      buff.push(
+        `${escapeKey(key)}${opts.partial ? "?" : ""}: ${val.tsType},\n`
+      );
     } else if (val.type === "object") {
-      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: {`, ..._genTypes(val, spaces + " ", opts), "},\n");
+      buff.push(
+        `${escapeKey(key)}${opts.partial ? "?" : ""}: {`,
+        ..._genTypes(val, spaces + " ", opts),
+        "},\n"
+      );
     } else {
       let type: string;
       if (val.type === "array") {
@@ -115,16 +137,21 @@ function _genTypes (schema: Schema, spaces: string, opts: GenerateTypesOptions):
     buff.push(last.slice(0, Math.max(0, last.length - 1)));
   }
 
-  if (opts.allowExtraKeys === true || (buff.length === 0 && opts.allowExtraKeys !== false)) {
+  if (
+    opts.allowExtraKeys === true ||
+    (buff.length === 0 && opts.allowExtraKeys !== false)
+  ) {
     buff.push("[key: string]: any");
   }
 
-  return buff.map(i => spaces + i);
+  return buff.map((i) => spaces + i);
 }
 
-function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
+function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
   if (Array.isArray(type)) {
-    return [normalizeTypes(type.map(t => getTsType(t)))].flat().join("|") || "any";
+    return (
+      [normalizeTypes(type.map((t) => getTsType(t)))].flat().join("|") || "any"
+    );
   }
   if (!type) {
     return "any";
@@ -136,7 +163,7 @@ function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
     return "any";
   }
   if (Array.isArray(type.type)) {
-    return type.type.map(t => TYPE_MAP[t]).join("|");
+    return type.type.map((t) => TYPE_MAP[t]).join("|");
   }
   if (type.type === "array") {
     return `Array<${getTsType(type.items)}>`;
@@ -144,24 +171,28 @@ function getTsType (type: TypeDescriptor | TypeDescriptor[]): string {
   return TYPE_MAP[type.type] || type.type;
 }
 
-export function genFunctionType (schema) {
+export function genFunctionType(schema) {
   return `(${genFunctionArgs(schema.args)}) => ${getTsType(schema.returns)}`;
 }
 
-export function genFunctionArgs (args: Schema["args"]) {
-  return args?.map((arg) => {
-    let argStr = arg.name;
-    if (arg.optional || arg.default) {
-      argStr += "?";
-    }
-    if (arg.type || arg.tsType) {
-      argStr += `: ${getTsType(arg)}`;
-    }
-    return argStr;
-  }).join(", ") || "";
+export function genFunctionArgs(args: Schema["args"]) {
+  return (
+    args
+      ?.map((arg) => {
+        let argStr = arg.name;
+        if (arg.optional || arg.default) {
+          argStr += "?";
+        }
+        if (arg.type || arg.tsType) {
+          argStr += `: ${getTsType(arg)}`;
+        }
+        return argStr;
+      })
+      .join(", ") || ""
+  );
 }
 
-function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
+function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   let buff = [];
 
   if (schema.title) {
@@ -176,7 +207,8 @@ function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
 
   if (
     opts.addDefaults &&
-    schema.type !== "object" && schema.type !== "any" &&
+    schema.type !== "object" &&
+    schema.type !== "any" &&
     !(Array.isArray(schema.default) && schema.default.length === 0)
   ) {
     const stringified = JSON.stringify(schema.default);
@@ -200,12 +232,12 @@ function generateJSDoc (schema: Schema, opts: GenerateTypesOptions): string[] {
   }
 
   // Normalize new lines in values
-  buff = buff.flatMap(i => i.split("\n"));
+  buff = buff.flatMap((i) => i.split("\n"));
 
   if (buff.length > 0) {
     return buff.length === 1
       ? ["/** " + buff[0] + " */"]
-      : ["/**", ...buff.map(i => ` * ${i}`), "*/"];
+      : ["/**", ...buff.map((i) => ` * ${i}`), "*/"];
   }
 
   return [];

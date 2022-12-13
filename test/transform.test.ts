@@ -11,18 +11,22 @@ describe("transform (functions)", () => {
     expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
         type: "function",
-        args: [{
-          name: "id",
-          type: "string"
-        }, {
-          name: "date",
-          tsType: "Date"
-        }, {
-          name: "append",
-          optional: true,
-          type: "boolean"
-        }]
-      }
+        args: [
+          {
+            name: "id",
+            type: "string",
+          },
+          {
+            name: "date",
+            tsType: "Date",
+          },
+          {
+            name: "append",
+            optional: true,
+            type: "boolean",
+          },
+        ],
+      },
     });
   });
 
@@ -35,17 +39,20 @@ describe("transform (functions)", () => {
     expectCodeToMatch(result, /export const add = ([\S\s]*)$/, {
       $schema: {
         type: "function",
-        args: [{
-          name: "test",
-          type: "array",
-          items: {
-            type: ["string", "number"]
-          }
-        }, {
-          name: "append",
-          tsType: "false"
-        }]
-      }
+        args: [
+          {
+            name: "test",
+            type: "array",
+            items: {
+              type: ["string", "number"],
+            },
+          },
+          {
+            name: "append",
+            tsType: "false",
+          },
+        ],
+      },
     });
   });
 
@@ -60,9 +67,9 @@ describe("transform (functions)", () => {
         type: "function",
         args: [],
         returns: {
-          tsType: "void"
-        }
-      }
+          tsType: "void",
+        },
+      },
     });
   });
 
@@ -82,36 +89,41 @@ describe("transform (functions)", () => {
         type: "function",
         args: [
           { name: "a", type: "number" },
-          { name: "b", type: "number" }
+          { name: "b", type: "number" },
         ],
         returns: {
-          tsType: "void"
-        }
-      }
+          tsType: "void",
+        },
+      },
     });
   });
 
   it("correctly handles a function assigned to a variable", () => {
-    const results = [transform(`
+    const results = [
+      transform(`
       /** @untyped */
       export const bob = function add (test: string): string {}
-    `), transform(`
+    `),
+      transform(`
       /** @untyped */
       export const bob = (test: string): string => {}
-    `)];
+    `),
+    ];
 
     for (const result of results) {
       expectCodeToMatch(result, /export const bob = ([\S\s]*)$/, {
         $schema: {
           type: "function",
-          args: [{
-            name: "test",
-            type: "string"
-          }],
+          args: [
+            {
+              name: "test",
+              type: "string",
+            },
+          ],
           returns: {
-            type: "string"
-          }
-        }
+            type: "string",
+          },
+        },
       });
     }
   });
@@ -139,10 +151,11 @@ describe("transform (jsdoc)", () => {
         $default: "src",
         $schema: {
           title: "Define the source directory of your Nuxt application.",
-          description: "This property can be overwritten (for example, running `nuxt ./my-app/` will set the `rootDir` to the absolute path of `./my-app/` from the current/working directory.\nWith more content in description.",
-          tags: []
-        }
-      }
+          description:
+            "This property can be overwritten (for example, running `nuxt ./my-app/` will set the `rootDir` to the absolute path of `./my-app/` from the current/working directory.\nWith more content in description.",
+          tags: [],
+        },
+      },
     });
   });
 
@@ -174,10 +187,10 @@ describe("transform (jsdoc)", () => {
           tags: [
             "@note This is a note.\nthat is on two lines",
             "@example\n```js\nexport default secretNumber = 42\n```",
-            "@see https://nuxtjs.org"
-          ]
-        }
-      }
+            "@see https://nuxtjs.org",
+          ],
+        },
+      },
     });
   });
 
@@ -206,26 +219,27 @@ describe("transform (jsdoc)", () => {
         $schema: {
           title: "",
           description: "",
-          tsType: "'src' | 'root'"
-        }
+          tsType: "'src' | 'root'",
+        },
       },
       posix: {
         $default: null,
         $schema: {
           title: "",
           description: "",
-          tsType: "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
-          markdownType: "null | PathPosix | NetSocket['PassThrough']"
-        }
+          tsType:
+            "null | typeof import('path').posix | typeof import('net')['Socket']['PassThrough']",
+          markdownType: "null | PathPosix | NetSocket['PassThrough']",
+        },
       },
       multiline: {
         $default: null,
         $schema: {
           title: "",
           description: "",
-          tsType: "null | {\n  foo: 'bar' | 'baz'\n}"
-        }
-      }
+          tsType: "null | {\n  foo: 'bar' | 'baz'\n}",
+        },
+      },
     });
   });
 
@@ -246,9 +260,9 @@ describe("transform (jsdoc)", () => {
           title: "",
           description: "",
           tsType: "Array<'src' | 'root'>",
-          markdownType: "Array<HumanReadable>"
-        }
-      }
+          markdownType: "Array<HumanReadable>",
+        },
+      },
     });
   });
 
@@ -277,10 +291,10 @@ describe("transform (jsdoc)", () => {
           tags: [
             "@note This is a note.\nthat is on two lines",
             "@example\n```js\nexport default secretNumber = 42\n```",
-            "@see https://nuxtjs.org"
-          ]
-        }
-      }
+            "@see https://nuxtjs.org",
+          ],
+        },
+      },
     });
   });
 
@@ -305,10 +319,10 @@ describe("transform (jsdoc)", () => {
           title: "",
           description: "",
           tags: [
-            "@example\n```js\nexport default secretNumber = 42\n\nexport default nothing = null\n```"
-          ]
-        }
-      }
+            "@example\n```js\nexport default secretNumber = 42\n\nexport default nothing = null\n```",
+          ],
+        },
+      },
     });
   });
 
@@ -413,10 +427,12 @@ describe("transform (jsdoc)", () => {
   });
 });
 
-function expectCodeToMatch (code: string, pattern: RegExp, expected: any) {
+function expectCodeToMatch(code: string, pattern: RegExp, expected: any) {
   const [, result] = code.match(pattern) || [];
   expect(result).toBeDefined();
   // eslint-disable-next-line no-new-func, unicorn/new-for-builtins
-  const obj = Function("\"use strict\";return (" + result.replace(/;$/, "") + ")")();
+  const obj = Function(
+    '"use strict";return (' + result.replace(/;$/, "") + ")"
+  )();
   expect(obj).toMatchObject(expected);
 }

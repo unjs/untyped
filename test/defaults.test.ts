@@ -10,15 +10,15 @@ describe("applyDefaults", () => {
         val: 1,
         list: {
           // eslint-disable-next-line unicorn/prefer-spread
-          $resolve: val => ["a"].concat(val)
-        }
-      }
+          $resolve: (val) => ["a"].concat(val),
+        },
+      },
     };
     const input = {
       name: "custom",
       nested: {
-        list: "b"
-      }
+        list: "b",
+      },
     };
 
     const applied = await applyDefaults(ref, input);
@@ -28,8 +28,8 @@ describe("applyDefaults", () => {
       empty: {},
       nested: {
         val: 1,
-        list: ["a", "b"]
-      }
+        list: ["a", "b"],
+      },
     });
 
     expect(applied.empty).toMatchObject({});

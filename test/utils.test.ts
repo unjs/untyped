@@ -3,7 +3,10 @@ import { getValue, setValue } from "../src/utils";
 
 describe("getValue", () => {
   it("handles inaccessible properties", () => {
-    const fixture = { top: false, test: { other: false, thing: { value: "foo" } } };
+    const fixture = {
+      top: false,
+      test: { other: false, thing: { value: "foo" } },
+    };
     expect(getValue(fixture, "test.thing.value")).toBe("foo");
     expect(getValue(fixture, "test.other.value")).toBe(undefined);
     expect(getValue(fixture, "top.other.value")).toBe(undefined);

@@ -1,24 +1,36 @@
-import { getType, isObject, unique, getValue, setValue, joinPath, nonEmpty } from "./utils";
+import {
+  getType,
+  isObject,
+  unique,
+  getValue,
+  setValue,
+  joinPath,
+  nonEmpty,
+} from "./utils";
 import type { InputObject, InputValue, JSValue, Schema } from "./types";
 
 interface _ResolveCtx {
-  root: InputObject
-  defaults?: InputObject,
-  resolveCache: Record<string, Schema>
+  root: InputObject;
+  defaults?: InputObject;
+  resolveCache: Record<string, Schema>;
 }
 
-export async function resolveSchema (obj: InputObject, defaults?: InputObject) {
+export async function resolveSchema(obj: InputObject, defaults?: InputObject) {
   const schema = await _resolveSchema(obj, "", {
     root: obj,
     defaults,
-    resolveCache: {}
+    resolveCache: {},
   });
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
   return schema;
 }
 
-async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx): Promise<Schema> {
+async function _resolveSchema(
+  input: InputValue,
+  id: string,
+  ctx: _ResolveCtx
+): Promise<Schema> {
   // Check cache
   if (id in ctx.resolveCache) {
     return ctx.resolveCache[id];
@@ -29,7 +41,7 @@ async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx):
     const schema = {
       type: getType(input),
       // Clone arrays to avoid mutation
-      default: Array.isArray(input) ? [...input] : input as JSValue
+      default: Array.isArray(input) ? [...input] : (input as JSValue),
     };
     normalizeSchema(schema);
     ctx.resolveCache[id] = schema;
@@ -40,12 +52,12 @@ async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx):
   }
 
   // Clone to avoid mutation
-  const node = { ...input as any } as InputObject;
+  const node = { ...(input as any) } as InputObject;
 
-  const schema: Schema = ctx.resolveCache[id] = {
+  const schema: Schema = (ctx.resolveCache[id] = {
     ...node.$schema,
-    id: "#" + id.replace(/\./g, "/")
-  };
+    id: "#" + id.replace(/\./g, "/"),
+  });
 
   // Resolve children
   for (const key in node) {
@@ -55,7 +67,11 @@ async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx):
     }
     schema.properties = schema.properties || {};
     if (!schema.properties[key]) {
-      schema.properties[key] = await _resolveSchema(node[key], joinPath(id, key), ctx);
+      schema.properties[key] = await _resolveSchema(
+        node[key],
+        joinPath(id, key),
+        ctx
+      );
     }
   }
 
@@ -78,7 +94,8 @@ async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx):
 
   // Infer type from default value
   if (!schema.type) {
-    schema.type = getType(schema.default) || (schema.properties ? "object" : "any");
+    schema.type =
+      getType(schema.default) || (schema.properties ? "object" : "any");
   }
 
   normalizeSchema(schema);
@@ -88,21 +105,26 @@ async function _resolveSchema (input: InputValue, id: string, ctx: _ResolveCtx):
   return schema;
 }
 
-export async function applyDefaults (ref: InputObject, input: InputObject) {
+export async function applyDefaults(ref: InputObject, input: InputObject) {
   await resolveSchema(ref, input);
   return input;
 }
 
-function normalizeSchema (schema: Partial<Schema>): asserts schema is Schema {
+function normalizeSchema(schema: Partial<Schema>): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
     schema.items = {
-      type: nonEmpty(unique((schema.default as any[]).map(i => getType(i))))
+      type: nonEmpty(unique((schema.default as any[]).map((i) => getType(i)))),
     };
-    if (schema.items.type!.length === 0) {
+    if (schema.items.type && schema.items.type.length === 0) {
       schema.items.type = "any";
     }
   }
-  if (schema.default === undefined && ("properties" in schema || schema.type === "object" || schema.type === "any")) {
+  if (
+    schema.default === undefined &&
+    ("properties" in schema ||
+      schema.type === "object" ||
+      schema.type === "any")
+  ) {
     const propsWithDefaults = Object.entries(schema.properties || {})
       .filter(([, prop]) => "default" in prop)
       .map(([key, value]) => [key, value.default]);

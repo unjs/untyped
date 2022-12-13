@@ -5,26 +5,26 @@ describe("resolveSchema", () => {
   it("direct value", async () => {
     const schema = await resolveSchema({
       foo: "bar",
-      empty: {}
+      empty: {},
     });
     expect(schema).toMatchObject({
       type: "object",
       properties: {
         foo: {
           type: "string",
-          default: "bar"
+          default: "bar",
         },
         empty: {
           type: "any",
-          default: {}
-        }
-      }
+          default: {},
+        },
+      },
     });
   });
 
   it("nested value", async () => {
     const schema = await resolveSchema({
-      foo: { bar: 123 }
+      foo: { bar: 123 },
     });
     expect(schema).toMatchObject({
       properties: {
@@ -33,91 +33,95 @@ describe("resolveSchema", () => {
           properties: {
             bar: {
               default: 123,
-              type: "number"
-            }
-          }
-        }
-      }
+              type: "number",
+            },
+          },
+        },
+      },
     });
   });
 
   it("with $default", async () => {
     const schema = await resolveSchema({
-      foo: { $default: "bar" }
+      foo: { $default: "bar" },
     });
     expect(schema).toMatchObject({
       properties: {
         foo: {
           type: "string",
-          default: "bar"
-        }
-      }
+          default: "bar",
+        },
+      },
     });
   });
 
   it("with $schema", async () => {
     const schema = await resolveSchema({
-      foo: { $schema: { title: "this is foo" } }
+      foo: { $schema: { title: "this is foo" } },
     });
     expect(schema).toMatchObject({
       properties: {
         foo: {
-          title: "this is foo"
-        }
-      }
+          title: "this is foo",
+        },
+      },
     });
   });
 
   it("with $resolve", async () => {
     const schema = await resolveSchema({
-      foo: { $default: "123", $resolve: val => Number.parseInt(val) }
+      foo: { $default: "123", $resolve: (val) => Number.parseInt(val) },
     });
     expect(schema).toMatchObject({
       properties: {
         foo: {
           default: 123,
-          type: "number"
-        }
-      }
+          type: "number",
+        },
+      },
     });
   });
 
   it("with $resolve (dependency order-1)", async () => {
     const schema = await resolveSchema({
       foo: { $resolve: () => "foo" },
-      bar: { $resolve: async (val, get) => await get("foo") + (val || "bar") }
+      bar: {
+        $resolve: async (val, get) => (await get("foo")) + (val || "bar"),
+      },
     });
     expect(schema).toMatchObject({
       properties: {
         bar: {
-          default: "foobar"
-        }
-      }
+          default: "foobar",
+        },
+      },
     });
   });
 
   it("with $resolve (dependency order-2)", async () => {
     const schema = await resolveSchema({
       nested: {
-        foo: { $resolve: async (val, get) => await get("rootDir") + (val || "bar") }
+        foo: {
+          $resolve: async (val, get) => (await get("rootDir")) + (val || "bar"),
+        },
       },
-      rootDir: { $resolve: () => "root/" }
+      rootDir: { $resolve: () => "root/" },
     });
     expect(schema).toMatchObject({
       properties: {
         rootDir: {
           type: "string",
-          default: "root/"
+          default: "root/",
         },
         nested: {
           properties: {
             foo: {
               type: "string",
-              default: "root/bar"
-            }
-          }
-        }
-      }
+              default: "root/bar",
+            },
+          },
+        },
+      },
     });
   });
 
@@ -129,8 +133,8 @@ describe("resolveSchema", () => {
       resolved: {
         $default: ["d"],
         // eslint-disable-next-line unicorn/prefer-spread
-        $resolve: val => ["r"].concat(val)
-      }
+        $resolve: (val) => ["r"].concat(val),
+      },
     });
     expect(schema).toMatchObject({
       properties: {
@@ -138,48 +142,31 @@ describe("resolveSchema", () => {
           type: "array",
           default: [],
           items: {
-            type: "any"
-          }
+            type: "any",
+          },
         },
         numbers: {
           type: "array",
-          default: [
-            1,
-            2,
-            3
-          ],
+          default: [1, 2, 3],
           items: {
-            type: [
-              "number"
-            ]
-          }
+            type: ["number"],
+          },
         },
         mixed: {
           type: "array",
-          default: [
-            true,
-            123
-          ],
+          default: [true, 123],
           items: {
-            type: [
-              "boolean",
-              "number"
-            ]
-          }
+            type: ["boolean", "number"],
+          },
         },
         resolved: {
-          default: [
-            "r",
-            "d"
-          ],
+          default: ["r", "d"],
           type: "array",
           items: {
-            type: [
-              "string"
-            ]
-          }
-        }
-      }
+            type: ["string"],
+          },
+        },
+      },
     });
   });
 });
