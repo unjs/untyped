@@ -38,7 +38,7 @@ export function _generateMarkdown(
 
   // Signuture (function)
   if (schema.type === "function") {
-    lines.push("```ts", genFunctionType(schema), "```", "");
+    lines.push("```ts", genFunctionType(schema, {}), "```", "");
   }
 
   // Description
