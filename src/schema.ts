@@ -67,11 +67,19 @@ async function _resolveSchema(
     }
     schema.properties = schema.properties || {};
     if (!schema.properties[key]) {
-      schema.properties[key] = await _resolveSchema(
+      const child = (schema.properties[key] = await _resolveSchema(
         node[key],
         joinPath(id, key),
         ctx
-      );
+      ));
+
+      // Infer @required
+      if (Array.isArray(child.tags) && child.tags.includes("@required")) {
+        schema.required = schema.required || [];
+        if (!schema.required.includes(key)) {
+          schema.required.push(key);
+        }
+      }
     }
   }
 

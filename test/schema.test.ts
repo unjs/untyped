@@ -177,4 +177,17 @@ describe("resolveSchema", () => {
       },
     });
   });
+
+  it("Handle @required tag", async () => {
+    const schema = await resolveSchema({
+      some: {
+        prop: {
+          $schema: {
+            tags: ["@required"],
+          },
+        },
+      },
+    });
+    expect((schema as any).properties.some.required).toMatchObject(["prop"]);
+  });
 });
