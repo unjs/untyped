@@ -113,11 +113,13 @@ function _genTypes(
     buff.push(...generateJSDoc(val, opts));
     if (val.tsType) {
       buff.push(
-        `${escapeKey(key)}${opts.partial ? "?" : ""}: ${val.tsType},\n`
+        `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: ${
+          val.tsType
+        },\n`
       );
     } else if (val.type === "object") {
       buff.push(
-        `${escapeKey(key)}${opts.partial ? "?" : ""}: {`,
+        `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: {`,
         ..._genTypes(val, spaces, opts),
         "},\n"
       );
@@ -130,7 +132,11 @@ function _genTypes(
       } else {
         type = getTsType(val, opts);
       }
-      buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: ${type},\n`);
+      buff.push(
+        `${escapeKey(key)}${
+          isRequired(schema, key, opts) ? "" : "?"
+        }: ${type},\n`
+      );
     }
   }
 
@@ -256,4 +262,11 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   }
 
   return [];
+}
+
+function isRequired(schema: Schema, key: string, opts: GenerateTypesOptions) {
+  if (Array.isArray(schema.required) && schema.required.includes(key)) {
+    return true;
+  }
+  return !opts.partial;
 }

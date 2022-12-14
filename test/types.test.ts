@@ -68,10 +68,15 @@ describe("resolveSchema", () => {
             type: "array",
             items: {
               type: "object",
+              required: ["foo"],
               properties: {
                 foo: {
                   type: "number",
                   description: "This is foo prop",
+                },
+                bar: {
+                  type: "number",
+                  description: "This is bar prop",
                 },
               },
             },
@@ -98,7 +103,10 @@ describe("resolveSchema", () => {
 
        manual?: Array<{
         /** This is foo prop */
-        foo?: number,
+        foo: number,
+
+        /** This is bar prop */
+        bar?: number,
        }>,
       }"
     `);

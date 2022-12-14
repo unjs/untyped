@@ -48,6 +48,7 @@ export interface Schema extends TypeDescriptor {
   default?: JSValue;
   resolve?: ResolveFn;
   properties?: { [key: string]: Schema };
+  required?: string[];
   title?: string;
   description?: string;
   $schema?: string;
