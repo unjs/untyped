@@ -124,11 +124,11 @@ function _genTypes(
     } else {
       let type: string;
       if (val.type === "array") {
-        type = `Array<${getTsType(val.items)}>`;
+        type = `Array<${getTsType(val.items, opts)}>`;
       } else if (val.type === "function") {
-        type = genFunctionType(val);
+        type = genFunctionType(val, opts);
       } else {
-        type = getTsType(val);
+        type = getTsType(val, opts);
       }
       buff.push(`${escapeKey(key)}${opts.partial ? "?" : ""}: ${type},\n`);
     }
@@ -149,10 +149,14 @@ function _genTypes(
   return buff.flatMap((l) => l.split("\n")).map((l) => spaces + l);
 }
 
-function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
+function getTsType(
+  type: TypeDescriptor | TypeDescriptor[],
+  opts: GenerateTypesOptions
+): string {
   if (Array.isArray(type)) {
     return (
-      [normalizeTypes(type.map((t) => getTsType(t)))].flat().join("|") || "any"
+      [normalizeTypes(type.map((t) => getTsType(t, opts)))].flat().join("|") ||
+      "any"
     );
   }
   if (!type) {
@@ -168,19 +172,25 @@ function getTsType(type: TypeDescriptor | TypeDescriptor[]): string {
     return type.type.map((t) => TYPE_MAP[t]).join("|");
   }
   if (type.type === "array") {
-    return `Array<${getTsType(type.items)}>`;
+    return `Array<${getTsType(type.items, opts)}>`;
   }
   if (type.type === "object") {
-    return `{\n` + _genTypes(type, " ", {}).join("\n") + `\n}`;
+    return `{\n` + _genTypes(type, " ", opts).join("\n") + `\n}`;
   }
   return TYPE_MAP[type.type] || type.type;
 }
 
-export function genFunctionType(schema) {
-  return `(${genFunctionArgs(schema.args)}) => ${getTsType(schema.returns)}`;
+export function genFunctionType(schema, opts: GenerateTypesOptions) {
+  return `(${genFunctionArgs(schema.args, opts)}) => ${getTsType(
+    schema.returns,
+    opts
+  )}`;
 }
 
-export function genFunctionArgs(args: Schema["args"]) {
+export function genFunctionArgs(
+  args: Schema["args"],
+  opts: GenerateTypesOptions
+) {
   return (
     args
       ?.map((arg) => {
@@ -189,7 +199,7 @@ export function genFunctionArgs(args: Schema["args"]) {
           argStr += "?";
         }
         if (arg.type || arg.tsType) {
-          argStr += `: ${getTsType(arg)}`;
+          argStr += `: ${getTsType(arg, opts)}`;
         }
         return argStr;
       })

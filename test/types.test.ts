@@ -77,27 +77,28 @@ describe("resolveSchema", () => {
             },
           },
         },
-      })
+      }),
+      { partial: true }
     );
 
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
-       empty: Array<any>,
+       empty?: Array<any>,
 
        /** @default [1,2,3] */
-       numbers: Array<number>,
+       numbers?: Array<number>,
 
        /** @default [true,123] */
-       mixed: Array<boolean|number>,
+       mixed?: Array<boolean|number>,
 
        /** @default [{\\"foo\\":[123]}] */
-       object: Array<{
+       object?: Array<{
         [key: string]: any
        }>,
 
-       manual: Array<{
+       manual?: Array<{
         /** This is foo prop */
-        foo: number,
+        foo?: number,
        }>,
       }"
     `);
