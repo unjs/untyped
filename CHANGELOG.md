@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/unjs/untyped/compare/v1.1.0...v1.2.0) (2022-12-14)
+
+
+### Features
+
+* **schema:** support `required` ([f75c15c](https://github.com/unjs/untyped/commit/f75c15c98f4adab60e5b6d40e0c2aca319c92a98))
+* support `[@required](https://github.com/required)` tag infer ([d9d5084](https://github.com/unjs/untyped/commit/d9d5084da48ee11d8495f30262e8520fd6deca31))
+
+
+### Bug Fixes
+
+* respect `partial: true` option for array object type gen ([ef1a009](https://github.com/unjs/untyped/commit/ef1a009526d1af5a21f766c6244b015bdc5ee204))
+
 ## [1.1.0](https://github.com/unjs/untyped/compare/v1.0.0...v1.1.0) (2022-12-13)
 
 
