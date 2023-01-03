@@ -11,11 +11,13 @@ describe("resolveSchema", () => {
       type: "object",
       properties: {
         foo: {
+          id: "#foo",
           type: "string",
           default: "bar",
         },
         empty: {
           type: "any",
+          id: "#empty",
           default: {},
         },
       },

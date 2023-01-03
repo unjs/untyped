@@ -36,10 +36,14 @@ async function _resolveSchema(
     return ctx.resolveCache[id];
   }
 
+  // Normalize id for schema
+  const schemaId = "#" + id.replace(/\./g, "/");
+
   // Node is plain value
   if (!isObject(input)) {
-    const schema = {
+    const schema: Schema = {
       type: getType(input),
+      id: schemaId,
       // Clone arrays to avoid mutation
       default: Array.isArray(input) ? [...input] : (input as JSValue),
     };
@@ -56,7 +60,7 @@ async function _resolveSchema(
 
   const schema: Schema = (ctx.resolveCache[id] = {
     ...node.$schema,
-    id: "#" + id.replace(/\./g, "/"),
+    id: schemaId,
   });
 
   // Resolve children
