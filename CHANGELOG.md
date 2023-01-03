@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/unjs/untyped/compare/v1.2.0...v1.2.1) (2023-01-03)
+
+
+### Bug Fixes
+
+* dedefault babel/standalone ([da7979b](https://github.com/unjs/untyped/commit/da7979b49e795f763b087326dd2c2ba5a84592af))
+* **schema:** add id for non object types ([b836da8](https://github.com/unjs/untyped/commit/b836da829a97596ad971729a8071fd7ebd9024ee))
+
 ## [1.2.0](https://github.com/unjs/untyped/compare/v1.1.0...v1.2.0) (2022-12-14)
 
 
