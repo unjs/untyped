@@ -38,8 +38,8 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/core": "^7.20.7",
-    "@babel/standalone": "^7.20.11",
+    "@babel/core": "^7.20.12",
+    "@babel/standalone": "^7.20.12",
     "@babel/types": "^7.20.7",
     "scule": "^1.0.0"
   },
