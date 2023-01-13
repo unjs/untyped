@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/unjs/untyped/compare/v1.2.1...v1.2.2) (2023-01-13)
+
+
+### Bug Fixes
+
+* **dts:** add empty lines between title and description lines (resolves [#70](https://github.com/unjs/untyped/issues/70)) ([5255259](https://github.com/unjs/untyped/commit/525525979fadec7dbf6dade38726c82221a793c2))
+* **dts:** also add empty line for default description ([d4034c1](https://github.com/unjs/untyped/commit/d4034c1de14d3daa61bb61ef55f16e77df0fea3b))
+
 ### [1.2.1](https://github.com/unjs/untyped/compare/v1.2.0...v1.2.1) (2023-01-03)
 
 
