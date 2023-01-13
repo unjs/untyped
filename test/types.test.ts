@@ -21,7 +21,9 @@ describe("resolveSchema", () => {
        test: {
         /**
          * Test
+         * 
          * this is test
+         * 
          * @default \\"test value\\"
         */
         foo: string,
@@ -102,10 +104,16 @@ describe("resolveSchema", () => {
        }>,
 
        manual?: Array<{
-        /** This is foo prop */
+        /**
+         * This is foo prop
+         * 
+        */
         foo: number,
 
-        /** This is bar prop */
+        /**
+         * This is bar prop
+         * 
+        */
         bar?: number,
        }>,
       }"

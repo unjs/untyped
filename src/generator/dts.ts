@@ -217,11 +217,11 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   let buff = [];
 
   if (schema.title) {
-    buff.push(schema.title);
+    buff.push(schema.title, "");
   }
 
   if (schema.description) {
-    buff.push(schema.description);
+    buff.push(schema.description, "");
   } else if (opts.defaultDescrption && schema.type !== "object") {
     buff.push(opts.defaultDescrption);
   }
