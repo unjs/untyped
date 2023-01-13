@@ -223,7 +223,7 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   if (schema.description) {
     buff.push(schema.description, "");
   } else if (opts.defaultDescrption && schema.type !== "object") {
-    buff.push(opts.defaultDescrption);
+    buff.push(opts.defaultDescrption, "");
   }
 
   if (
