@@ -14,11 +14,11 @@ specifiers:
   eslint-config-unjs: ^0.0.3
   hljs: ^6.2.3
   json-schema: ^0.4.0
-  marked: ^4.2.5
+  marked: ^4.2.12
   monaco-editor: ^0.34.1
   nuxt: ^3.0.0
   nuxt-windicss: ^2.6.0
-  prettier: ^2.8.2
+  prettier: ^2.8.3
   prismjs: ^1.29.0
   scule: ^1.0.0
   standard-version: ^9.5.0
@@ -43,11 +43,11 @@ devDependencies:
   eslint-config-unjs: 0.0.3_iukboom6ndih5an6iafl45j2fe
   hljs: 6.2.3
   json-schema: 0.4.0
-  marked: 4.2.5
+  marked: 4.2.12
   monaco-editor: 0.34.1
   nuxt: 3.0.0_cm42zyxvglsov4txw4kqlclcfe
   nuxt-windicss: 2.6.0
-  prettier: 2.8.2
+  prettier: 2.8.3
   prismjs: 1.29.0
   standard-version: 9.5.0
   typescript: 4.9.4
@@ -4881,8 +4881,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /marked/4.2.5:
-    resolution: {integrity: sha512-jPueVhumq7idETHkb203WDD4fMA3yV9emQ5vLwop58lu8bTclMghBWcYAavlDqIEMaisADinV1TooIFCfqOsYQ==}
+  /marked/4.2.12:
+    resolution: {integrity: sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: true
@@ -5375,7 +5375,7 @@ packages:
       unhead: 1.0.10
       unimport: 1.0.1
       unplugin: 1.0.0
-      untyped: 1.0.0
+      untyped: 1.2.2
       vue: 3.2.45
       vue-bundle-renderer: 1.0.0
       vue-devtools-stub: 0.1.0
@@ -6069,8 +6069,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier/2.8.2:
-    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
+  /prettier/2.8.3:
+    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -7194,17 +7194,6 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
-    dev: true
-
-  /untyped/1.0.0:
-    resolution: {integrity: sha512-aBeR3Z51038d7zVzsNShYEdO7u/VCp5R17fxpPXlD2QvG9g6uVJ+JM+zMJ7KFPIt1BNf3I6bU6PhAlsAFkIfdA==}
-    dependencies:
-      '@babel/core': 7.20.12
-      '@babel/standalone': 7.20.12
-      '@babel/types': 7.20.7
-      scule: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /untyped/1.2.2:
