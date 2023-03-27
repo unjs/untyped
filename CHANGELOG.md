@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.3.1
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.3.0...v1.3.1)
+
+
+### 🩹 Fixes
+
+  - **loader:** Use named defu import ([7cc6075](https://github.com/unjs/untyped/commit/7cc6075))
+  - **loader:** Options is optional ([807d68a](https://github.com/unjs/untyped/commit/807d68a))
+  - **babel:** Allow unannotated function schemas ([8c09c02](https://github.com/unjs/untyped/commit/8c09c02))
+  - **pkg:** Add compatible types for `/loader` subpath ([dbaa90d](https://github.com/unjs/untyped/commit/dbaa90d))
+  - Handle undefined schema for internal `_genTypes` ([cc693ff](https://github.com/unjs/untyped/commit/cc693ff))
+  - Handle arrow functions with literal return type ([4d8453b](https://github.com/unjs/untyped/commit/4d8453b))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.3.0
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.2.2...v1.3.0)
