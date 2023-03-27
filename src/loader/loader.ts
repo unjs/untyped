@@ -14,7 +14,7 @@ export interface LoaderOptions {
 
 export async function loadSchema(
   entryPath: string,
-  options: LoaderOptions
+  options: LoaderOptions = {}
 ): Promise<Schema> {
   const _jitiRequire = jiti(
     process.cwd(),
