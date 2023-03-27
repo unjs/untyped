@@ -214,6 +214,7 @@ export function genFunctionArgs(
 }
 
 function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
+  // TODO: remove when appropriate
   // @ts-expect-error - legacy typo
   opts.defaultDescription = opts.defaultDescription || opts.defaultDescrption;
 
