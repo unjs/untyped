@@ -5,7 +5,7 @@ export interface GenerateTypesOptions {
   interfaceName?: string;
   addExport?: boolean;
   addDefaults?: boolean;
-  defaultDescrption?: string;
+  defaultDescription?: string;
   indentation?: number;
   allowExtraKeys?: boolean;
   partial?: boolean;
@@ -214,6 +214,9 @@ export function genFunctionArgs(
 }
 
 function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
+  // @ts-expect-error - legacy typo
+  opts.defaultDescription = opts.defaultDescription || opts.defaultDescrption;
+
   let buff = [];
 
   if (schema.title) {
@@ -222,8 +225,8 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
 
   if (schema.description) {
     buff.push(schema.description, "");
-  } else if (opts.defaultDescrption && schema.type !== "object") {
-    buff.push(opts.defaultDescrption, "");
+  } else if (opts.defaultDescription && schema.type !== "object") {
+    buff.push(opts.defaultDescription, "");
   }
 
   if (
