@@ -108,6 +108,10 @@ function _genTypes(
 ): string[] {
   const buff: string[] = [];
 
+  if (!schema) {
+    return buff;
+  }
+
   for (const key in schema.properties) {
     const val = schema.properties[key] as Schema;
     buff.push(...generateJSDoc(val, opts));
