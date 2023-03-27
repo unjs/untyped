@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.3.0
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.2.2...v1.3.0)
+
+
+### 🚀 Enhancements
+
+  - Schema loader and `untyped` cli ([#82](https://github.com/unjs/untyped/pull/82))
+
+### 🩹 Fixes
+
+  - Correct typo in `GenerateTypesOptions` ([#81](https://github.com/unjs/untyped/pull/81))
+
+### 🏡 Chore
+
+  - Update lockfile ([f9d78cb](https://github.com/unjs/untyped/commit/f9d78cb))
+  - Use changelogen for release ([dac9612](https://github.com/unjs/untyped/commit/dac9612))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Daniel Roe <daniel@roe.dev>
+
 ### [1.2.2](https://github.com/unjs/untyped/compare/v1.2.1...v1.2.2) (2023-01-13)
 
 
