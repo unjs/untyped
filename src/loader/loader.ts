@@ -1,5 +1,5 @@
 import jiti from "jiti";
-import defu from "defu";
+import { defu } from "defu";
 import { resolveSchema } from "../schema";
 import type { Schema } from "../types";
 import untypedPlugin from "./babel";
