@@ -10,12 +10,15 @@ specifiers:
   '@types/node': ^18.15.10
   '@vitest/coverage-c8': ^0.29.7
   '@vue/compiler-sfc': ^3.2.47
+  defu: ^6.1.2
   eslint: ^8.36.0
   eslint-config-unjs: ^0.1.0
   hljs: ^6.2.3
+  jiti: ^1.18.2
   json-schema: ^0.4.0
   marked: ^4.3.0
   monaco-editor: ^0.36.1
+  mri: ^1.2.0
   nuxt: ^3.3.2
   nuxt-windicss: ^2.6.0
   prettier: ^2.8.7
@@ -30,6 +33,9 @@ dependencies:
   '@babel/core': 7.21.3
   '@babel/standalone': 7.21.3
   '@babel/types': 7.21.3
+  defu: 6.1.2
+  jiti: 1.18.2
+  mri: 1.2.0
   scule: 1.0.0
 
 devDependencies:
@@ -2703,7 +2709,6 @@ packages:
 
   /defu/6.1.2:
     resolution: {integrity: sha512-+uO4+qr7msjNNWKYPHqN/3+Dx3NFkmIzayk2L1MyZQlvgZb/J1A0fo410dpKrN2SnqFjt8n4JL8fDJE0wIgjFQ==}
-    dev: true
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
@@ -4451,7 +4456,6 @@ packages:
   /jiti/1.18.2:
     resolution: {integrity: sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==}
     hasBin: true
-    dev: true
 
   /js-sdsl/4.4.0:
     resolution: {integrity: sha512-FfVSdx6pJ41Oa+CF7RDaFmTnCaFhua+SNYQX74riGOpl96x+2jQCqEfQ2bnXu/5DPCqlRuiqyvTJM0Qjz26IVg==}
@@ -4960,7 +4964,6 @@ packages:
   /mri/1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
-    dev: true
 
   /mrmime/1.0.1:
     resolution: {integrity: sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==}

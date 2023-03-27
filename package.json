@@ -20,10 +20,18 @@
       "import": "./dist/transform.mjs",
       "require": "./dist/transform.cjs",
       "types": "./dist/transform.d.ts"
+    },
+    "./loader": {
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.mjs",
+      "require": "./dist/loader.cjs"
     }
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "untyped": "./dist/cli.mjs"
+  },
   "files": [
     "dist"
   ],
@@ -34,6 +42,7 @@
     "prepack": "pnpm build",
     "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
     "test": "pnpm lint && vitest run --coverage",
+    "untyped": "jiti ./src/cli.ts",
     "web": "nuxi dev web",
     "web:build": "nuxi generate web"
   },
@@ -41,6 +50,9 @@
     "@babel/core": "^7.21.3",
     "@babel/standalone": "^7.21.3",
     "@babel/types": "^7.21.3",
+    "defu": "^6.1.2",
+    "jiti": "^1.18.2",
+    "mri": "^1.2.0",
     "scule": "^1.0.0"
   },
   "devDependencies": {
