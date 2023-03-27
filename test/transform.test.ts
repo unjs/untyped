@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { evalModule } from "mlly";
 import { transform } from "../src/loader/transform";
 
 describe("transform (functions)", () => {
@@ -126,6 +127,27 @@ describe("transform (functions)", () => {
         },
       });
     }
+  });
+
+  it("Handles comments above overloads", async () => {
+    const exports = await evalModule(
+      transform(`
+        /** Multiply a by b */
+        export function mul (a: number, b:number)
+        export function mul (a: number, b:number, c: number): number {
+          return a * b
+        };
+
+        /** Adds numbers */
+        export function add (a: number, b: number): number;
+        export function add (a: number, b: number, c: number = 0): number {
+          return a + b + c
+        };
+    `)
+    );
+
+    expect(exports.mul.$schema.title).toMatch("Multiply a by b");
+    expect(exports.add.$schema.title).toMatch("Adds numbers");
   });
 });
 
