@@ -6,4 +6,3 @@ coverage
 dist
 .tmp
 /*.js
-/*.d.ts
