@@ -87,9 +87,10 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
         schema.type = "function";
         schema.args = [];
 
-        if (!schema.tags.includes("@untyped")) {
-          return;
-        }
+        // TODO: Check for possible external regressions and only opt-in for loader if any
+        // if (!schema.tags.includes("@untyped")) {
+        //   return;
+        // }
 
         const _getLines = cachedFn(() => this.file.code.split("\n"));
         const getCode: GetCodeFn = (loc) => {
