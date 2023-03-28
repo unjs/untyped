@@ -39,8 +39,8 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",
-    "lint": "eslint --ext .js,.ts . && prettier -c src test",
-    "lint:fix": "eslint --fix --ext .js,.ts . && prettier -w src test",
+    "lint": "eslint --ext .js,.ts . && prettier -c src test web",
+    "lint:fix": "eslint --fix --ext .js,.ts . && prettier -w src test web",
     "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage",

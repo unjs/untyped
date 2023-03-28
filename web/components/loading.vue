@@ -1,7 +1,13 @@
 <template>
   <div class="loading">
     <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
-    <svg width="50" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#ababab">
+    <svg
+      width="50"
+      height="30"
+      viewBox="0 0 120 30"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#ababab"
+    >
       <circle cx="15" cy="15" r="15">
         <animate
           attributeName="r"
@@ -73,7 +79,7 @@
 </template>
 
 <style scoped>
-  .loading {
-    padding: 2em;
-  }
+.loading {
+  padding: 2em;
+}
 </style>
