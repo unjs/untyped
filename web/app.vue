@@ -6,7 +6,12 @@
         <a href="/">Untyped</a>
       </p>
       <div>
-        <a href="https://github.com/unjs/untyped" role="noopener" target="github">Github</a>
+        <a
+          href="https://github.com/unjs/untyped"
+          role="noopener"
+          target="github"
+          >Github</a
+        >
       </div>
     </div>
     <!-- Main -->
@@ -19,8 +24,8 @@
         </div>
         <div v-if="state.editorTab === 'reference'" class="block-content">
           <div class="block-info">
-            Reference describes object shape, defaults, and normalizer.
-            We can use jsdocs to set additional comments.
+            Reference describes object shape, defaults, and normalizer. We can
+            use jsdocs to set additional comments.
           </div>
           <Editor v-model="state.ref" language="typescript" />
         </div>
@@ -34,15 +39,23 @@
       <!-- Output -->
       <div class="block">
         <div class="block-title">
-          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'types', 'docs', 'resolved']" />
+          <Tabs
+            v-model="state.outputTab"
+            :tabs="['loader', 'schema', 'types', 'docs', 'resolved']"
+          />
           <span class="block-label">Output</span>
         </div>
         <!-- Schema -->
         <div v-if="state.outputTab === 'schema'" class="block-content">
           <div class="block-info">
-            Schema is auto generated from reference and is json-schema compliant.
+            Schema is auto generated from reference and is json-schema
+            compliant.
           </div>
-          <Editor :model-value="JSON.stringify(schema, null, 2)" read-only language="json" />
+          <Editor
+            :model-value="JSON.stringify(schema, null, 2)"
+            read-only
+            language="json"
+          />
         </div>
         <!-- Types -->
         <div v-if="state.outputTab === 'types'" class="block-content">
@@ -63,14 +76,22 @@
           <div class="block-info">
             Using optional loader, we can support jsdoc to describe object.
           </div>
-          <Editor :model-value="transpiledRef" read-only language="typescript" />
+          <Editor
+            :model-value="transpiledRef"
+            read-only
+            language="typescript"
+          />
         </div>
         <!-- Resolved -->
         <div v-if="state.outputTab === 'resolved'" class="block-content">
           <div class="block-info">
             We can apply reference object to user input to apply defaults.
           </div>
-          <Editor :model-value="JSON.stringify(resolvedInput, null, 2)" read-only language="typescript" />
+          <Editor
+            :model-value="JSON.stringify(resolvedInput, null, 2)"
+            read-only
+            language="typescript"
+          />
         </div>
       </div>
     </main>
@@ -78,47 +99,64 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
-import { resolveSchema, generateTypes, applyDefaults, generateMarkdown } from '../src'
-import { defaultReference, defaultInput } from './consts'
-import LoadingComponent from './components/loading.vue'
-import Tabs from './components/tabs.vue'
+import { defineComponent, defineAsyncComponent } from "vue";
+import {
+  resolveSchema,
+  generateTypes,
+  applyDefaults,
+  generateMarkdown,
+} from "../src";
+import { defaultReference, defaultInput } from "./consts";
+import LoadingComponent from "./components/loading.vue";
+import Tabs from "./components/tabs.vue";
 
 export default defineComponent({
   components: {
     Tabs,
     Editor: defineAsyncComponent({
-      loader: () => import('./components/editor.vue'),
-      loadingComponent: LoadingComponent
+      loader: () => import("./components/editor.vue"),
+      loadingComponent: LoadingComponent,
     }),
     Markdown: defineAsyncComponent({
-      loader: () => import('./components/markdown.vue'),
-      loadingComponent: LoadingComponent
-    })
+      loader: () => import("./components/markdown.vue"),
+      loadingComponent: LoadingComponent,
+    }),
   },
-  setup () {
+  setup() {
     const state = persistedState({
-      editorTab: 'reference',
-      outputTab: 'types',
+      editorTab: "reference",
+      outputTab: "types",
       ref: defaultReference,
-      input: defaultInput
-    })
+      input: defaultInput,
+    });
 
-    window.process = { env: {} }
+    window.process = { env: {} };
     const loader = asyncImport({
-      loader: () => import('../src/loader/transform'),
-      loading: { transform: () => 'export default {} // loader is loading...' },
-      error: err => ({ transform: () => 'export default {} // Error loading loader: ' + err })
-    })
+      loader: () => import("../src/loader/transform"),
+      loading: { transform: () => "export default {} // loader is loading..." },
+      error: (err) => ({
+        transform: () => "export default {} // Error loading loader: " + err,
+      }),
+    });
 
-    const transpiledRef = safeComputed(() => loader.transform(state.ref))
-    const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value))
-    const schema = asyncComputed(async () => await resolveSchema(referenceObj.value))
-    const types = safeComputed(() => generateTypes(schema.value))
-    const markdown = safeComputed(() => generateMarkdown(schema.value))
+    const transpiledRef = safeComputed(() =>
+      loader.transform(state.ref, {
+        experimentalFunctions: true,
+      })
+    );
+    const referenceObj = safeComputed(() =>
+      evaluateSource(transpiledRef.value)
+    );
+    const schema = asyncComputed(
+      async () => await resolveSchema(referenceObj.value)
+    );
+    const types = safeComputed(() => generateTypes(schema.value));
+    const markdown = safeComputed(() => generateMarkdown(schema.value));
 
-    const inputObj = safeComputed(() => evaluateSource(state.input))
-    const resolvedInput = asyncComputed(async () => await applyDefaults(referenceObj.value, inputObj.value))
+    const inputObj = safeComputed(() => evaluateSource(state.input));
+    const resolvedInput = asyncComputed(
+      async () => await applyDefaults(referenceObj.value, inputObj.value)
+    );
 
     return {
       state,
@@ -127,14 +165,16 @@ export default defineComponent({
       transpiledRef,
       inputObj,
       resolvedInput,
-      markdown
-    }
-  }
-})
+      markdown,
+    };
+  },
+});
 </script>
 
 <style>
-body, html, #app {
+body,
+html,
+#app {
   margin: 0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   @apply antialiased;
@@ -149,7 +189,7 @@ body, html, #app {
 }
 
 .block-title {
-  padding: .5em;
+  padding: 0.5em;
   position: relative;
   @apply border-green-500 border-b-2 flex flex-col;
 }
@@ -169,7 +209,7 @@ body, html, #app {
 }
 
 .block-info {
-  padding: .25em;
+  padding: 0.25em;
   @apply border-dashed border-light-blue-500 border-b-1 mb-3 text-gray-700;
 }
 </style>
