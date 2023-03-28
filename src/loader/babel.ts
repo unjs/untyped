@@ -30,9 +30,9 @@ const babelPluginUntyped: PluginItem = function (
           const newDeclaration = t.functionDeclaration(
             declaration.id,
             declaration.init.params,
-            t.isLiteral(declaration.init.body)
-              ? t.blockStatement([t.returnStatement(declaration.init.body)])
-              : (declaration.init.body as t.BlockStatement)
+            t.isBlockStatement(declaration.init.body)
+              ? (declaration.init.body as t.BlockStatement)
+              : t.blockStatement([t.returnStatement(declaration.init.body)])
           );
           newDeclaration.returnType = declaration.init.returnType;
           p.replaceWith(newDeclaration);
