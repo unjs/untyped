@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.3.2
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.3.1...v1.3.2)
+
+
+### 🩹 Fixes
+
+  - Only enable `experimentalFunctions` for new loader ([f875ae5](https://github.com/unjs/untyped/commit/f875ae5))
+  - **babel:** Only transform exported functions with meta ([afa8dac](https://github.com/unjs/untyped/commit/afa8dac))
+  - **babel:** Transform all arrow functions with block syntax ([ca052d6](https://github.com/unjs/untyped/commit/ca052d6))
+  - Allow opting in to experimental functions for transform and web ([e3395fc](https://github.com/unjs/untyped/commit/e3395fc))
+  - **babel:** Partially handle functions as default export ([a35258b](https://github.com/unjs/untyped/commit/a35258b))
+
+### 🏡 Chore
+
+  - Update lockfile ([6ed9138](https://github.com/unjs/untyped/commit/6ed9138))
+
+### 🎨 Styles
+
+  - Format web project with prettier ([55f1ffb](https://github.com/unjs/untyped/commit/55f1ffb))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.3.1
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.3.0...v1.3.1)
