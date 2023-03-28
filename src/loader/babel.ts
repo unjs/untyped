@@ -100,6 +100,11 @@ const babelPluginUntyped: PluginItem = function (
           return;
         }
 
+        // Do not add meta to internal functions
+        if (p.parent.type !== "ExportNamedDeclaration") {
+          return;
+        }
+
         const _getLines = cachedFn(() => this.file.code.split("\n"));
         const getCode: GetCodeFn = (loc) => {
           const _lines = _getLines();
