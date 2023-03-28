@@ -13,18 +13,18 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
     tabs: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     modelValue: {
       type: String,
-      default: ''
-    }
-  }
-})
+      default: "",
+    },
+  },
+});
 </script>

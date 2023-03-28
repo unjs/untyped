@@ -12,7 +12,10 @@ import { version } from "../../package.json";
 
 type GetCodeFn = (loc: t.SourceLocation) => string;
 
-const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
+const babelPluginUntyped: PluginItem = function (
+  api: ConfigAPI,
+  options: { experimentalFunctions?: boolean }
+) {
   api.cache.using(() => version);
 
   return <PluginObj>{
@@ -27,7 +30,9 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
           const newDeclaration = t.functionDeclaration(
             declaration.id,
             declaration.init.params,
-            declaration.init.body as t.BlockStatement
+            t.isBlockStatement(declaration.init.body)
+              ? (declaration.init.body as t.BlockStatement)
+              : t.blockStatement([t.returnStatement(declaration.init.body)])
           );
           newDeclaration.returnType = declaration.init.returnType;
           p.replaceWith(newDeclaration);
@@ -87,10 +92,21 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
         schema.type = "function";
         schema.args = [];
 
-        // TODO: Check for possible external regressions and only opt-in for loader if any
-        // if (!schema.tags.includes("@untyped")) {
-        //   return;
-        // }
+        // Experimental functions meta support
+        if (
+          !options.experimentalFunctions &&
+          !schema.tags.includes("@untyped")
+        ) {
+          return;
+        }
+
+        // Do not add meta to internal functions
+        if (
+          p.parent.type !== "ExportNamedDeclaration" &&
+          p.parent.type !== "ExportDefaultDeclaration"
+        ) {
+          return;
+        }
 
         const _getLines = cachedFn(() => this.file.code.split("\n"));
         const getCode: GetCodeFn = (loc) => {
@@ -175,14 +191,18 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
         });
 
         // Replace function with it's meta
-        p.replaceWith(
-          t.variableDeclaration("const", [
-            t.variableDeclarator(
-              t.identifier(p.node.id.name),
-              astify({ $schema: schema })
-            ),
-          ])
-        );
+        if (p.parent.type === "ExportDefaultDeclaration") {
+          p.replaceWith(astify({ $schema: schema }));
+        } else {
+          p.replaceWith(
+            t.variableDeclaration("const", [
+              t.variableDeclarator(
+                t.identifier(p.node.id.name),
+                astify({ $schema: schema })
+              ),
+            ])
+          );
+        }
       },
     },
   };

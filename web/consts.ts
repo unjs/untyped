@@ -1,5 +1,4 @@
 export const defaultReference = `
-/** @untyped */
 export function sendMessage (message: string, date = new Date(), flash?: boolean): string {
   return 'OK'
 }
@@ -21,7 +20,7 @@ export const config = {
         $resolve: (val) => ['tag1'].concat(val).filter(Boolean)
     }
 }
-`.trim()
+`.trim();
 
 export const defaultInput = `
 export const config = {
@@ -31,4 +30,4 @@ export const config = {
     },
     tags: ['custom']
 }
-`.trim()
+`.trim();

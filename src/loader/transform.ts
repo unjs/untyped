@@ -3,11 +3,11 @@ import untypedPlugin from "./babel";
 
 const { transform: babelTransform } = babel.default || babel;
 
-export function transform(src: string) {
+export function transform(src: string, opts = {}) {
   const res = babelTransform(src, {
     filename: "src.ts",
     presets: ["typescript"],
-    plugins: [untypedPlugin],
+    plugins: [[untypedPlugin, opts]],
   });
   return res.code;
 }

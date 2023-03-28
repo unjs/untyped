@@ -1,6 +1,6 @@
 {
   "name": "untyped",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "description": "",
   "repository": "unjs/untyped",
   "license": "MIT",
@@ -39,8 +39,8 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",
-    "lint": "eslint --ext .js,.ts . && prettier -c src test",
-    "lint:fix": "eslint --fix --ext .js,.ts . && prettier -w src test",
+    "lint": "eslint --ext .js,.ts . && prettier -c src test web",
+    "lint:fix": "eslint --fix --ext .js,.ts . && prettier -w src test web",
     "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage",
@@ -78,5 +78,6 @@
     "typescript": "^5.0.2",
     "unbuild": "^1.1.2",
     "vitest": "^0.29.7"
-  }
+  },
+  "packageManager": "pnpm@8.0.0"
 }

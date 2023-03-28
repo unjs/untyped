@@ -23,7 +23,7 @@ export async function loadSchema(
       interopDefault: true,
       transformOptions: {
         babel: {
-          plugins: [untypedPlugin],
+          plugins: [[untypedPlugin, { experimentalFunctions: true }]],
         },
       },
     })
