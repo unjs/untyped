@@ -12,7 +12,10 @@ import { version } from "../../package.json";
 
 type GetCodeFn = (loc: t.SourceLocation) => string;
 
-const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
+const babelPluginUntyped: PluginItem = function (
+  api: ConfigAPI,
+  options: { experimentalFunctions?: boolean }
+) {
   api.cache.using(() => version);
 
   return <PluginObj>{
@@ -89,10 +92,13 @@ const babelPluginUntyped: PluginItem = function (api: ConfigAPI) {
         schema.type = "function";
         schema.args = [];
 
-        // TODO: Check for possible external regressions and only opt-in for loader if any
-        // if (!schema.tags.includes("@untyped")) {
-        //   return;
-        // }
+        // Experimental functions meta support
+        if (
+          !options.experimentalFunctions &&
+          !schema.tags.includes("@untyped")
+        ) {
+          return;
+        }
 
         const _getLines = cachedFn(() => this.file.code.split("\n"));
         const getCode: GetCodeFn = (loc) => {
