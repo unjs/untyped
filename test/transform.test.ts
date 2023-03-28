@@ -131,7 +131,10 @@ describe("transform (functions)", () => {
 
   it("Handles comments above overloads", async () => {
     const exports = await evalModule(
-      transform(`
+      transform(
+        `
+        /** an unrelated comment */
+
         /** Multiply a by b */
         export function mul (a: number, b:number)
         export function mul (a: number, b:number, c: number): number {
@@ -143,7 +146,9 @@ describe("transform (functions)", () => {
         export function add (a: number, b: number, c: number = 0): number {
           return a + b + c
         };
-    `)
+    `,
+        { experimentalFunctions: true }
+      )
     );
 
     expect(exports.mul.$schema.title).toMatch("Multiply a by b");
