@@ -101,7 +101,10 @@ const babelPluginUntyped: PluginItem = function (
         }
 
         // Do not add meta to internal functions
-        if (p.parent.type !== "ExportNamedDeclaration") {
+        if (
+          p.parent.type !== "ExportNamedDeclaration" &&
+          p.parent.type !== "ExportDefaultDeclaration"
+        ) {
           return;
         }
 
@@ -188,14 +191,18 @@ const babelPluginUntyped: PluginItem = function (
         });
 
         // Replace function with it's meta
-        p.replaceWith(
-          t.variableDeclaration("const", [
-            t.variableDeclarator(
-              t.identifier(p.node.id.name),
-              astify({ $schema: schema })
-            ),
-          ])
-        );
+        if (p.parent.type === "ExportDefaultDeclaration") {
+          p.replaceWith(astify({ $schema: schema }));
+        } else {
+          p.replaceWith(
+            t.variableDeclaration("const", [
+              t.variableDeclarator(
+                t.identifier(p.node.id.name),
+                astify({ $schema: schema })
+              ),
+            ])
+          );
+        }
       },
     },
   };
