@@ -49,9 +49,9 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/standalone": "^7.21.3",
-    "@babel/types": "^7.21.3",
+    "@babel/core": "^7.21.4",
+    "@babel/standalone": "^7.21.4",
+    "@babel/types": "^7.21.4",
     "defu": "^6.1.2",
     "jiti": "^1.18.2",
     "mri": "^1.2.0",
@@ -61,23 +61,23 @@
     "@babel/template": "^7.20.7",
     "@types/babel__standalone": "latest",
     "@types/babel__traverse": "latest",
-    "@types/node": "^18.15.10",
-    "@vitest/coverage-c8": "^0.29.7",
+    "@types/node": "^18.15.11",
+    "@vitest/coverage-c8": "^0.29.8",
     "@vue/compiler-sfc": "^3.2.47",
-    "changelogen": "^0.5.1",
-    "eslint": "^8.36.0",
+    "changelogen": "^0.5.2",
+    "eslint": "^8.37.0",
     "eslint-config-unjs": "^0.1.0",
     "hljs": "^6.2.3",
     "json-schema": "^0.4.0",
     "marked": "^4.3.0",
     "monaco-editor": "^0.36.1",
-    "nuxt": "^3.3.2",
+    "nuxt": "^3.3.3",
     "nuxt-windicss": "^2.6.0",
     "prettier": "^2.8.7",
     "prismjs": "^1.29.0",
-    "typescript": "^5.0.2",
-    "unbuild": "^1.1.2",
-    "vitest": "^0.29.7"
+    "typescript": "^5.0.3",
+    "unbuild": "^1.2.0",
+    "vitest": "^0.29.8"
   },
-  "packageManager": "pnpm@8.0.0"
+  "packageManager": "pnpm@8.1.0"
 }
