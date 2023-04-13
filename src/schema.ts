@@ -16,7 +16,7 @@ interface _ResolveCtx {
   inferDefaults: boolean;
 }
 
-interface NormalizeSchemaOptions {
+export interface NormalizeSchemaOptions {
   inferDefaults: boolean;
 }
 
@@ -141,7 +141,7 @@ export async function applyDefaults(ref: InputObject, input: InputObject) {
 
 function normalizeSchema(
   schema: Partial<Schema>,
-  { inferDefaults }: NormalizeSchemaOptions
+  options: NormalizeSchemaOptions
 ): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
     schema.items = {
@@ -156,7 +156,7 @@ function normalizeSchema(
     }
   }
   if (
-    inferDefaults &&
+    options.inferDefaults &&
     schema.default === undefined &&
     ("properties" in schema ||
       schema.type === "object" ||
