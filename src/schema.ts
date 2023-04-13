@@ -13,23 +13,25 @@ interface _ResolveCtx {
   root: InputObject;
   defaults?: InputObject;
   resolveCache: Record<string, Schema>;
-  inferDefaults: boolean;
+  ignoreDefaults: boolean;
 }
 
 export interface NormalizeSchemaOptions {
-  inferDefaults: boolean;
+  ignoreDefaults?: boolean;
 }
+
+export interface ResolveSchemaOptions extends NormalizeSchemaOptions {}
 
 export async function resolveSchema(
   obj: InputObject,
   defaults?: InputObject,
-  inferDefaults = true
+  options: ResolveSchemaOptions = {}
 ): Promise<Schema> {
   const schema = await _resolveSchema(obj, "", {
     root: obj,
     defaults,
     resolveCache: {},
-    inferDefaults,
+    ignoreDefaults: options.ignoreDefaults,
   });
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
@@ -56,10 +58,10 @@ async function _resolveSchema(
     const schema: Schema = {
       type: getType(input),
       id: schemaId,
-      default: ctx.inferDefaults ? safeInput : undefined,
+      default: !ctx.ignoreDefaults ? safeInput : undefined,
     };
 
-    normalizeSchema(schema, { inferDefaults: ctx.inferDefaults });
+    normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
     ctx.resolveCache[id] = schema;
 
     if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
@@ -100,7 +102,7 @@ async function _resolveSchema(
     }
   }
 
-  if (ctx.inferDefaults) {
+  if (!ctx.ignoreDefaults) {
     // Infer default value from $resolve and $default
     if (ctx.defaults) {
       schema.default = getValue(ctx.defaults, id);
@@ -127,7 +129,7 @@ async function _resolveSchema(
       getType(schema.default) || (schema.properties ? "object" : "any");
   }
 
-  normalizeSchema(schema, { inferDefaults: ctx.inferDefaults });
+  normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
   if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
     setValue(ctx.defaults, id, schema.default);
   }
@@ -156,7 +158,7 @@ function normalizeSchema(
     }
   }
   if (
-    options.inferDefaults &&
+    !options.ignoreDefaults &&
     schema.default === undefined &&
     ("properties" in schema ||
       schema.type === "object" ||
