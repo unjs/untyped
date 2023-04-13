@@ -16,6 +16,10 @@ interface _ResolveCtx {
   inferDefaults: boolean;
 }
 
+interface NormalizeSchemaOptions {
+  inferDefaults: boolean;
+}
+
 export async function resolveSchema(
   obj: InputObject,
   defaults?: InputObject,
@@ -55,7 +59,7 @@ async function _resolveSchema(
       default: ctx.inferDefaults ? safeInput : undefined,
     };
 
-    normalizeSchema(schema, ctx.inferDefaults);
+    normalizeSchema(schema, { inferDefaults: ctx.inferDefaults });
     ctx.resolveCache[id] = schema;
 
     if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
@@ -123,7 +127,7 @@ async function _resolveSchema(
       getType(schema.default) || (schema.properties ? "object" : "any");
   }
 
-  normalizeSchema(schema, ctx.inferDefaults);
+  normalizeSchema(schema, { inferDefaults: ctx.inferDefaults });
   if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
     setValue(ctx.defaults, id, schema.default);
   }
@@ -137,7 +141,7 @@ export async function applyDefaults(ref: InputObject, input: InputObject) {
 
 function normalizeSchema(
   schema: Partial<Schema>,
-  inferDefaults = true
+  { inferDefaults }: NormalizeSchemaOptions
 ): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
     schema.items = {
