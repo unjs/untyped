@@ -10,7 +10,7 @@ type JITIOptions = Parameters<typeof jiti>[1];
 export interface LoaderOptions {
   jiti?: JITIOptions;
   defaults?: Record<string, any>;
-  inferDefaults?: boolean;
+  ignoreDefaults?: boolean;
 }
 
 export async function loadSchema(
@@ -32,11 +32,9 @@ export async function loadSchema(
 
   const resolvedEntryPath = _jitiRequire.resolve(entryPath);
   const rawSchema = _jitiRequire(resolvedEntryPath);
-  const schema = await resolveSchema(
-    rawSchema,
-    options.defaults,
-    options.inferDefaults
-  );
+  const schema = await resolveSchema(rawSchema, options.defaults, {
+    ignoreDefaults: options.ignoreDefaults,
+  });
 
   return schema;
 }
