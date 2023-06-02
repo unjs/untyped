@@ -216,10 +216,11 @@ export interface Untyped {
       "export interface Untyped {
        foo: {
         /** @default [\\"first\\",\\"second\\",{\\"third\\":true}] */
-        bar: Array<any>,
+        bar: Array<string|{
+         [key: string]: any
+        }>,
        },
       }"
     `)
   })
-
 });

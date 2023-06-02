@@ -179,11 +179,13 @@ function getTsType(
     return "any";
   }
   if (Array.isArray(type.type)) {
-    // if we're mixing objects with literals then we just revert to any array input
-    if (type.type.length > 1 && type.type.includes("object")) {
-      return 'any'
-    }
-    return type.type.map((t) => TYPE_MAP[t]).join("|");
+    return type.type.map((t) => {
+      // object is typed to an empty string by default, we need to type as object
+      if (t === 'object' && type.type.length > 1) {
+        return `{\n` + _genTypes(type, " ", opts).join("\n") + `\n}`;
+      }
+      return TYPE_MAP[t]
+    }).join("|");
   }
   if (type.type === "array") {
     return `Array<${getTsType(type.items, opts)}>`;
