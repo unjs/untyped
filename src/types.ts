@@ -23,8 +23,8 @@ export type JSType =
 
 // eslint-disable-next-line no-use-before-define
 export type ResolveFn = (
-  value: any,
-  get: (key: string) => any,
+  value: JSValue,
+  get: (key: string) => JSValue
 ) => JSValue | Promise<JSValue>;
 
 export interface TypeDescriptor {
