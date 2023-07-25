@@ -32,7 +32,7 @@ devDependencies:
     version: 7.1.4
   '@types/babel__traverse':
     specifier: latest
-    version: 7.18.5
+    version: 7.20.1
   '@types/node':
     specifier: ^18.16.8
     version: 18.16.8
@@ -58,8 +58,8 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0
   marked:
-    specifier: ^4.3.0
-    version: 4.3.0
+    specifier: ^5.1.2
+    version: 5.1.2
   monaco-editor:
     specifier: ^0.38.0
     version: 0.38.0
@@ -1397,8 +1397,8 @@ packages:
       - supports-color
     dev: true
 
-  /@types/babel__traverse@7.18.5:
-    resolution: {integrity: sha512-enCvTL8m/EHS/zIvJno9nE+ndYPh1/oNFzRYRmtUqJICG2VnCSBzMLW5VN2KCQU91f23tsNKR8v7VJJQMatl7Q==}
+  /@types/babel__traverse@7.20.1:
+    resolution: {integrity: sha512-MitHFXnhtgwsGZWtT68URpOvLN4EREih1u3QtQiN4VdAxWKRVvGCSvw/Qth0M0Qq3pJpnGOu5JaM/ydK7OGbqg==}
     dependencies:
       '@babel/types': 7.21.5
     dev: true
@@ -4808,9 +4808,9 @@ packages:
       semver: 6.3.0
     dev: true
 
-  /marked@4.3.0:
-    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
-    engines: {node: '>= 12'}
+  /marked@5.1.2:
+    resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
+    engines: {node: '>= 16'}
     hasBin: true
     dev: true
 
