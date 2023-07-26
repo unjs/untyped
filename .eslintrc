@@ -4,6 +4,7 @@
   ],
   "rules": {
     "unicorn/no-null": 0,
+    "unicorn/expiring-todo-comments": 0,
     "unicorn/prevent-abbreviations": 0
   }
 }
