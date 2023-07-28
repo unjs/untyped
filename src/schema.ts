@@ -25,7 +25,7 @@ export interface ResolveSchemaOptions extends NormalizeSchemaOptions {}
 export async function resolveSchema(
   obj: InputObject,
   defaults?: InputObject,
-  options: ResolveSchemaOptions = {}
+  options: ResolveSchemaOptions = {},
 ): Promise<Schema> {
   const schema = await _resolveSchema(obj, "", {
     root: obj,
@@ -41,7 +41,7 @@ export async function resolveSchema(
 async function _resolveSchema(
   input: InputValue,
   id: string,
-  ctx: _ResolveCtx
+  ctx: _ResolveCtx,
 ): Promise<Schema> {
   // Check cache
   if (id in ctx.resolveCache) {
@@ -89,7 +89,7 @@ async function _resolveSchema(
       const child = (schema.properties[key] = await _resolveSchema(
         node[key],
         joinPath(id, key),
-        ctx
+        ctx,
       ));
 
       // Infer @required
@@ -143,7 +143,7 @@ export async function applyDefaults(ref: InputObject, input: InputObject) {
 
 function normalizeSchema(
   schema: Partial<Schema>,
-  options: NormalizeSchemaOptions
+  options: NormalizeSchemaOptions,
 ): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
     schema.items = {

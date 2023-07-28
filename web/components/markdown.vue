@@ -36,7 +36,7 @@ export default defineComponent({
           const _lang = prism.languages[lang];
           return _lang ? prism.highlight(code, _lang) : code;
         },
-      })
+      }),
     );
     return {
       render,

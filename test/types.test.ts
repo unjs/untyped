@@ -14,7 +14,7 @@ describe("resolveSchema", () => {
             },
           },
         },
-      })
+      }),
     );
     expect(types).toMatchInlineSnapshot(`
       "export interface Untyped {
@@ -39,7 +39,7 @@ describe("resolveSchema", () => {
           foo: { bar: 123, baz: { x: 123 } },
         },
       }),
-      { partial: true, addDefaults: false, addExport: false }
+      { partial: true, addDefaults: false, addExport: false },
     );
     expect(types).toMatchInlineSnapshot(`
       "interface Untyped {
@@ -85,7 +85,7 @@ describe("resolveSchema", () => {
           },
         },
       }),
-      { partial: true }
+      { partial: true },
     );
 
     expect(types).toMatchInlineSnapshot(`
@@ -124,7 +124,7 @@ describe("resolveSchema", () => {
     const types = generateTypes(
       await resolveSchema({
         "*key": "123",
-      })
+      }),
     );
     expect(types).toMatch('"*key": string');
   });
@@ -150,7 +150,7 @@ describe("resolveSchema", () => {
             ],
           },
         },
-      })
+      }),
     );
 
     expect(types).toBe(
@@ -158,7 +158,7 @@ describe("resolveSchema", () => {
 export interface Untyped {
  add: (test?: Array<string | number>, append?: false) => any,
 }
-`.trim()
+`.trim(),
     );
   });
 
@@ -187,7 +187,7 @@ export interface Untyped {
             },
           },
         },
-      })
+      }),
     );
     expect(types).toMatchInlineSnapshot(`
       "import type { VueConfig, OtherImport } from 'vue'
@@ -210,7 +210,7 @@ export interface Untyped {
     const schema = generateTypes(
       await resolveSchema({
         foo: { bar: ["first", "second", { third: true }] },
-      })
+      }),
     );
     expect(schema).toMatchInlineSnapshot(`
       "export interface Untyped {

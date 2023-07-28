@@ -14,7 +14,7 @@ type GetCodeFn = (loc: t.SourceLocation) => string;
 
 const babelPluginUntyped: PluginItem = function (
   api: ConfigAPI,
-  options: { experimentalFunctions?: boolean }
+  options: { experimentalFunctions?: boolean },
 ) {
   api.cache.using(() => version);
 
@@ -32,7 +32,7 @@ const babelPluginUntyped: PluginItem = function (
             declaration.init.params,
             t.isBlockStatement(declaration.init.body)
               ? (declaration.init.body as t.BlockStatement)
-              : t.blockStatement([t.returnStatement(declaration.init.body)])
+              : t.blockStatement([t.returnStatement(declaration.init.body)]),
           );
           newDeclaration.returnType = declaration.init.returnType;
           p.replaceWith(newDeclaration);
@@ -43,7 +43,7 @@ const babelPluginUntyped: PluginItem = function (
           const schema = parseJSDocs(
             p.node.leadingComments
               .filter((c) => c.type === "CommentBlock")
-              .map((c) => c.value)
+              .map((c) => c.value),
           );
 
           const valueNode =
@@ -57,7 +57,7 @@ const babelPluginUntyped: PluginItem = function (
               (prop) =>
                 "key" in prop &&
                 prop.key.type === "Identifier" &&
-                prop.key.name === "$schema"
+                prop.key.name === "$schema",
             );
             if (schemaProp && "value" in schemaProp) {
               if (schemaProp.value.type === "ObjectExpression") {
@@ -70,7 +70,7 @@ const babelPluginUntyped: PluginItem = function (
             } else {
               // Object has not $schema
               valueNode.properties.unshift(
-                ...astify({ $schema: schema }).properties
+                ...astify({ $schema: schema }).properties,
               );
             }
           } else {
@@ -87,7 +87,7 @@ const babelPluginUntyped: PluginItem = function (
         const schema = parseJSDocs(
           (p.parent.leadingComments || [])
             .filter((c) => c.type === "CommentBlock")
-            .map((c) => c.value)
+            .map((c) => c.value),
         );
         schema.type = "function";
         schema.args = [];
@@ -143,8 +143,8 @@ const babelPluginUntyped: PluginItem = function (
               arg,
               mergedTypes(
                 arg,
-                inferAnnotationType(lparam.typeAnnotation, getCode)
-              )
+                inferAnnotationType(lparam.typeAnnotation, getCode),
+              ),
             );
           }
 
@@ -152,7 +152,7 @@ const babelPluginUntyped: PluginItem = function (
           if (param.type === "AssignmentPattern") {
             Object.assign(
               arg,
-              mergedTypes(arg, inferArgType(param.right, getCode))
+              mergedTypes(arg, inferArgType(param.right, getCode)),
             );
           }
           schema.args = schema.args || [];
@@ -198,9 +198,9 @@ const babelPluginUntyped: PluginItem = function (
             t.variableDeclaration("const", [
               t.variableDeclarator(
                 t.identifier(p.node.id.name),
-                astify({ $schema: schema })
+                astify({ $schema: schema }),
               ),
-            ])
+            ]),
           );
         }
       },
@@ -241,12 +241,12 @@ function parseJSDocs(input: string | string[]): Schema {
   };
 
   const lines: string[] = (Array.isArray(input) ? input : [input]).flatMap(
-    (c) => c.split("\n").map((l) => l.replace(/(^\s*\*+ )|([\s*]+$)/g, ""))
+    (c) => c.split("\n").map((l) => l.replace(/(^\s*\*+ )|([\s*]+$)/g, "")),
   );
 
   const firstTag = lines.findIndex((l) => l.startsWith("@"));
   const comments = clumpLines(
-    lines.slice(0, firstTag >= 0 ? firstTag : undefined)
+    lines.slice(0, firstTag >= 0 ? firstTag : undefined),
   );
 
   if (comments.length === 1) {
@@ -269,7 +269,7 @@ function parseJSDocs(input: string | string[]): Schema {
         }
         return typedefs;
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     );
     for (const tag of tags) {
       if (tag.startsWith("@type")) {
@@ -283,7 +283,7 @@ function parseJSDocs(input: string | string[]): Schema {
           schema.markdownType = type;
           schema.tsType = schema.tsType.replace(
             new RegExp(typedefs[typedef], "g"),
-            typedef
+            typedef,
           );
         }
         continue;
@@ -317,7 +317,7 @@ function astify(val) {
   return t.objectExpression(
     Object.getOwnPropertyNames(val)
       .filter((key) => val[key] !== undefined && val[key] !== null)
-      .map((key) => t.objectProperty(t.identifier(key), astify(val[key])))
+      .map((key) => t.objectProperty(t.identifier(key), astify(val[key]))),
   );
 }
 
@@ -360,7 +360,7 @@ function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
 
 function inferAnnotationType(
   ann: t.Identifier["typeAnnotation"],
-  getCode: GetCodeFn
+  getCode: GetCodeFn,
 ): TypeDescriptor | null {
   if (ann.type !== "TSTypeAnnotation") {
     return null;
@@ -370,7 +370,7 @@ function inferAnnotationType(
 
 function inferTSType(
   tsType: t.TSType,
-  getCode: GetCodeFn
+  getCode: GetCodeFn,
 ): TypeDescriptor | null {
   if (tsType.type === "TSParenthesizedType") {
     return inferTSType(tsType.typeAnnotation, getCode);

@@ -103,7 +103,7 @@ export function mergedTypes(...types: TypeDescriptor[]): TypeDescriptor {
     return types[0];
   }
   const tsTypes = normalizeTypes(
-    types.flatMap((t) => t.tsType).filter(Boolean)
+    types.flatMap((t) => t.tsType).filter(Boolean),
   );
   return {
     type: normalizeTypes(types.flatMap((t) => t.type).filter(Boolean)),
@@ -162,7 +162,7 @@ export function getTypeDescriptor(type: string | JSType): TypeDescriptor {
     if (importName && firstType) {
       markdownType = markdownType.replace(
         match[0],
-        pascalCase(importName) + pascalCase(firstType)
+        pascalCase(importName) + pascalCase(firstType),
       );
     }
   }

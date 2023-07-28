@@ -21,7 +21,7 @@ async function main() {
     const json = JSON.stringify(schema, null, 2);
     const outfile = resolve(
       process.cwd(),
-      args.write === true ? "schema.json" : args.write
+      args.write === true ? "schema.json" : args.write,
     );
     await writeFile(outfile, json);
   } else {

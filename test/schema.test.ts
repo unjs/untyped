@@ -47,7 +47,7 @@ describe("resolveSchema", () => {
     const schema = await resolveSchema(
       { foo: { bar: 123 } },
       { foo: { bar: 123 } },
-      { ignoreDefaults: true }
+      { ignoreDefaults: true },
     );
 
     expect(schema).toMatchObject({

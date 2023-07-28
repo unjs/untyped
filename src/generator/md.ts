@@ -8,7 +8,7 @@ export function generateMarkdown(schema: Schema) {
 export function _generateMarkdown(
   schema: Schema,
   title: string,
-  level: string
+  level: string,
 ) {
   const lines: string[] = [];
 
@@ -24,7 +24,7 @@ export function _generateMarkdown(
 
   // Type and default
   lines.push(
-    `- **Type**: \`${schema.markdownType || schema.tsType || schema.type}\``
+    `- **Type**: \`${schema.markdownType || schema.tsType || schema.type}\``,
   );
   if ("default" in schema) {
     lines.push(`- **Default**: \`${JSON.stringify(schema.default)}\``);

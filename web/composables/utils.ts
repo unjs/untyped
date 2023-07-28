@@ -4,7 +4,7 @@ const globalKeys = Object.getOwnPropertyNames(globalThis).filter(
   (key) =>
     key[0].toLocaleLowerCase() === key[0] &&
     key !== "console" &&
-    key !== "module"
+    key !== "module",
 );
 
 export function evaluateSource(src) {

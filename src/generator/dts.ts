@@ -74,13 +74,13 @@ function extractTypeImports(declarations: string) {
       declarations = declarations.replace(
         new RegExp(
           `typeof import\\(['"]${source}['"]\\)(\\.${type}|\\[['"]${type}['"]\\])`,
-          "g"
+          "g",
         ),
-        alias
+        alias,
       );
     }
     imports.push(
-      `import type { ${sourceImports.join(", ")} } from '${source}'`
+      `import type { ${sourceImports.join(", ")} } from '${source}'`,
     );
   }
   return [...imports, declarations].join("\n");
@@ -104,7 +104,7 @@ export function generateTypes(schema: Schema, opts: GenerateTypesOptions = {}) {
 function _genTypes(
   schema: Schema,
   spaces: string,
-  opts: GenerateTypesOptions
+  opts: GenerateTypesOptions,
 ): string[] {
   const buff: string[] = [];
 
@@ -119,13 +119,13 @@ function _genTypes(
       buff.push(
         `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: ${
           val.tsType
-        },\n`
+        },\n`,
       );
     } else if (val.type === "object") {
       buff.push(
         `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: {`,
         ..._genTypes(val, spaces, opts),
-        "},\n"
+        "},\n",
       );
     } else {
       let type: string;
@@ -139,7 +139,7 @@ function _genTypes(
       buff.push(
         `${escapeKey(key)}${
           isRequired(schema, key, opts) ? "" : "?"
-        }: ${type},\n`
+        }: ${type},\n`,
       );
     }
   }
@@ -161,7 +161,7 @@ function _genTypes(
 
 function getTsType(
   type: TypeDescriptor | TypeDescriptor[],
-  opts: GenerateTypesOptions
+  opts: GenerateTypesOptions,
 ): string {
   if (Array.isArray(type)) {
     return (
@@ -201,13 +201,13 @@ function getTsType(
 export function genFunctionType(schema, opts: GenerateTypesOptions) {
   return `(${genFunctionArgs(schema.args, opts)}) => ${getTsType(
     schema.returns,
-    opts
+    opts,
   )}`;
 }
 
 export function genFunctionArgs(
   args: Schema["args"],
-  opts: GenerateTypesOptions
+  opts: GenerateTypesOptions,
 ) {
   return (
     args
