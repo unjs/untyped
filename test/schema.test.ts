@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { resolveSchema } from "../src";
 
 describe("resolveSchema", () => {
@@ -35,6 +35,27 @@ describe("resolveSchema", () => {
           properties: {
             bar: {
               default: 123,
+              type: "number",
+            },
+          },
+        },
+      },
+    });
+  });
+
+  it("without inferred defaults", async () => {
+    const schema = await resolveSchema(
+      { foo: { bar: 123 } },
+      { foo: { bar: 123 } },
+      { ignoreDefaults: true }
+    );
+
+    expect(schema).toMatchObject({
+      properties: {
+        foo: {
+          type: "object",
+          properties: {
+            bar: {
               type: "number",
             },
           },

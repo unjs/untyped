@@ -54,14 +54,26 @@ export default defineComponent({
 
 <style>
 .markdown {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
-    sans-serif, Apple Color Emoji, Segoe UI Emoji !important;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Helvetica,
+    Arial,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji !important;
   color: #24292e !important;
   word-wrap: break-word;
 }
 
 .markdown code {
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-family:
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
   padding: 0.2em 0.4em;
   font-size: 85%;
   background-color: #f6f8fa;

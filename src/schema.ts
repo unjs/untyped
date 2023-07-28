@@ -1,25 +1,37 @@
+import type { InputObject, InputValue, JSType, JSValue, Schema } from "./types";
 import {
   getType,
-  isObject,
-  unique,
   getValue,
-  setValue,
+  isObject,
   joinPath,
   nonEmpty,
+  setValue,
+  unique,
 } from "./utils";
-import type { InputObject, InputValue, JSType, JSValue, Schema } from "./types";
 
 interface _ResolveCtx {
   root: InputObject;
   defaults?: InputObject;
   resolveCache: Record<string, Schema>;
+  ignoreDefaults: boolean;
 }
 
-export async function resolveSchema(obj: InputObject, defaults?: InputObject) {
+export interface NormalizeSchemaOptions {
+  ignoreDefaults?: boolean;
+}
+
+export interface ResolveSchemaOptions extends NormalizeSchemaOptions {}
+
+export async function resolveSchema(
+  obj: InputObject,
+  defaults?: InputObject,
+  options: ResolveSchemaOptions = {}
+): Promise<Schema> {
   const schema = await _resolveSchema(obj, "", {
     root: obj,
     defaults,
     resolveCache: {},
+    ignoreDefaults: options.ignoreDefaults,
   });
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
@@ -41,23 +53,26 @@ async function _resolveSchema(
 
   // Node is plain value
   if (!isObject(input)) {
+    // Clone arrays to avoid mutation
+    const safeInput = Array.isArray(input) ? [...input] : (input as JSValue);
     const schema: Schema = {
       type: getType(input),
       id: schemaId,
-      // Clone arrays to avoid mutation
-      default: Array.isArray(input) ? [...input] : (input as JSValue),
+      default: ctx.ignoreDefaults ? undefined : safeInput,
     };
-    normalizeSchema(schema);
+
+    normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
     ctx.resolveCache[id] = schema;
+
     if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
       setValue(ctx.defaults, id, schema.default);
     }
+
     return schema;
   }
 
   // Clone to avoid mutation
   const node = { ...(input as any) } as InputObject;
-
   const schema: Schema = (ctx.resolveCache[id] = {
     ...node.$schema,
     id: schemaId,
@@ -87,19 +102,23 @@ async function _resolveSchema(
     }
   }
 
-  // Infer default value from $resolve and $default
-  if (ctx.defaults) {
-    schema.default = getValue(ctx.defaults, id);
+  if (!ctx.ignoreDefaults) {
+    // Infer default value from $resolve and $default
+    if (ctx.defaults) {
+      schema.default = getValue(ctx.defaults, id);
+    }
+    if (schema.default === undefined && "$default" in node) {
+      schema.default = node.$default;
+    }
+    if (typeof node.$resolve === "function") {
+      schema.default = await node.$resolve(schema.default, async (key) => {
+        // eslint-disable-next-line unicorn/no-await-expression-member
+        return (await _resolveSchema(getValue(ctx.root, key), key, ctx))
+          .default;
+      });
+    }
   }
-  if (schema.default === undefined && "$default" in node) {
-    schema.default = node.$default;
-  }
-  if (typeof node.$resolve === "function") {
-    schema.default = await node.$resolve(schema.default, async (key) => {
-      // eslint-disable-next-line unicorn/no-await-expression-member
-      return (await _resolveSchema(getValue(ctx.root, key), key, ctx)).default;
-    });
-  }
+
   if (ctx.defaults) {
     setValue(ctx.defaults, id, schema.default);
   }
@@ -110,7 +129,7 @@ async function _resolveSchema(
       getType(schema.default) || (schema.properties ? "object" : "any");
   }
 
-  normalizeSchema(schema);
+  normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
   if (ctx.defaults && getValue(ctx.defaults, id) === undefined) {
     setValue(ctx.defaults, id, schema.default);
   }
@@ -122,7 +141,10 @@ export async function applyDefaults(ref: InputObject, input: InputObject) {
   return input;
 }
 
-function normalizeSchema(schema: Partial<Schema>): asserts schema is Schema {
+function normalizeSchema(
+  schema: Partial<Schema>,
+  options: NormalizeSchemaOptions
+): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
     schema.items = {
       type: nonEmpty(unique((schema.default as any[]).map((i) => getType(i)))),
@@ -136,6 +158,7 @@ function normalizeSchema(schema: Partial<Schema>): asserts schema is Schema {
     }
   }
   if (
+    !options.ignoreDefaults &&
     schema.default === undefined &&
     ("properties" in schema ||
       schema.type === "object" ||

@@ -14,7 +14,9 @@ async function main() {
   }
 
   const { loadSchema } = await import("./loader/loader");
-  const schema = await loadSchema(entryPath, {});
+  const schema = await loadSchema(entryPath, {
+    ignoreDefaults: args.ignoreDefaults,
+  });
   if (args.write) {
     const json = JSON.stringify(schema, null, 2);
     const outfile = resolve(

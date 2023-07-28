@@ -231,8 +231,8 @@ function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
   while (lines.length > 0) {
     const line = lines.shift();
     if (
-      (line && !delimiters.includes(line[0]) && clumps[clumps.length - 1]) ||
-      containsIncompleteCodeblock(clumps[clumps.length - 1])
+      (line && !delimiters.includes(line[0]) && clumps.at(-1)) ||
+      containsIncompleteCodeblock(clumps.at(-1))
     ) {
       clumps[clumps.length - 1] += separator + line;
     } else {
@@ -268,15 +268,18 @@ function parseJSDocs(input: string | string[]): Schema {
   if (firstTag >= 0) {
     const tags = clumpLines(lines.slice(firstTag), ["@"], "\n");
     // eslint-disable-next-line unicorn/no-array-reduce
-    const typedefs = tags.reduce((typedefs, tag) => {
-      const { typedef, alias } =
-        tag.match(/@typedef\s+{(?<typedef>[\S\s]+)} (?<alias>.*)/)?.groups ||
-        {};
-      if (typedef && alias) {
-        typedefs[typedef] = alias;
-      }
-      return typedefs;
-    }, {} as Record<string, string>);
+    const typedefs = tags.reduce(
+      (typedefs, tag) => {
+        const { typedef, alias } =
+          tag.match(/@typedef\s+{(?<typedef>[\S\s]+)} (?<alias>.*)/)?.groups ||
+          {};
+        if (typedef && alias) {
+          typedefs[typedef] = alias;
+        }
+        return typedefs;
+      },
+      {} as Record<string, string>
+    );
     for (const tag of tags) {
       if (tag.startsWith("@type")) {
         const type = tag.match(/@type\s+{([\S\s]+)}/)?.[1];
