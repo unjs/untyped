@@ -170,6 +170,6 @@ export function getTypeDescriptor(type: string | JSType): TypeDescriptor {
   return {
     ...(isJSType(type) ? { type } : {}),
     tsType: type,
-    ...(markdownType !== type ? { markdownType } : {}),
+    ...(markdownType === type ? {} : { markdownType }),
   };
 }
