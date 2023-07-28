@@ -205,4 +205,22 @@ export interface Untyped {
       }"
     `);
   });
+
+  it("array - literal and object entries", async () => {
+    const schema = generateTypes(
+      await resolveSchema({
+        foo: { bar: ["first", "second", { third: true }] },
+      })
+    );
+    expect(schema).toMatchInlineSnapshot(`
+      "export interface Untyped {
+       foo: {
+        /** @default [\\"first\\",\\"second\\",{\\"third\\":true}] */
+        bar: Array<string|{
+         [key: string]: any
+        }>,
+       },
+      }"
+    `);
+  });
 });
