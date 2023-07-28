@@ -206,12 +206,12 @@ export interface Untyped {
     `);
   });
 
-  it('array - literal and object entries', async() => {
+  it("array - literal and object entries", async () => {
     const schema = generateTypes(
-        await resolveSchema(({
-          foo: { bar: ['first', 'second', { third: true }] },
-        }))
-    )
+      await resolveSchema({
+        foo: { bar: ["first", "second", { third: true }] },
+      })
+    );
     expect(schema).toMatchInlineSnapshot(`
       "export interface Untyped {
        foo: {
@@ -221,6 +221,6 @@ export interface Untyped {
         }>,
        },
       }"
-    `)
-  })
+    `);
+  });
 });
