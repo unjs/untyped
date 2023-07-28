@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.4.0
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.3.2...v1.4.0)
+
+### 🚀 Enhancements
+
+- Add option to not infer defaults ([#86](https://github.com/unjs/untyped/pull/86), [#88](https://github.com/unjs/untyped/pull/88))
+
+### 🩹 Fixes
+
+- Tighten schema definition types ([#102](https://github.com/unjs/untyped/pull/102))
+- Broken types with array literal and object entries ([#96](https://github.com/unjs/untyped/pull/96))
+
+### 🏡 Chore
+
+- Explicitly use pnpm 8 ([71f845d](https://github.com/unjs/untyped/commit/71f845d))
+- Update dependencies ([3796abb](https://github.com/unjs/untyped/commit/3796abb))
+- Update dependencies ([5efda9e](https://github.com/unjs/untyped/commit/5efda9e))
+- Temporarily keep old prettier style ([5250851](https://github.com/unjs/untyped/commit/5250851))
+- Lint code ([347c312](https://github.com/unjs/untyped/commit/347c312))
+- Add autofix ci ([21f6e9c](https://github.com/unjs/untyped/commit/21f6e9c))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Harlan Wilton ([@harlan-zw](http://github.com/harlan-zw))
+- Daniel Roe <daniel@roe.dev>
+- Paulohsa32 <paulohsa32@icloud.com>
+
 ## v1.3.2
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.3.1...v1.3.2)
