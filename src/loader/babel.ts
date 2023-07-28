@@ -10,7 +10,19 @@ import {
 
 import { version } from "../../package.json";
 
-type GetCodeFn = (loc: t.SourceLocation) => string;
+interface SourceLocation {
+  start: {
+    line: number;
+    column: number;
+    index?: number;
+  };
+  end: {
+    line: number;
+    column: number;
+    index?: number;
+  };
+}
+type GetCodeFn = (loc: SourceLocation) => string;
 
 const babelPluginUntyped: PluginItem = function (
   api: ConfigAPI,
@@ -84,11 +96,18 @@ const babelPluginUntyped: PluginItem = function (
         }
       },
       FunctionDeclaration(p) {
-        const schema = parseJSDocs(
-          (p.parent.leadingComments || [])
-            .filter((c) => c.type === "CommentBlock")
-            .map((c) => c.value)
-        );
+        const getCode: GetCodeFn = (loc) => {
+          return this.file.code.substring(loc.start.index, loc.end.index);
+        };
+
+        const comments = (p.parent.leadingComments || [])
+          .filter((c) => c.type === "CommentBlock")
+          .map((c) => c.value);
+
+        console.log(this.file);
+
+        const schema = parseJSDocs(comments);
+
         schema.type = "function";
         schema.args = [];
 
@@ -107,16 +126,6 @@ const babelPluginUntyped: PluginItem = function (
         ) {
           return;
         }
-
-        const _getLines = cachedFn(() => this.file.code.split("\n"));
-        const getCode: GetCodeFn = (loc) => {
-          const _lines = _getLines();
-          return (
-            _lines[loc.start.line - 1]
-              .slice(loc.start.column, loc.end.column)
-              .trim() || ""
-          );
-        };
 
         // Extract arguments
         for (const [index, param] of p.node.params.entries()) {
