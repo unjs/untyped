@@ -58,7 +58,7 @@ async function _resolveSchema(
     const schema: Schema = {
       type: getType(input),
       id: schemaId,
-      default: !ctx.ignoreDefaults ? safeInput : undefined,
+      default: ctx.ignoreDefaults ? undefined : safeInput,
     };
 
     normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
