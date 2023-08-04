@@ -1,3 +1,5 @@
+import { ZodSchema } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import type { InputObject, InputValue, JSType, JSValue, Schema } from "./types";
 import {
   getType,
@@ -23,16 +25,19 @@ export interface NormalizeSchemaOptions {
 export interface ResolveSchemaOptions extends NormalizeSchemaOptions {}
 
 export async function resolveSchema(
-  obj: InputObject,
+  obj: InputObject | ZodSchema<any> ,
   defaults?: InputObject,
   options: ResolveSchemaOptions = {},
 ): Promise<Schema> {
-  const schema = await _resolveSchema(obj, "", {
-    root: obj,
-    defaults,
-    resolveCache: {},
-    ignoreDefaults: options.ignoreDefaults,
-  });
+  const schema = obj instanceof ZodSchema
+? zodToJsonSchema(obj, "schemaName").definitions.schemaName
+: (await _resolveSchema(obj, "", {
+      root: obj,
+      defaults,
+      resolveCache: {},
+      ignoreDefaults: options.ignoreDefaults,
+    }));
+
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
   return schema;

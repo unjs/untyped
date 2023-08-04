@@ -55,7 +55,9 @@
     "defu": "^6.1.2",
     "jiti": "^1.19.1",
     "mri": "^1.2.0",
-    "scule": "^1.0.0"
+    "scule": "^1.0.0",
+    "zod": "^3.21.4",
+    "zod-to-json-schema": "^3.21.4"
   },
   "devDependencies": {
     "@babel/template": "^7.22.5",
