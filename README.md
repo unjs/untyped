@@ -165,7 +165,7 @@ Thanks to [@dominikschreiber](https://github.com/dominikschreiber) for donating 
 [npm-downloads-src]: https://img.shields.io/npm/dm/untyped?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/untyped
 
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/untyped/ci/main?style=flat-square
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/untyped/ci.yml?branch-main&style=flat-square
 [github-actions-href]: https://github.com/unjs/untyped/actions?query=workflow%3Aci
 
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/untyped/main?style=flat-square
