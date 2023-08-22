@@ -76,7 +76,7 @@
     "prettier": "^3.0.0",
     "prismjs": "^1.29.0",
     "typescript": "^5.1.6",
-    "unbuild": "^1.2.1",
+    "unbuild": "^2.0.0",
     "vitest": "^0.33.0"
   },
   "packageManager": "pnpm@8.6.10"
