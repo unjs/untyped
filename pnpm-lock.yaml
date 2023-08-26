@@ -62,8 +62,8 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0
   marked:
-    specifier: ^5.1.2
-    version: 5.1.2
+    specifier: ^7.0.5
+    version: 7.0.5
   monaco-editor:
     specifier: ^0.40.0
     version: 0.40.0
@@ -4587,8 +4587,8 @@ packages:
       semver: 7.5.4
     dev: true
 
-  /marked@5.1.2:
-    resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
+  /marked@7.0.5:
+    resolution: {integrity: sha512-lwNAFTfXgqpt/XvK17a/8wY9/q6fcSPZT1aP6QW0u74VwaJF/Z9KbRcX23sWE4tODM+AolJNcUtErTkgOeFP/Q==}
     engines: {node: '>= 16'}
     hasBin: true
     dev: true
