@@ -7,24 +7,44 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.d.cts"
+      }
     },
     "./babel-plugin": {
-      "types": "./dist/loader/babel.d.mts",
-      "import": "./dist/loader/babel.mjs",
-      "require": "./dist/loader/babel.cjs"
+      "import": {
+        "types": "./dist/loader/babel.d.mts",
+        "default": "./dist/loader/babel.mjs"
+      },
+      "require": {
+        "types": "./dist/loader/babel.d.cts",
+        "default": "./dist/loader/babel.cjs"
+      }
     },
     "./transform": {
-      "types": "./dist/loader/transform.d.mts",
-      "import": "./dist/loader/transform.mjs",
-      "require": "./dist/loader/transform.cjs"
+      "import": {
+        "types": "./dist/loader/transform.d.mts",
+        "default": "./dist/loader/transform.mjs"
+      },
+      "require": {
+        "types": "./dist/loader/transform.d.cts",
+        "default": "./dist/loader/transform.cjs"
+      }
     },
     "./loader": {
-      "types": "./dist/loader/loader.d.ts",
-      "import": "./dist/loader/loader.mjs",
-      "require": "./dist/loader/loader.cjs"
+      "import": {
+        "types": "./dist/loader/loader.d.mts",
+        "default": "./dist/loader/loader.mjs"
+      },
+      "require": {
+        "types": "./dist/loader/loader.d.cts",
+        "default": "./dist/loader/loader.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
