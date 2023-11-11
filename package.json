@@ -89,7 +89,7 @@
     "eslint-config-unjs": "^0.2.1",
     "hljs": "^6.2.3",
     "json-schema": "^0.4.0",
-    "marked": "^7.0.5",
+    "marked": "^10.0.0",
     "monaco-editor": "^0.41.0",
     "nuxt": "^3.7.0",
     "nuxt-windicss": "^2.6.1",
