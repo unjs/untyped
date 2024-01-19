@@ -1,5 +1,11 @@
 import { pascalCase } from "scule";
-import type { Schema, JSType, TypeDescriptor, SchemaDefinition } from "./types";
+import type {
+  Schema,
+  JSType,
+  TypeDescriptor,
+  SchemaDefinition,
+  JSValue,
+} from "./types";
 
 export function defineUntypedSchema(options: SchemaDefinition) {
   return options;
@@ -54,7 +60,7 @@ function resolveRelative(path: string) {
   return "/" + rSegments.filter(Boolean).join("/");
 }
 
-export function setValue(obj: Record<string, any>, path: string, val: any) {
+export function setValue(obj: Record<string, any>, path: string, val: JSValue) {
   const keys = path.split(".");
   const _key = keys.pop();
   for (const key of keys) {
