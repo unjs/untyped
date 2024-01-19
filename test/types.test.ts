@@ -24,7 +24,7 @@ describe("resolveSchema", () => {
          * 
          * this is test
          * 
-         * @default \\"test value\\"
+         * @default "test value"
         */
         foo: string,
        },
@@ -98,7 +98,7 @@ describe("resolveSchema", () => {
        /** @default [true,123] */
        mixed?: Array<boolean|number>,
 
-       /** @default [{\\"foo\\":[123]}] */
+       /** @default [{"foo":[123]}] */
        object?: Array<{
         [key: string]: any
        }>,
@@ -215,7 +215,7 @@ export interface Untyped {
     expect(schema).toMatchInlineSnapshot(`
       "export interface Untyped {
        foo: {
-        /** @default [\\"first\\",\\"second\\",{\\"third\\":true}] */
+        /** @default ["first","second",{"third":true}] */
         bar: Array<string|{
          [key: string]: any
         }>,

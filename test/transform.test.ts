@@ -345,11 +345,11 @@ describe("transform (jsdoc)", () => {
       "export default {
         srcDir: {
           $schema: {
-            title: \\"\\",
-            description: \\"\\",
+            title: "",
+            description: "",
             tags: [],
-            tsType: \\"Array<'src' | 'root'>\\",
-            markdownType: \\"Array<HumanReadable>\\"
+            tsType: "Array<'src' | 'root'>",
+            markdownType: "Array<HumanReadable>"
           },
           $resolve(val, get) {
             return val ?? 'src';
@@ -378,11 +378,11 @@ describe("transform (jsdoc)", () => {
       "export default {
         srcDir: {
           $schema: {
-            title: \\"\\",
-            description: \\"\\",
+            title: "",
+            description: "",
             tags: [],
-            tsType: \\"Array<'src' | 'root'>\\",
-            markdownType: \\"Array<HumanReadable>\\"
+            tsType: "Array<'src' | 'root'>",
+            markdownType: "Array<HumanReadable>"
           },
           $resolve(val, get) {
             return val ?? 'src';
@@ -411,10 +411,10 @@ describe("transform (jsdoc)", () => {
         srcDir: {
           $default: 'src',
           $schema: {
-            title: \\"\\",
-            description: \\"\\",
+            title: "",
+            description: "",
             tags: [],
-            tsType: \\"'src' | 'root'\\"
+            tsType: "'src' | 'root'"
           }
         },
         multiline: {
