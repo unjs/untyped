@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.4.1
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.4.0...v1.4.1)
+
+### 🩹 Fixes
+
+- Make sure leading comments has value before assigning ([7a94141](https://github.com/unjs/untyped/commit/7a94141))
+
+### 📦 Build
+
+- Add new ts type exports ([1038f03](https://github.com/unjs/untyped/commit/1038f03))
+
+### 🌊 Types
+
+- Improve types for `$resolve` function ([#97](https://github.com/unjs/untyped/pull/97))
+
+### 🏡 Chore
+
+- Update badge ([#109](https://github.com/unjs/untyped/pull/109))
+- Update dependencies ([ef3250b](https://github.com/unjs/untyped/commit/ef3250b))
+- Use node 18 ([b11fabd](https://github.com/unjs/untyped/commit/b11fabd))
+- Update dependencies ([af9dedf](https://github.com/unjs/untyped/commit/af9dedf))
+- Lint ([0036975](https://github.com/unjs/untyped/commit/0036975))
+- Update snapshots with vitest 1.x ([6ca444f](https://github.com/unjs/untyped/commit/6ca444f))
+- Update ci script ([f5feaa4](https://github.com/unjs/untyped/commit/f5feaa4))
+- **web:** Update marked ([f2a4439](https://github.com/unjs/untyped/commit/f2a4439))
+- Update types ([4683cae](https://github.com/unjs/untyped/commit/4683cae))
+- Prettier ignore web/.output ([046ef3b](https://github.com/unjs/untyped/commit/046ef3b))
+
+### ✅ Tests
+
+- Add test for loader ([5388749](https://github.com/unjs/untyped/commit/5388749))
+
+### 🎨 Styles
+
+- Lint with prettier v3 ([3292277](https://github.com/unjs/untyped/commit/3292277))
+- Format with prettier v3 ([4aefefe](https://github.com/unjs/untyped/commit/4aefefe))
+
+### 🤖 CI
+
+- Enable & use conventional commit for autofix ([#104](https://github.com/unjs/untyped/pull/104))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Daniel Roe <daniel@roe.dev>
+- Luke Nelson <luke@nelson.zone>
+
 ## v1.4.0
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.3.2...v1.4.0)
