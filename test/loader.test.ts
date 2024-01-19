@@ -25,7 +25,7 @@ describe("loader", () => {
                 "description": "",
                 "id": "#config/checked",
                 "tags": [],
-                "title": "",
+                "title": "checked status",
                 "type": "boolean",
               },
             },

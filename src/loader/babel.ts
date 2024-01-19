@@ -39,7 +39,7 @@ const babelPluginUntyped: PluginItem = function (
         }
       },
       ObjectProperty(p) {
-        if (p.node.leadingComments) {
+        if (p.node.leadingComments && p.node.leadingComments.length > 0) {
           const schema = parseJSDocs(
             p.node.leadingComments
               .filter((c) => c.type === "CommentBlock")
