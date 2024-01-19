@@ -19,7 +19,6 @@ jobs:
           node-version: 18
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm stub
       - name: Fix lint issues
         run: npm run lint:fix
       - uses: autofix-ci/action@ea32e3a12414e6d3183163c3424a7d7a8631ad84
