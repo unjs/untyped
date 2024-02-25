@@ -221,7 +221,7 @@ function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
 
     if (
       (line && !delimiters.includes(line[0]) && clumps.at(-1)) ||
-      // Support for example blocks in mutliline comments (last line is an example and next line is not a tag)
+      // Support for example block with blank line (last line is an example and next line is not a tag)
       (isExampleBlock(clumps.at(-1)) && !line.startsWith("@"))
     ) {
       clumps[clumps.length - 1] += separator + line;
