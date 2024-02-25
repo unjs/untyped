@@ -210,20 +210,19 @@ const babelPluginUntyped: PluginItem = function (
 
 export default babelPluginUntyped;
 
-function containsIncompleteCodeblock(line = "") {
-  const codeDelimiters = line
-    .split("\n")
-    .filter((line) => line.startsWith("```")).length;
-  return !!(codeDelimiters % 2);
+function isExampleBlock(line = "") {
+  return line.includes("@example");
 }
 
 function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
   const clumps: string[] = [];
   while (lines.length > 0) {
     const line = lines.shift();
+
     if (
       (line && !delimiters.includes(line[0]) && clumps.at(-1)) ||
-      containsIncompleteCodeblock(clumps.at(-1))
+      // Support for example blocks in mutliline comments (last line is an example and next line is not a tag)
+      (isExampleBlock(clumps.at(-1)) && !line.startsWith("@"))
     ) {
       clumps[clumps.length - 1] += separator + line;
     } else {
