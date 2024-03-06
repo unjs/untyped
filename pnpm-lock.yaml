@@ -62,8 +62,8 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0
   marked:
-    specifier: ^11.2.0
-    version: 11.2.0
+    specifier: ^12.0.1
+    version: 12.0.1
   monaco-editor:
     specifier: ^0.45.0
     version: 0.45.0
@@ -5289,8 +5289,8 @@ packages:
       - supports-color
     dev: true
 
-  /marked@11.2.0:
-    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
+  /marked@12.0.1:
+    resolution: {integrity: sha512-Y1/V2yafOcOdWQCX0XpAKXzDakPOpn6U0YLxTJs3cww6VxOzZV1BTOOYWLvH3gX38cq+iLwljHHTnMtlDfg01Q==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: true
