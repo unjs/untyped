@@ -92,7 +92,7 @@
     "marked": "^11.2.0",
     "monaco-editor": "^0.45.0",
     "nuxt": "^3.9.3",
-    "nuxt-windicss": "^2.6.1",
+    "nuxt-windicss": "^3.0.1",
     "prettier": "^3.2.4",
     "prismjs": "^1.29.0",
     "typescript": "^5.3.3",
