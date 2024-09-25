@@ -1,12 +1,11 @@
 import { defu } from "defu";
-import jiti from "jiti";
-import type { JITIOptions } from "jiti";
+import { createJiti, type JitiOptions } from "jiti";
 import { resolveSchema } from "../schema";
-import type { Schema } from "../types";
+import type { InputObject, Schema } from "../types";
 import untypedPlugin from "./babel";
 
 export interface LoaderOptions {
-  jiti?: JITIOptions;
+  jiti?: JitiOptions;
   defaults?: Record<string, any>;
   ignoreDefaults?: boolean;
 }
@@ -15,21 +14,19 @@ export async function loadSchema(
   entryPath: string,
   options: LoaderOptions = {},
 ): Promise<Schema> {
-  const _jitiRequire = jiti(
+  const jiti = createJiti(
     process.cwd(),
     defu(options.jiti, {
-      esmResolve: true,
       interopDefault: true,
       transformOptions: {
         babel: {
           plugins: [[untypedPlugin, { experimentalFunctions: true }]],
         },
       },
-    }),
+    } satisfies JitiOptions),
   );
 
-  const resolvedEntryPath = _jitiRequire.resolve(entryPath);
-  const rawSchema = _jitiRequire(resolvedEntryPath);
+  const rawSchema = await jiti.import(entryPath) as InputObject;
   const schema = await resolveSchema(rawSchema, options.defaults, {
     ignoreDefaults: options.ignoreDefaults,
   });
