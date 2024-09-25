@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as babel from "@babel/standalone/babel.min.js";
 import untypedPlugin from "./babel";
 

@@ -1,6 +1,6 @@
 import type { ConfigAPI, PluginItem, PluginObj } from "@babel/core";
 import * as t from "@babel/types";
-import { Schema, JSType, TypeDescriptor, FunctionArg } from "../types";
+import type { Schema, JSType, TypeDescriptor, FunctionArg } from "../types";
 import {
   normalizeTypes,
   mergedTypes,
