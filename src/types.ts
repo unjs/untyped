@@ -4,7 +4,7 @@ export type JSValue =
   | bigint
   | boolean
   | symbol
-  | Function // eslint-disable-line @typescript-eslint/ban-types
+  | Function // eslint-disable-line @typescript-eslint/no-unsafe-function-type
   | Array<any>
   | undefined
   | object
