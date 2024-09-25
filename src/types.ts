@@ -21,7 +21,6 @@ export type JSType =
   | "any"
   | "array";
 
-// eslint-disable-next-line no-use-before-define
 export type ResolveFn = (
   value: unknown,
   get: (key: string) => Promise<unknown>,

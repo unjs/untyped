@@ -9,7 +9,7 @@ async function main() {
 
   if (action !== "load" || !entryPath) {
     console.error("Usage: untyped load <entryPath> [--write]");
-    // eslint-disable-next-line unicorn/no-process-exit
+
     process.exit(1);
   }
 
@@ -32,6 +32,6 @@ async function main() {
 // eslint-disable-next-line unicorn/prefer-top-level-await
 main().catch((error) => {
   console.error(error);
-  // eslint-disable-next-line unicorn/no-process-exit
+
   process.exit(1);
 });

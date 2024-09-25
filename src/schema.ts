@@ -112,7 +112,6 @@ async function _resolveSchema(
     }
     if (typeof node.$resolve === "function") {
       schema.default = await node.$resolve(schema.default, async (key) => {
-        // eslint-disable-next-line unicorn/no-await-expression-member
         return (await _resolveSchema(getValue(ctx.root, key), key, ctx))
           .default;
       });

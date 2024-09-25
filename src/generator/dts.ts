@@ -250,7 +250,7 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   ) {
     const stringified = JSON.stringify(schema.default);
     if (stringified) {
-      buff.push(`@default ${stringified.replace(/\*\//g, "*\\/")}`);
+      buff.push(`@default ${stringified.replace(/\*\//g, String.raw`*\/`)}`);
     }
   }
 

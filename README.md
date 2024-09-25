@@ -30,11 +30,11 @@ const defaultPlanet = {
   name: "earth",
   specs: {
     gravity: {
-      $resolve: (val) => parseFloat(val),
+      $resolve: (val) => Number.parseFloat(val),
       $default: "9.8",
     },
     moons: {
-      $resolve: (val = ["moon"]) => [].concat(val),
+      $resolve: (val = ["moon"]) => [val].flat(),
       $schema: {
         title: "planet moons",
       },
