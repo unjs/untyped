@@ -32,7 +32,7 @@ export async function resolveSchema(
     root: obj,
     defaults,
     resolveCache: {},
-    ignoreDefaults: options.ignoreDefaults,
+    ignoreDefaults: !!options.ignoreDefaults,
   });
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'

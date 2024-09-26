@@ -109,12 +109,16 @@ export function mergedTypes(...types: TypeDescriptor[]): TypeDescriptor {
     return types[0];
   }
   const tsTypes = normalizeTypes(
-    types.flatMap((t) => t.tsType).filter(Boolean),
+    types.flatMap((t) => t.tsType).filter(Boolean) as string[],
   );
   return {
-    type: normalizeTypes(types.flatMap((t) => t.type).filter(Boolean)),
+    type: normalizeTypes(
+      types.flatMap((t) => t.type).filter(Boolean) as JSType[],
+    ),
     tsType: Array.isArray(tsTypes) ? tsTypes.join(" | ") : tsTypes,
-    items: mergedTypes(...types.flatMap((t) => t.items).filter(Boolean)),
+    items: mergedTypes(
+      ...(types.flatMap((t) => t.items).filter(Boolean) as TypeDescriptor[]),
+    ),
   };
 }
 
@@ -126,16 +130,17 @@ export function normalizeTypes<T extends string>(val: T[]) {
   return arr.length > 1 ? arr : arr[0];
 }
 
-export function cachedFn(fn) {
-  let val;
+export function cachedFn<T>(fn: () => T): () => T {
+  let val: T | undefined;
   let resolved = false;
-  return () => {
+  const cachedFn = () => {
     if (!resolved) {
       val = fn();
       resolved = true;
     }
     return val;
   };
+  return cachedFn as () => T;
 }
 
 const jsTypes: Set<JSType> = new Set([

@@ -10,7 +10,7 @@ import {
 
 import { version } from "../../package.json";
 
-type GetCodeFn = (loc: t.SourceLocation) => string;
+type GetCodeFn = (loc: t.SourceLocation | null | undefined) => string;
 
 const babelPluginUntyped: PluginItem = function (
   api: ConfigAPI,
@@ -62,7 +62,9 @@ const babelPluginUntyped: PluginItem = function (
             if (schemaProp && "value" in schemaProp) {
               if (schemaProp.value.type === "ObjectExpression") {
                 // Object has $schema
-                schemaProp.value.properties.push(...astify(schema).properties);
+                schemaProp.value.properties.push(
+                  ...(astify(schema) as t.ObjectExpression).properties,
+                );
               } else {
                 // Object has $schema which is not an object
                 // SKIP
@@ -70,7 +72,8 @@ const babelPluginUntyped: PluginItem = function (
             } else {
               // Object has not $schema
               valueNode.properties.unshift(
-                ...astify({ $schema: schema }).properties,
+                ...(astify({ $schema: schema }) as t.ObjectExpression)
+                  .properties,
               );
             }
           } else {
@@ -95,7 +98,7 @@ const babelPluginUntyped: PluginItem = function (
         // Experimental functions meta support
         if (
           !options.experimentalFunctions &&
-          !schema.tags.includes("@untyped")
+          !schema.tags?.includes("@untyped")
         ) {
           return;
         }
@@ -110,10 +113,13 @@ const babelPluginUntyped: PluginItem = function (
 
         const _getLines = cachedFn(() => this.file.code.split("\n"));
         const getCode: GetCodeFn = (loc) => {
+          if (!loc) {
+            return "";
+          }
           const _lines = _getLines();
           return (
             _lines[loc.start.line - 1]
-              .slice(loc.start.column, loc.end.column)
+              ?.slice(loc.start.column, loc.end.column)
               .trim() || ""
           );
         };
@@ -143,7 +149,7 @@ const babelPluginUntyped: PluginItem = function (
               arg,
               mergedTypes(
                 arg,
-                inferAnnotationType(lparam.typeAnnotation, getCode),
+                inferAnnotationType(lparam.typeAnnotation!, getCode)!,
               ),
             );
           }
@@ -197,7 +203,7 @@ const babelPluginUntyped: PluginItem = function (
           p.replaceWith(
             t.variableDeclaration("const", [
               t.variableDeclarator(
-                t.identifier(p.node.id.name),
+                t.identifier(p.node.id!.name),
                 astify({ $schema: schema }),
               ),
             ]),
@@ -220,7 +226,7 @@ function containsIncompleteCodeblock(line = "") {
 function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
   const clumps: string[] = [];
   while (lines.length > 0) {
-    const line = lines.shift();
+    const line = lines.shift()!;
     if (
       (line && !delimiters.includes(line[0]) && clumps.at(-1)) ||
       containsIncompleteCodeblock(clumps.at(-1))
@@ -281,21 +287,25 @@ function parseJSDocs(input: string | string[]): Schema {
         Object.assign(schema, getTypeDescriptor(type));
         for (const typedef in typedefs) {
           schema.markdownType = type;
-          schema.tsType = schema.tsType.replace(
-            new RegExp(typedefs[typedef], "g"),
-            typedef,
-          );
+          if (schema.tsType) {
+            schema.tsType = schema.tsType.replace(
+              new RegExp(typedefs[typedef], "g"),
+              typedef,
+            );
+          }
         }
         continue;
       }
-      schema.tags.push(tag.trim());
+      schema.tags!.push(tag.trim());
     }
   }
 
   return schema;
 }
 
-function astify(val) {
+function astify(
+  val: unknown,
+): t.Literal | t.Identifier | t.ArrayExpression | t.ObjectExpression {
   if (typeof val === "string") {
     return t.stringLiteral(val);
   }
@@ -316,8 +326,17 @@ function astify(val) {
   }
   return t.objectExpression(
     Object.getOwnPropertyNames(val)
-      .filter((key) => val[key] !== undefined && val[key] !== null)
-      .map((key) => t.objectProperty(t.identifier(key), astify(val[key]))),
+      .filter(
+        (key) =>
+          val[key as keyof typeof val] !== undefined &&
+          val[key as keyof typeof val] !== null,
+      )
+      .map((key) =>
+        t.objectProperty(
+          t.identifier(key),
+          astify(val[key as keyof typeof val]),
+        ),
+      ),
   );
 }
 
@@ -336,7 +355,7 @@ const AST_JSTYPE_MAP: Partial<Record<t.Expression["type"], JSType | "RegExp">> =
 
 function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   if (AST_JSTYPE_MAP[e.type]) {
-    return getTypeDescriptor(AST_JSTYPE_MAP[e.type]);
+    return getTypeDescriptor(AST_JSTYPE_MAP[e.type]!);
   }
   if (e.type === "AssignmentExpression") {
     return inferArgType(e.right, getCode);
@@ -351,7 +370,7 @@ function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
     return {
       type: "array",
       items: {
-        type: normalizeTypes(itemTypes),
+        type: normalizeTypes(itemTypes as JSType[]),
       },
     };
   }
@@ -361,22 +380,23 @@ function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
 function inferAnnotationType(
   ann: t.Identifier["typeAnnotation"],
   getCode: GetCodeFn,
-): TypeDescriptor | null {
-  if (ann.type !== "TSTypeAnnotation") {
-    return null;
+): TypeDescriptor | undefined {
+  if (ann?.type !== "TSTypeAnnotation") {
+    return undefined;
   }
   return inferTSType(ann.typeAnnotation, getCode);
 }
 
-function inferTSType(
-  tsType: t.TSType,
-  getCode: GetCodeFn,
-): TypeDescriptor | null {
+function inferTSType(tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor {
   if (tsType.type === "TSParenthesizedType") {
     return inferTSType(tsType.typeAnnotation, getCode);
   }
   if (tsType.type === "TSTypeReference") {
-    if ("name" in tsType.typeName && tsType.typeName.name === "Array") {
+    if (
+      tsType.typeParameters &&
+      "name" in tsType.typeName &&
+      tsType.typeName.name === "Array"
+    ) {
       return {
         type: "array",
         items: inferTSType(tsType.typeParameters.params[0], getCode),
