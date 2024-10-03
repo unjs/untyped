@@ -356,6 +356,32 @@ describe("transform (jsdoc)", () => {
     });
   });
 
+  it("supports codeblock without `@example`", () => {
+    const result = transform(`
+      export default {
+        /**
+         * @note This is a note.
+         * \`\`\`js
+         * export default secret
+         * \`\`\`
+         * @type {'src' | 'root'}
+         */
+        srcDir: 'src'
+      }
+    `);
+    expectCodeToMatch(result, /export default ([\S\s]*)$/, {
+      srcDir: {
+        $default: "src",
+        $schema: {
+          title: "",
+          tsType: "'src' | 'root'",
+          description: "",
+          tags: ["@note This is a note.", "```js\nexport default secret\n```"],
+        },
+      },
+    });
+  });
+
   it("correctly parses type assertion", () => {
     const result = transform(`
       import type { InputObject } from 'untyped'

@@ -217,24 +217,62 @@ const babelPluginUntyped: PluginItem = function (
 export default babelPluginUntyped;
 
 function isExampleBlock(line = "") {
-  return line.includes("@example");
+  return line.startsWith("@example");
+}
+
+function containsIncompleteCodeblock(line = "") {
+  const codeDelimiters = line
+    .split("\n")
+    .filter((line) => line.startsWith("```")).length;
+  return !!(codeDelimiters % 2);
 }
 
 function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
   const clumps: string[] = [];
-  while (lines.length > 0) {
-    const line = lines.shift();
 
-    if (
-      (line && !delimiters.includes(line[0]) && clumps.at(-1)) ||
-      // Support for example block with blank line (last line is an example and next line is not a tag)
-      (isExampleBlock(clumps.at(-1)) && !line.startsWith("@"))
-    ) {
+  while (lines.length > 0) {
+    const line = lines.shift() as string;
+
+    // If there is no previous clump, create one
+    if (!clumps.at(-1)) {
+      clumps.push(line);
+      continue;
+    }
+
+    // If the line starts with a delimiter, create a new clump
+    if (delimiters.includes(line[0])) {
+      clumps.push(line);
+      continue;
+    }
+
+    // If the previous clump is an example block, append to it
+    if (isExampleBlock(clumps.at(-1))) {
       clumps[clumps.length - 1] += separator + line;
+      continue;
+    }
+
+    // If the previous clump is an incomplete code block, append to it
+    if (containsIncompleteCodeblock(clumps.at(-1))) {
+      clumps[clumps.length - 1] += separator + line;
+      continue;
+    }
+
+    // If the line starts with a code block delimiter, create a new clump
+    // We need to check this after the previous check to avoid creating a new clump for an incomplete code block
+    if (line.startsWith("```")) {
+      clumps.push(line);
+      continue;
+    }
+
+    // If the line is empty, create a new clump
+    if (line) {
+      clumps[clumps.length - 1] += separator + line;
+      continue;
     } else {
       clumps.push(line);
     }
   }
+
   return clumps.filter(Boolean);
 }
 
