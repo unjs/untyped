@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.5.0
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.4.2...v1.5.0)
+
+### 🚀 Enhancements
+
+- Update to jiti v2 ([6c35c70](https://github.com/unjs/untyped/commit/6c35c70))
+
+### 💅 Refactors
+
+- Improve type safety ([7f51a8a](https://github.com/unjs/untyped/commit/7f51a8a))
+
+### 🏡 Chore
+
+- Update deps ([8881231](https://github.com/unjs/untyped/commit/8881231))
+- Lint with eslint v9 ([6392dbd](https://github.com/unjs/untyped/commit/6392dbd))
+- Update deps ([41b8154](https://github.com/unjs/untyped/commit/41b8154))
+- Lint ([9e5084a](https://github.com/unjs/untyped/commit/9e5084a))
+- Apply automated updates ([5a569eb](https://github.com/unjs/untyped/commit/5a569eb))
+- Fix type issues ([88c2803](https://github.com/unjs/untyped/commit/88c2803))
+
+### 🤖 CI
+
+- Update node version to 20 ([c4ede69](https://github.com/unjs/untyped/commit/c4ede69))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.4.2
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.4.1...v1.4.2)

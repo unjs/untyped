@@ -460,7 +460,7 @@ describe("transform (jsdoc)", () => {
 function expectCodeToMatch(code: string, pattern: RegExp, expected: any) {
   const [, result] = code.match(pattern) || [];
   expect(result).toBeDefined();
-  // eslint-disable-next-line no-new-func, unicorn/new-for-builtins
+  // eslint-disable-next-line unicorn/new-for-builtins
   const obj = Function(
     '"use strict";return (' + result.replace(/;$/, "") + ")",
   )();

@@ -20,6 +20,7 @@ export interface NormalizeSchemaOptions {
   ignoreDefaults?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ResolveSchemaOptions extends NormalizeSchemaOptions {}
 
 export async function resolveSchema(
@@ -31,7 +32,7 @@ export async function resolveSchema(
     root: obj,
     defaults,
     resolveCache: {},
-    ignoreDefaults: options.ignoreDefaults,
+    ignoreDefaults: !!options.ignoreDefaults,
   });
   // TODO: Create meta-schema fror superset of Schema interface
   // schema.$schema = 'http://json-schema.org/schema#'
@@ -112,7 +113,6 @@ async function _resolveSchema(
     }
     if (typeof node.$resolve === "function") {
       schema.default = await node.$resolve(schema.default, async (key) => {
-        // eslint-disable-next-line unicorn/no-await-expression-member
         return (await _resolveSchema(getValue(ctx.root, key), key, ctx))
           .default;
       });

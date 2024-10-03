@@ -88,7 +88,7 @@ function extractTypeImports(declarations: string) {
 
 export function generateTypes(schema: Schema, opts: GenerateTypesOptions = {}) {
   opts = { ...GenerateTypesDefaults, ...opts };
-  const baseIden = " ".repeat(opts.indentation);
+  const baseIden = " ".repeat(opts.indentation || 0);
   const interfaceCode =
     `interface ${opts.interfaceName} {\n` +
     _genTypes(schema, baseIden + " ", opts)
@@ -130,7 +130,7 @@ function _genTypes(
     } else {
       let type: string;
       if (val.type === "array") {
-        type = `Array<${getTsType(val.items, opts)}>`;
+        type = `Array<${getTsType(val.items || [], opts)}>`;
       } else if (val.type === "function") {
         type = genFunctionType(val, opts);
       } else {
@@ -182,7 +182,7 @@ function getTsType(
     return type.type
       .map((t) => {
         // object is typed to an empty string by default, we need to type as object
-        if (t === "object" && type.type.length > 1) {
+        if (t === "object" && type.type!.length > 1) {
           return `{\n` + _genTypes(type, " ", opts).join("\n") + `\n}`;
         }
         return TYPE_MAP[t];
@@ -190,7 +190,7 @@ function getTsType(
       .join("|");
   }
   if (type.type === "array") {
-    return `Array<${getTsType(type.items, opts)}>`;
+    return `Array<${getTsType(type.items || [], opts)}>`;
   }
   if (type.type === "object") {
     return `{\n` + _genTypes(type, " ", opts).join("\n") + `\n}`;
@@ -198,9 +198,9 @@ function getTsType(
   return TYPE_MAP[type.type] || type.type;
 }
 
-export function genFunctionType(schema, opts: GenerateTypesOptions) {
+export function genFunctionType(schema: Schema, opts: GenerateTypesOptions) {
   return `(${genFunctionArgs(schema.args, opts)}) => ${getTsType(
-    schema.returns,
+    schema.returns || [],
     opts,
   )}`;
 }
@@ -250,13 +250,13 @@ function generateJSDoc(schema: Schema, opts: GenerateTypesOptions): string[] {
   ) {
     const stringified = JSON.stringify(schema.default);
     if (stringified) {
-      buff.push(`@default ${stringified.replace(/\*\//g, "*\\/")}`);
+      buff.push(`@default ${stringified.replace(/\*\//g, String.raw`*\/`)}`);
     }
   }
 
   for (const key in schema) {
     if (!SCHEMA_KEYS.has(key)) {
-      buff.push("", `@${key} ${schema[key]}`);
+      buff.push("", `@${key} ${schema[key as keyof Schema] as string}`);
     }
   }
 
