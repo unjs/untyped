@@ -264,13 +264,14 @@ function clumpLines(lines: string[], delimiters = [" "], separator = " ") {
       continue;
     }
 
-    // If the line is empty, create a new clump
+    // Append to the previous clump
     if (line) {
       clumps[clumps.length - 1] += separator + line;
       continue;
-    } else {
-      clumps.push(line);
     }
+
+    // If the line is empty, create a new clump
+    clumps.push(line);
   }
 
   return clumps.filter(Boolean);
