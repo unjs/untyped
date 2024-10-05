@@ -26,7 +26,13 @@ export async function loadSchema(
     } satisfies JitiOptions),
   );
 
-  const rawSchema = (await jiti.import(entryPath)) as InputObject;
+  let rawSchema = (await jiti.import(entryPath)) as InputObject;
+
+  const rawSchemaKeys = Object.keys(rawSchema);
+  if (rawSchemaKeys.length === 1 && rawSchemaKeys[0] === "default") {
+    rawSchema = (rawSchema as any).default;
+  }
+
   const schema = await resolveSchema(rawSchema, options.defaults, {
     ignoreDefaults: options.ignoreDefaults,
   });
