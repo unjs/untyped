@@ -1,25 +1,40 @@
 # untyped
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions][github-actions-src]][github-actions-href]
-[![Codecov][codecov-src]][codecov-href]
-[![bundle][bundle-src]][bundle-href]
+<!-- automd:badges bundlejs -->
+
+[![npm version](https://img.shields.io/npm/v/untyped)](https://npmjs.com/package/untyped)
+[![npm downloads](https://img.shields.io/npm/dm/untyped)](https://npm.chart.dev/untyped)
+[![bundle size](https://img.shields.io/bundlejs/size/untyped)](https://bundlejs.com/?q=untyped)
+
+<!-- /automd -->
 
 **▶️ Check [online playground](https://untyped.unjs.io)**
 
 ## Install
 
+<!-- automd:pm-i -->
+
 ```sh
+# ✨ Auto-detect
+npx nypm install untyped
+
 # npm
-npm i untyped
+npm install untyped
 
 # yarn
 yarn add untyped
 
 # pnpm
-pnpm add untyped
+pnpm install untyped
+
+# bun
+bun install untyped
+
+# deno
+deno install untyped
 ```
+
+<!-- /automd -->
 
 ## Usage
 
