@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.5.1
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.5.0...v1.5.1)
+
+### 🩹 Fixes
+
+- **loader:** Use default export if is the only export ([030a98c](https://github.com/unjs/untyped/commit/030a98c))
+
+### 🏡 Chore
+
+- Update deps ([6a6d2d9](https://github.com/unjs/untyped/commit/6a6d2d9))
+- Add automd ([e067210](https://github.com/unjs/untyped/commit/e067210))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.5.0
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.4.2...v1.5.0)
