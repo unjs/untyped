@@ -124,9 +124,24 @@ describe("resolveSchema", () => {
     const types = generateTypes(
       await resolveSchema({
         "*key": "123",
+        "2ndKey": "456",
+        key3: "789",
       }),
     );
-    expect(types).toMatch('"*key": string');
+    expect(types).toMatch(
+      [
+        "export interface Untyped {",
+        ' /** @default "123" */',
+        ' "*key": string,',
+        "",
+        ' /** @default "456" */',
+        ' "2ndKey": string,',
+        "",
+        ' /** @default "789" */',
+        " key3: string,",
+        "}",
+      ].join("\n"),
+    );
   });
 
   it("functions", async () => {
