@@ -12,7 +12,7 @@ export function defineUntypedSchema(options: SchemaDefinition) {
 }
 
 export function escapeKey(val: string): string {
-  return /^\w+$/.test(val) ? val : `"${val}"`;
+  return /^(?!\d)[\w$]+$/.test(val) ? val : `"${val}"`;
 }
 
 export function getType(val: unknown): JSType | undefined {
