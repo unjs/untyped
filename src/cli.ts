@@ -54,9 +54,8 @@ const cli = defineCommand({
   },
 });
 
-try {
-  await runMain(cli);
-} catch (error) {
+// eslint-disable-next-line unicorn/prefer-top-level-await
+runMain(cli).catch((error) => {
   console.error(error);
   process.exit(1);
-}
+});
