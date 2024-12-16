@@ -11,10 +11,6 @@ export function defineUntypedSchema(options: SchemaDefinition) {
   return options;
 }
 
-export function escapeKey(val: string): string {
-  return /^(?!\d)[\w$]+$/.test(val) ? val : `"${val}"`;
-}
-
 export function getType(val: unknown): JSType | undefined {
   const type = typeof val;
   if (type === "undefined" || val === null) {
