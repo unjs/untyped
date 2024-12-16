@@ -1,5 +1,6 @@
+import { genObjectKey } from "knitwork";
 import type { Schema, JSType, TypeDescriptor } from "../types";
-import { escapeKey, normalizeTypes } from "../utils";
+import { normalizeTypes } from "../utils";
 
 export interface GenerateTypesOptions {
   interfaceName?: string;
@@ -117,13 +118,13 @@ function _genTypes(
     buff.push(...generateJSDoc(val, opts));
     if (val.tsType) {
       buff.push(
-        `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: ${
+        `${genObjectKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: ${
           val.tsType
         },\n`,
       );
     } else if (val.type === "object") {
       buff.push(
-        `${escapeKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: {`,
+        `${genObjectKey(key)}${isRequired(schema, key, opts) ? "" : "?"}: {`,
         ..._genTypes(val, spaces, opts),
         "},\n",
       );
@@ -137,7 +138,7 @@ function _genTypes(
         type = getTsType(val, opts);
       }
       buff.push(
-        `${escapeKey(key)}${
+        `${genObjectKey(key)}${
           isRequired(schema, key, opts) ? "" : "?"
         }: ${type},\n`,
       );
