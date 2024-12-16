@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.5.2
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.5.1...v1.5.2)
+
+### 🩹 Fixes
+
+- Escape keys in generated types ([#143](https://github.com/unjs/untyped/pull/143))
+
+### 💅 Refactors
+
+- Implement cli with `citty` ([#150](https://github.com/unjs/untyped/pull/150))
+
+### 🏡 Chore
+
+- Update deps ([9095957](https://github.com/unjs/untyped/commit/9095957))
+- Lint ([06a0e21](https://github.com/unjs/untyped/commit/06a0e21))
+
+### ❤️ Contributors
+
+- Morgän <morgan.balde@gmail.com>
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Daniel Roe ([@danielroe](http://github.com/danielroe))
+
 ## v1.5.1
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.5.0...v1.5.1)
