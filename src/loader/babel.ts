@@ -252,7 +252,7 @@ function parseJSDocs(input: string | string[]): Schema {
 
   const firstTag = lines.findIndex((l) => l.startsWith("@"));
   const comments = clumpLines(
-    lines.slice(0, firstTag >= 0 ? firstTag : undefined),
+    lines.slice(0, firstTag === -1 ? undefined : firstTag),
   );
 
   if (comments.length === 1) {
@@ -262,7 +262,7 @@ function parseJSDocs(input: string | string[]): Schema {
     schema.description = comments.splice(1).join("\n");
   }
 
-  if (firstTag >= 0) {
+  if (firstTag !== -1) {
     const tags = clumpLines(lines.slice(firstTag), ["@"], "\n");
     // eslint-disable-next-line unicorn/no-array-reduce
     const typedefs = tags.reduce(
