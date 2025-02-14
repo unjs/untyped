@@ -16,9 +16,17 @@ const babelPluginUntyped: PluginItem = function (
   api: ConfigAPI,
   options: { experimentalFunctions?: boolean },
 ) {
+  const name = "untyped";
   api.cache.using(() => version);
 
   return <PluginObj>{
+    name,
+    manipulateOptions(opts: { plugins: Array<{ key: string }> }) {
+      // This `untyped` plugin must come before the `transform-typescript` plugin,
+      // otherwise the `returnType` annotations will be removed.
+      // So put it at the beginning.
+      opts.plugins!.sort((a) => (a.key === name ? -1 : 0));
+    },
     visitor: {
       VariableDeclaration(p) {
         const declaration = p.node.declarations[0];
