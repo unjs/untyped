@@ -39,7 +39,6 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/types": "^7.26.9",
     "citty": "^0.1.6",
     "defu": "^6.1.4",
     "jiti": "^2.4.2",

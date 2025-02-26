@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@babel/types':
-        specifier: ^7.26.9
-        version: 7.26.9
       citty:
         specifier: ^0.1.6
         version: 0.1.6
@@ -34,6 +31,9 @@ importers:
         specifier: ^7.26.9
         version: 7.26.9
       '@babel/template':
+        specifier: ^7.26.9
+        version: 7.26.9
+      '@babel/types':
         specifier: ^7.26.9
         version: 7.26.9
       '@types/babel__standalone':
