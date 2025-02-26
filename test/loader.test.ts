@@ -37,7 +37,7 @@ describe("loader", () => {
     `);
   });
 
-  it.only("should load a schema with function return type annotations", async () => {
+  it("should load a schema with function return type annotations", async () => {
     const schema = await loadSchema("./test/fixtures/functions.ts");
     expect(schema).toMatchInlineSnapshot(`
       {
