@@ -14,10 +14,6 @@
       "types": "./dist/loader/babel.d.mts",
       "default": "./dist/loader/babel.mjs"
     },
-    "./transform": {
-      "types": "./dist/loader/transform.d.mts",
-      "default": "./dist/loader/transform.mjs"
-    },
     "./loader": {
       "types": "./dist/loader/loader.d.mts",
       "default": "./dist/loader/loader.mjs"
@@ -43,7 +39,6 @@
     "web:build": "nuxi generate web"
   },
   "dependencies": {
-    "@babel/standalone": "^7.26.9",
     "@babel/types": "^7.26.9",
     "citty": "^0.1.6",
     "defu": "^6.1.4",
@@ -53,7 +48,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
+    "@babel/standalone": "^7.26.9",
     "@babel/template": "^7.26.9",
+    "@babel/types": "^7.26.9",
     "@types/babel__standalone": "^7.1.9",
     "@types/babel__traverse": "^7.20.6",
     "@types/node": "^22.13.5",
@@ -61,6 +58,7 @@
     "@vue/compiler-sfc": "^3.5.13",
     "automd": "^0.3.12",
     "changelogen": "^0.6.0",
+    "esbuild": "^0.25.0",
     "eslint": "^9.21.0",
     "eslint-config-unjs": "^0.4.2",
     "hljs": "^6.2.3",

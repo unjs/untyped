@@ -1,5 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { transform } from "../src/loader/transform";
+import { transform as babelTransform } from "@babel/standalone";
+import untypedPlugin from "../src/loader/babel";
+
+function transform(src: string, opts = {}) {
+  const res = babelTransform(src, {
+    filename: "src.ts",
+    presets: ["typescript"],
+    plugins: [[untypedPlugin, opts]],
+  });
+  return res.code!;
+}
 
 describe("transform (functions)", () => {
   it("creates correct types for simple function", () => {
