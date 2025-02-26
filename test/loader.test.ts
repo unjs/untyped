@@ -36,4 +36,36 @@ describe("loader", () => {
       }
     `);
   });
+
+  it("should load a schema with function return type annotations", async () => {
+    const schema = await loadSchema("./test/fixtures/functions.ts");
+    expect(schema).toMatchInlineSnapshot(`
+      {
+        "default": {},
+        "id": "#",
+        "properties": {
+          "main": {
+            "args": [
+              {
+                "items": {},
+                "name": "a",
+                "tsType": "number",
+                "type": "number",
+              },
+            ],
+            "description": "",
+            "id": "#main",
+            "returns": {
+              "tsType": "string",
+              "type": "string",
+            },
+            "tags": [],
+            "title": "",
+            "type": "function",
+          },
+        },
+        "type": "object",
+      }
+    `);
+  });
 });
