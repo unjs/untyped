@@ -6,7 +6,12 @@
         <a href="/">Untyped</a>
       </p>
       <div>
-        <a href="https://github.com/unjs/untyped" role="noopener" target="github">Github</a>
+        <a
+          href="https://github.com/unjs/untyped"
+          role="noopener"
+          target="github"
+          >Github</a
+        >
       </div>
     </div>
     <!-- Main -->
@@ -34,7 +39,10 @@
       <!-- Output -->
       <div class="block">
         <div class="block-title">
-          <Tabs v-model="state.outputTab" :tabs="['loader', 'schema', 'types', 'docs', 'resolved']" />
+          <Tabs
+            v-model="state.outputTab"
+            :tabs="['loader', 'schema', 'types', 'docs', 'resolved']"
+          />
           <span class="block-label">Output</span>
         </div>
         <!-- Schema -->
@@ -43,7 +51,11 @@
             Schema is auto generated from reference and is json-schema
             compliant.
           </div>
-          <Editor :model-value="JSON.stringify(schema, null, 2)" read-only language="json" />
+          <Editor
+            :model-value="JSON.stringify(schema, null, 2)"
+            read-only
+            language="json"
+          />
         </div>
         <!-- Types -->
         <div v-if="state.outputTab === 'types'" class="block-content">
@@ -64,14 +76,22 @@
           <div class="block-info">
             Using optional loader, we can support jsdoc to describe object.
           </div>
-          <Editor :model-value="transpiledRef" read-only language="typescript" />
+          <Editor
+            :model-value="transpiledRef"
+            read-only
+            language="typescript"
+          />
         </div>
         <!-- Resolved -->
         <div v-if="state.outputTab === 'resolved'" class="block-content">
           <div class="block-info">
             We can apply reference object to user input to apply defaults.
           </div>
-          <Editor :model-value="JSON.stringify(resolvedInput, null, 2)" read-only language="typescript" />
+          <Editor
+            :model-value="JSON.stringify(resolvedInput, null, 2)"
+            read-only
+            language="typescript"
+          />
         </div>
       </div>
     </main>
@@ -113,13 +133,11 @@ export default defineComponent({
     window.process = { env: {} };
     const loader = asyncImport({
       loader: async () => {
-        const [
-          { transform: babelTransform },
-          { default: untypedPlugin },
-        ] = await Promise.all([
-          await import("@babel/standalone"),
-          await import("../src/loader/babel")
-        ]);
+        const [{ transform: babelTransform }, { default: untypedPlugin }] =
+          await Promise.all([
+            await import("@babel/standalone"),
+            await import("../src/loader/babel"),
+          ]);
 
         return (src, opts = {}) => {
           const res = babelTransform(src, {
@@ -128,7 +146,7 @@ export default defineComponent({
             plugins: [[untypedPlugin, opts]],
           });
           return res.code;
-        }
+        };
       },
       loading: { transform: () => "export default {} // loader is loading..." },
       error: (err) => ({
