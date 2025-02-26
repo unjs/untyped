@@ -6,7 +6,6 @@ export default defineBuildConfig({
   entries: [
     "./src/index",
     "./src/loader/babel",
-    "./src/loader/transform",
     "./src/loader/loader",
     "./src/cli",
   ],
