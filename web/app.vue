@@ -132,7 +132,22 @@ export default defineComponent({
 
     window.process = { env: {} };
     const loader = asyncImport({
-      loader: () => import("../src/loader/transform"),
+      loader: async () => {
+        const [{ transform: babelTransform }, { default: untypedPlugin }] =
+          await Promise.all([
+            await import("@babel/standalone"),
+            await import("../src/loader/babel"),
+          ]);
+
+        return (src, opts = {}) => {
+          const res = babelTransform(src, {
+            filename: "src.ts",
+            presets: ["typescript"],
+            plugins: [[untypedPlugin, opts]],
+          });
+          return res.code;
+        };
+      },
       loading: { transform: () => "export default {} // loader is loading..." },
       error: (err) => ({
         transform: () => "export default {} // Error loading loader: " + err,
