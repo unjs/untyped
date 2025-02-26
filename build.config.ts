@@ -9,8 +9,10 @@ export default defineBuildConfig({
     "./src/loader/loader",
     "./src/cli",
   ],
+  externals: [
+    "@babel/core", // This is a type-only dependency
+  ],
   rollup: {
-    // inlineDependencies: true,
     emitCJS: true,
   },
 });
