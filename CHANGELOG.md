@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.0
+
+[compare changes](https://github.com/unjs/untyped/compare/v1.5.2...v2.0.0)
+
+### 🚀 Enhancements
+
+- Add `cwd` option to LoaderOptions ([#162](https://github.com/unjs/untyped/pull/162))
+
+### 🩹 Fixes
+
+- Put untyped plugin to first to avoid losing returnType. ([#160](https://github.com/unjs/untyped/pull/160))
+
+### 💅 Refactors
+
+- ⚠️  Remove `untyped/transform` and `@babel/standalone` dep ([#163](https://github.com/unjs/untyped/pull/163))
+
+### 📦 Build
+
+- Remove type-only `@babel/core` dependency ([e395ad3](https://github.com/unjs/untyped/commit/e395ad3))
+- ⚠️  Esm-only dist ([8cb5002](https://github.com/unjs/untyped/commit/8cb5002))
+- Bundle `@babel/types` ([2eaceba](https://github.com/unjs/untyped/commit/2eaceba))
+
+### 🏡 Chore
+
+- Update deps ([3b6a311](https://github.com/unjs/untyped/commit/3b6a311))
+- Update ci ([d514815](https://github.com/unjs/untyped/commit/d514815))
+- Update lockfile ([9b046de](https://github.com/unjs/untyped/commit/9b046de))
+- Update web demo ([30870b3](https://github.com/unjs/untyped/commit/30870b3))
+- Apply automated updates ([5bbaac0](https://github.com/unjs/untyped/commit/5bbaac0))
+
+### 🤖 CI
+
+- Update to node 22 ([ba4bea8](https://github.com/unjs/untyped/commit/ba4bea8))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Remove `untyped/transform` and `@babel/standalone` dep ([#163](https://github.com/unjs/untyped/pull/163))
+- ⚠️  Esm-only dist ([8cb5002](https://github.com/unjs/untyped/commit/8cb5002))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+- Kricsleo ([@kricsleo](https://github.com/kricsleo))
+
 ## v1.5.2
 
 [compare changes](https://github.com/unjs/untyped/compare/v1.5.1...v1.5.2)
