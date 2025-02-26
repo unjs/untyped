@@ -8,6 +8,7 @@ export interface LoaderOptions {
   jiti?: JitiOptions;
   defaults?: Record<string, any>;
   ignoreDefaults?: boolean;
+  cwd?: string;
 }
 
 export async function loadSchema(
@@ -15,7 +16,7 @@ export async function loadSchema(
   options: LoaderOptions = {},
 ): Promise<Schema> {
   const jiti = createJiti(
-    process.cwd(),
+    options.cwd || process.cwd(),
     defu(options.jiti, {
       interopDefault: true,
       transformOptions: {
