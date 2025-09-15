@@ -25,13 +25,13 @@ npm install untyped
 yarn add untyped
 
 # pnpm
-pnpm install untyped
+pnpm add untyped
 
 # bun
 bun install untyped
 
 # deno
-deno install untyped
+deno install npm:untyped
 ```
 
 <!-- /automd -->
