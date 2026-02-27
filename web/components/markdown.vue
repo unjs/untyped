@@ -26,16 +26,18 @@ export default defineComponent({
   },
   setup(ctx) {
     const render = ref(true);
-    const rendered = safeComputed(() =>
-      ctx.value && marked(ctx.value, {
-        highlight(code, lang) {
-          if (lang === "ts") {
-            lang = "js";
-          }
-          const _lang = prism.languages[lang];
-          return _lang ? prism.highlight(code, _lang) : code;
-        },
-      }),
+    const rendered = safeComputed(
+      () =>
+        ctx.value &&
+        marked(ctx.value, {
+          highlight(code, lang) {
+            if (lang === "ts") {
+              lang = "js";
+            }
+            const _lang = prism.languages[lang];
+            return _lang ? prism.highlight(code, _lang) : code;
+          },
+        }),
     );
     return {
       render,
