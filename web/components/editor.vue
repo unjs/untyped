@@ -6,7 +6,7 @@
 import { defineComponent } from "vue";
 import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
 import "monaco-editor/esm/vs/language/json/monaco.contribution";
-import "monaco-editor/esm/vs/basic-languages/monaco.contribution";
+// import "monaco-editor/esm/vs/basic-languages/monaco.contribution";
 import "monaco-editor/esm/vs/editor/editor.all";
 import { editor as moncacoEditor } from "monaco-editor/esm/vs/editor/editor.api";
 

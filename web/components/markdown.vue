@@ -2,8 +2,7 @@
   <div class="container">
     <div class="mb-2">
       <input id="markdown-raw" v-model="render" type="checkbox" />
-      <label for="markdown-raw" class="select-none"> Render markdown</label
-      ><br />
+      <label for="markdown-raw" class="select-none"> Render markdown</label><br />
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="render" class="markdown" v-html="rendered" />

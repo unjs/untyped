@@ -1,11 +1,5 @@
 import { pascalCase } from "scule";
-import type {
-  Schema,
-  JSType,
-  TypeDescriptor,
-  SchemaDefinition,
-  JSValue,
-} from "./types";
+import type { Schema, JSType, TypeDescriptor, SchemaDefinition, JSValue } from "./types";
 
 export function defineUntypedSchema(options: SchemaDefinition) {
   return options;
@@ -39,9 +33,7 @@ export function joinPath(a: string, b = "", sep = ".") {
 }
 
 export function resolvePath(path: string, from: string) {
-  return path.startsWith("/")
-    ? resolveRelative(path)
-    : resolveRelative(joinPath(from, path));
+  return path.startsWith("/") ? resolveRelative(path) : resolveRelative(joinPath(from, path));
 }
 
 function resolveRelative(path: string) {
@@ -104,17 +96,11 @@ export function mergedTypes(...types: TypeDescriptor[]): TypeDescriptor {
   if (types.length === 1) {
     return types[0];
   }
-  const tsTypes = normalizeTypes(
-    types.flatMap((t) => t.tsType).filter(Boolean) as string[],
-  );
+  const tsTypes = normalizeTypes(types.flatMap((t) => t.tsType).filter(Boolean) as string[]);
   return {
-    type: normalizeTypes(
-      types.flatMap((t) => t.type).filter(Boolean) as JSType[],
-    ),
+    type: normalizeTypes(types.flatMap((t) => t.type).filter(Boolean) as JSType[]),
     tsType: Array.isArray(tsTypes) ? tsTypes.join(" | ") : tsTypes,
-    items: mergedTypes(
-      ...(types.flatMap((t) => t.items).filter(Boolean) as TypeDescriptor[]),
-    ),
+    items: mergedTypes(...(types.flatMap((t) => t.items).filter(Boolean) as TypeDescriptor[])),
   };
 }
 
@@ -167,10 +153,7 @@ export function getTypeDescriptor(type: string | JSType): TypeDescriptor {
   for (const match of type.matchAll(FRIENDLY_TYPE_RE) || []) {
     const { importName, firstType } = match.groups || {};
     if (importName && firstType) {
-      markdownType = markdownType.replace(
-        match[0],
-        pascalCase(importName) + pascalCase(firstType),
-      );
+      markdownType = markdownType.replace(match[0], pascalCase(importName) + pascalCase(firstType));
     }
   }
 

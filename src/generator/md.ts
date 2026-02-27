@@ -5,11 +5,7 @@ export function generateMarkdown(schema: Schema) {
   return _generateMarkdown(schema, "", "").join("\n");
 }
 
-export function _generateMarkdown(
-  schema: Schema,
-  title: string,
-  level: string,
-) {
+export function _generateMarkdown(schema: Schema, title: string, level: string) {
   const lines: string[] = [];
 
   lines.push(`${level} ${title}`);
@@ -23,9 +19,7 @@ export function _generateMarkdown(
   }
 
   // Type and default
-  lines.push(
-    `- **Type**: \`${schema.markdownType || schema.tsType || schema.type}\``,
-  );
+  lines.push(`- **Type**: \`${schema.markdownType || schema.tsType || schema.type}\``);
   if ("default" in schema) {
     lines.push(`- **Default**: \`${JSON.stringify(schema.default)}\``);
   }

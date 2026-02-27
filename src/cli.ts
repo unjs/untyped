@@ -33,10 +33,7 @@ const load = defineCommand({
     });
     if (args.write) {
       const json = JSON.stringify(schema, null, 2);
-      const outfile = resolve(
-        cwd,
-        args.write === "true" ? "schema.json" : args.write,
-      );
+      const outfile = resolve(cwd, args.write === "true" ? "schema.json" : args.write);
       await writeFile(outfile, json);
     } else {
       console.log(schema);

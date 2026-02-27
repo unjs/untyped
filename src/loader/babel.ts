@@ -1,12 +1,7 @@
 import type { ConfigAPI, PluginItem, PluginObj } from "@babel/core";
 import * as t from "@babel/types";
 import type { Schema, JSType, TypeDescriptor, FunctionArg } from "../types";
-import {
-  normalizeTypes,
-  mergedTypes,
-  cachedFn,
-  getTypeDescriptor,
-} from "../utils";
+import { normalizeTypes, mergedTypes, cachedFn, getTypeDescriptor } from "../utils";
 
 import { version } from "../../package.json";
 
@@ -49,23 +44,18 @@ const babelPluginUntyped: PluginItem = function (
       ObjectProperty(p) {
         if (p.node.leadingComments && p.node.leadingComments.length > 0) {
           const schema = parseJSDocs(
-            p.node.leadingComments
-              .filter((c) => c.type === "CommentBlock")
-              .map((c) => c.value),
+            p.node.leadingComments.filter((c) => c.type === "CommentBlock").map((c) => c.value),
           );
 
           const valueNode =
-            p.node.value.type === "TSTypeAssertion" ||
-            p.node.value.type === "TSAsExpression"
+            p.node.value.type === "TSTypeAssertion" || p.node.value.type === "TSAsExpression"
               ? p.node.value.expression
               : p.node.value;
 
           if (valueNode.type === "ObjectExpression") {
             const schemaProp = valueNode.properties.find(
               (prop) =>
-                "key" in prop &&
-                prop.key.type === "Identifier" &&
-                prop.key.name === "$schema",
+                "key" in prop && prop.key.type === "Identifier" && prop.key.name === "$schema",
             );
             if (schemaProp && "value" in schemaProp) {
               if (schemaProp.value.type === "ObjectExpression") {
@@ -80,8 +70,7 @@ const babelPluginUntyped: PluginItem = function (
             } else {
               // Object has not $schema
               valueNode.properties.unshift(
-                ...(astify({ $schema: schema }) as t.ObjectExpression)
-                  .properties,
+                ...(astify({ $schema: schema }) as t.ObjectExpression).properties,
               );
             }
           } else {
@@ -104,10 +93,7 @@ const babelPluginUntyped: PluginItem = function (
         schema.args = [];
 
         // Experimental functions meta support
-        if (
-          !options.experimentalFunctions &&
-          !schema.tags?.includes("@untyped")
-        ) {
+        if (!options.experimentalFunctions && !schema.tags?.includes("@untyped")) {
           return;
         }
 
@@ -125,11 +111,7 @@ const babelPluginUntyped: PluginItem = function (
             return "";
           }
           const _lines = _getLines();
-          return (
-            _lines[loc.start.line - 1]
-              ?.slice(loc.start.column, loc.end.column)
-              .trim() || ""
-          );
+          return _lines[loc.start.line - 1]?.slice(loc.start.column, loc.end.column).trim() || "";
         };
 
         // Extract arguments
@@ -140,9 +122,7 @@ const babelPluginUntyped: PluginItem = function (
           if (!t.isAssignmentPattern(param) && !t.isIdentifier(param)) {
             continue;
           }
-          const lparam = (
-            t.isAssignmentPattern(param) ? param.left : param
-          ) as t.Identifier;
+          const lparam = (t.isAssignmentPattern(param) ? param.left : param) as t.Identifier;
           if (!t.isIdentifier(lparam)) {
             continue;
           }
@@ -155,19 +135,13 @@ const babelPluginUntyped: PluginItem = function (
           if (lparam.typeAnnotation) {
             Object.assign(
               arg,
-              mergedTypes(
-                arg,
-                inferAnnotationType(lparam.typeAnnotation!, getCode)!,
-              ),
+              mergedTypes(arg, inferAnnotationType(lparam.typeAnnotation!, getCode)!),
             );
           }
 
           // Infer type from default value
           if (param.type === "AssignmentPattern") {
-            Object.assign(
-              arg,
-              mergedTypes(arg, inferArgType(param.right, getCode)),
-            );
+            Object.assign(arg, mergedTypes(arg, inferArgType(param.right, getCode)));
           }
           schema.args = schema.args || [];
           schema.args.push(arg);
@@ -181,8 +155,7 @@ const babelPluginUntyped: PluginItem = function (
         // Extract and apply any manual types
         schema.tags = schema.tags?.filter((tag) => {
           if (tag.startsWith("@returns")) {
-            const { type } =
-              tag.match(/^@returns\s+{(?<type>[\S\s]+)}/)?.groups || {};
+            const { type } = tag.match(/^@returns\s+{(?<type>[\S\s]+)}/)?.groups || {};
             if (type) {
               schema.returns = schema.returns || {};
               Object.assign(schema.returns, getTypeDescriptor(type));
@@ -191,8 +164,7 @@ const babelPluginUntyped: PluginItem = function (
           }
           if (tag.startsWith("@param")) {
             const { type, param } =
-              tag.match(/^@param\s+{(?<type>[\S\s]+)}\s+(?<param>\w+)/)
-                ?.groups || {};
+              tag.match(/^@param\s+{(?<type>[\S\s]+)}\s+(?<param>\w+)/)?.groups || {};
             if (type && param) {
               const arg = schema.args?.find((arg) => arg.name === param);
               if (arg) {
@@ -210,10 +182,7 @@ const babelPluginUntyped: PluginItem = function (
         } else {
           p.replaceWith(
             t.variableDeclaration("const", [
-              t.variableDeclarator(
-                t.identifier(p.node.id!.name),
-                astify({ $schema: schema }),
-              ),
+              t.variableDeclarator(t.identifier(p.node.id!.name), astify({ $schema: schema })),
             ]),
           );
         }
@@ -225,9 +194,7 @@ const babelPluginUntyped: PluginItem = function (
 export default babelPluginUntyped;
 
 function containsIncompleteCodeblock(line = "") {
-  const codeDelimiters = line
-    .split("\n")
-    .filter((line) => line.startsWith("```")).length;
+  const codeDelimiters = line.split("\n").filter((line) => line.startsWith("```")).length;
   return !!(codeDelimiters % 2);
 }
 
@@ -254,14 +221,12 @@ function parseJSDocs(input: string | string[]): Schema {
     tags: [],
   };
 
-  const lines: string[] = (Array.isArray(input) ? input : [input]).flatMap(
-    (c) => c.split("\n").map((l) => l.replace(/(^\s*\*+ )|([\s*]+$)/g, "")),
+  const lines: string[] = (Array.isArray(input) ? input : [input]).flatMap((c) =>
+    c.split("\n").map((l) => l.replace(/(^\s*\*+ )|([\s*]+$)/g, "")),
   );
 
   const firstTag = lines.findIndex((l) => l.startsWith("@"));
-  const comments = clumpLines(
-    lines.slice(0, firstTag === -1 ? undefined : firstTag),
-  );
+  const comments = clumpLines(lines.slice(0, firstTag === -1 ? undefined : firstTag));
 
   if (comments.length === 1) {
     schema.title = comments[0];
@@ -276,8 +241,7 @@ function parseJSDocs(input: string | string[]): Schema {
     const typedefs = tags.reduce(
       (typedefs, tag) => {
         const { typedef, alias } =
-          tag.match(/@typedef\s+{(?<typedef>[\S\s]+)} (?<alias>.*)/)?.groups ||
-          {};
+          tag.match(/@typedef\s+{(?<typedef>[\S\s]+)} (?<alias>.*)/)?.groups || {};
         if (typedef && alias) {
           typedefs[typedef] = alias;
         }
@@ -296,10 +260,7 @@ function parseJSDocs(input: string | string[]): Schema {
         for (const typedef in typedefs) {
           schema.markdownType = type;
           if (schema.tsType) {
-            schema.tsType = schema.tsType.replace(
-              new RegExp(typedefs[typedef], "g"),
-              typedef,
-            );
+            schema.tsType = schema.tsType.replace(new RegExp(typedefs[typedef], "g"), typedef);
           }
         }
         continue;
@@ -311,9 +272,7 @@ function parseJSDocs(input: string | string[]): Schema {
   return schema;
 }
 
-function astify(
-  val: unknown,
-): t.Literal | t.Identifier | t.ArrayExpression | t.ObjectExpression {
+function astify(val: unknown): t.Literal | t.Identifier | t.ArrayExpression | t.ObjectExpression {
   if (typeof val === "string") {
     return t.stringLiteral(val);
   }
@@ -336,37 +295,30 @@ function astify(
     Object.getOwnPropertyNames(val)
       .filter(
         (key) =>
-          val[key as keyof typeof val] !== undefined &&
-          val[key as keyof typeof val] !== null,
+          val[key as keyof typeof val] !== undefined && val[key as keyof typeof val] !== null,
       )
-      .map((key) =>
-        t.objectProperty(
-          t.identifier(key),
-          astify(val[key as keyof typeof val]),
-        ),
-      ),
+      .map((key) => t.objectProperty(t.identifier(key), astify(val[key as keyof typeof val]))),
   );
 }
 
-const AST_JSTYPE_MAP: Partial<Record<t.Expression["type"], JSType | "RegExp">> =
-  {
-    StringLiteral: "string",
-    BooleanLiteral: "boolean",
-    BigIntLiteral: "bigint",
-    DecimalLiteral: "number",
-    NumericLiteral: "number",
-    ObjectExpression: "object",
-    FunctionExpression: "function",
-    ArrowFunctionExpression: "function",
-    RegExpLiteral: "RegExp",
-  };
+const AST_JSTYPE_MAP: Partial<Record<t.Expression["type"], JSType | "RegExp">> = {
+  StringLiteral: "string",
+  BooleanLiteral: "boolean",
+  BigIntLiteral: "bigint",
+  DecimalLiteral: "number",
+  NumericLiteral: "number",
+  ObjectExpression: "object",
+  FunctionExpression: "function",
+  ArrowFunctionExpression: "function",
+  RegExpLiteral: "RegExp",
+};
 
-function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
+function inferArgType(e: t.Expression): TypeDescriptor {
   if (AST_JSTYPE_MAP[e.type]) {
     return getTypeDescriptor(AST_JSTYPE_MAP[e.type]!);
   }
   if (e.type === "AssignmentExpression") {
-    return inferArgType(e.right, getCode);
+    return inferArgType(e.right);
   }
   if (e.type === "NewExpression" && e.callee.type === "Identifier") {
     return getTypeDescriptor(e.callee.name);
@@ -374,7 +326,7 @@ function inferArgType(e: t.Expression, getCode: GetCodeFn): TypeDescriptor {
   if (e.type === "ArrayExpression" || e.type === "TupleExpression") {
     const itemTypes = e.elements
       .filter((el) => t.isExpression(el))
-      .flatMap((el) => inferArgType(el as any, getCode).type);
+      .flatMap((el) => inferArgType(el as any).type);
     return {
       type: "array",
       items: {
@@ -400,11 +352,7 @@ function inferTSType(tsType: t.TSType, getCode: GetCodeFn): TypeDescriptor {
     return inferTSType(tsType.typeAnnotation, getCode);
   }
   if (tsType.type === "TSTypeReference") {
-    if (
-      tsType.typeParameters &&
-      "name" in tsType.typeName &&
-      tsType.typeName.name === "Array"
-    ) {
+    if (tsType.typeParameters && "name" in tsType.typeName && tsType.typeName.name === "Array") {
       return {
         type: "array",
         items: inferTSType(tsType.typeParameters.params[0], getCode),

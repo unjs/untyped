@@ -6,12 +6,7 @@
         <a href="/">Untyped</a>
       </p>
       <div>
-        <a
-          href="https://github.com/unjs/untyped"
-          role="noopener"
-          target="github"
-          >Github</a
-        >
+        <a href="https://github.com/unjs/untyped" role="noopener" target="github">Github</a>
       </div>
     </div>
     <!-- Main -->
@@ -24,8 +19,8 @@
         </div>
         <div v-if="state.editorTab === 'reference'" class="block-content">
           <div class="block-info">
-            Reference describes object shape, defaults, and normalizer. We can
-            use jsdocs to set additional comments.
+            Reference describes object shape, defaults, and normalizer. We can use jsdocs to set
+            additional comments.
           </div>
           <Editor v-model="state.ref" language="typescript" />
         </div>
@@ -48,27 +43,18 @@
         <!-- Schema -->
         <div v-if="state.outputTab === 'schema'" class="block-content">
           <div class="block-info">
-            Schema is auto generated from reference and is json-schema
-            compliant.
+            Schema is auto generated from reference and is json-schema compliant.
           </div>
-          <Editor
-            :model-value="JSON.stringify(schema, null, 2)"
-            read-only
-            language="json"
-          />
+          <Editor :model-value="JSON.stringify(schema, null, 2)" read-only language="json" />
         </div>
         <!-- Types -->
         <div v-if="state.outputTab === 'types'" class="block-content">
-          <div class="block-info">
-            Types are auto generated from schema for typescript usage.
-          </div>
+          <div class="block-info">Types are auto generated from schema for typescript usage.</div>
           <Editor :model-value="types" read-only language="typescript" />
         </div>
         <!-- Docs -->
         <div v-if="state.outputTab === 'docs'" class="block-content">
-          <div class="block-info">
-            Markdown documentation is auto generated from schema.
-          </div>
+          <div class="block-info">Markdown documentation is auto generated from schema.</div>
           <Markdown :value="markdown" />
         </div>
         <!-- Loader -->
@@ -76,11 +62,7 @@
           <div class="block-info">
             Using optional loader, we can support jsdoc to describe object.
           </div>
-          <Editor
-            :model-value="transpiledRef"
-            read-only
-            language="typescript"
-          />
+          <Editor :model-value="transpiledRef" read-only language="typescript" />
         </div>
         <!-- Resolved -->
         <div v-if="state.outputTab === 'resolved'" class="block-content">
@@ -100,12 +82,7 @@
 
 <script>
 import { defineComponent, defineAsyncComponent } from "vue";
-import {
-  resolveSchema,
-  generateTypes,
-  applyDefaults,
-  generateMarkdown,
-} from "../src";
+import { resolveSchema, generateTypes, applyDefaults, generateMarkdown } from "../src";
 import { defaultReference, defaultInput } from "./consts";
 import LoadingComponent from "./components/loading.vue";
 import Tabs from "./components/tabs.vue";
@@ -133,11 +110,10 @@ export default defineComponent({
     window.process = { env: {} };
     const loader = asyncImport({
       loader: async () => {
-        const [{ transform: babelTransform }, { default: untypedPlugin }] =
-          await Promise.all([
-            await import("@babel/standalone"),
-            await import("../src/loader/babel"),
-          ]);
+        const [{ transform: babelTransform }, { default: untypedPlugin }] = await Promise.all([
+          import("@babel/standalone"),
+          import("../src/loader/babel"),
+        ]);
 
         return (src, opts = {}) => {
           const res = babelTransform(src, {
@@ -159,12 +135,8 @@ export default defineComponent({
         experimentalFunctions: true,
       }),
     );
-    const referenceObj = safeComputed(() =>
-      evaluateSource(transpiledRef.value),
-    );
-    const schema = asyncComputed(
-      async () => await resolveSchema(referenceObj.value),
-    );
+    const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value));
+    const schema = asyncComputed(async () => await resolveSchema(referenceObj.value));
     const types = safeComputed(() => generateTypes(schema.value));
     const markdown = safeComputed(() => generateMarkdown(schema.value));
 

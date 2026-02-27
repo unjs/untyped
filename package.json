@@ -2,9 +2,16 @@
   "name": "untyped",
   "version": "2.0.0",
   "description": "",
-  "repository": "unjs/untyped",
   "license": "MIT",
+  "repository": "unjs/untyped",
+  "bin": {
+    "untyped": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -19,18 +26,11 @@
       "default": "./dist/loader/loader.mjs"
     }
   },
-  "types": "./dist/index.d.mts",
-  "bin": {
-    "untyped": "./dist/cli.mjs"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",
-    "lint": "eslint . && prettier -c src test web",
-    "lint:fix": "automd && eslint --fix . && prettier -w src test web",
+    "lint": "oxlint . && oxfmt --check src test web",
+    "lint:fix": "automd && oxlint --fix . && oxfmt src test web",
     "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage",
@@ -58,7 +58,6 @@
     "automd": "^0.4.3",
     "changelogen": "^0.6.2",
     "esbuild": "^0.27.3",
-    "eslint": "^10.0.2",
     "eslint-config-unjs": "^0.6.2",
     "hljs": "^6.2.3",
     "json-schema": "^0.4.0",
@@ -66,6 +65,8 @@
     "monaco-editor": "^0.55.1",
     "nuxt": "^4.3.1",
     "nuxt-windicss": "^3.0.1",
+    "oxfmt": "^0.35.0",
+    "oxlint": "^1.50.0",
     "prismjs": "^1.30.0",
     "typescript": "^5.9.3",
     "unbuild": "^3.6.1",

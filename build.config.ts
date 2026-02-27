@@ -4,12 +4,7 @@ import { transform } from "esbuild";
 
 export default defineBuildConfig({
   declaration: true,
-  entries: [
-    "./src/index",
-    "./src/loader/babel",
-    "./src/loader/loader",
-    "./src/cli",
-  ],
+  entries: ["./src/index", "./src/loader/babel", "./src/loader/loader", "./src/cli"],
   externals: [
     "@babel/core", // This is a type-only dependency
   ],

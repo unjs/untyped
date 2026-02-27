@@ -441,8 +441,6 @@ function expectCodeToMatch(code: string, pattern: RegExp, expected: any) {
   const [, result] = code.match(pattern) || [];
   expect(result).toBeDefined();
   // eslint-disable-next-line unicorn/new-for-builtins
-  const obj = Function(
-    '"use strict";return (' + result.replace(/;$/, "") + ")",
-  )();
+  const obj = Function('"use strict";return (' + result.replace(/;$/, "") + ")")();
   expect(obj).toMatchObject(expected);
 }

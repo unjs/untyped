@@ -1,10 +1,7 @@
 import { reactive, watch, computed } from "vue";
 
 const globalKeys = Object.getOwnPropertyNames(globalThis).filter(
-  (key) =>
-    key[0].toLocaleLowerCase() === key[0] &&
-    key !== "console" &&
-    key !== "module",
+  (key) => key[0].toLocaleLowerCase() === key[0] && key !== "console" && key !== "module",
 );
 
 export function evaluateSource(src) {

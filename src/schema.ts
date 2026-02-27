@@ -1,13 +1,5 @@
 import type { InputObject, InputValue, JSType, JSValue, Schema } from "./types";
-import {
-  getType,
-  getValue,
-  isObject,
-  joinPath,
-  nonEmpty,
-  setValue,
-  unique,
-} from "./utils";
+import { getType, getValue, isObject, joinPath, nonEmpty, setValue, unique } from "./utils";
 
 interface _ResolveCtx {
   root: InputObject;
@@ -39,11 +31,7 @@ export async function resolveSchema(
   return schema;
 }
 
-async function _resolveSchema(
-  input: InputValue,
-  id: string,
-  ctx: _ResolveCtx,
-): Promise<Schema> {
+async function _resolveSchema(input: InputValue, id: string, ctx: _ResolveCtx): Promise<Schema> {
   // Check cache
   if (id in ctx.resolveCache) {
     return ctx.resolveCache[id];
@@ -113,8 +101,7 @@ async function _resolveSchema(
     }
     if (typeof node.$resolve === "function") {
       schema.default = await node.$resolve(schema.default, async (key) => {
-        return (await _resolveSchema(getValue(ctx.root, key), key, ctx))
-          .default;
+        return (await _resolveSchema(getValue(ctx.root, key), key, ctx)).default;
       });
     }
   }
@@ -125,8 +112,7 @@ async function _resolveSchema(
 
   // Infer type from default value
   if (!schema.type) {
-    schema.type =
-      getType(schema.default) || (schema.properties ? "object" : "any");
+    schema.type = getType(schema.default) || (schema.properties ? "object" : "any");
   }
 
   normalizeSchema(schema, { ignoreDefaults: ctx.ignoreDefaults });
@@ -160,9 +146,7 @@ function normalizeSchema(
   if (
     !options.ignoreDefaults &&
     schema.default === undefined &&
-    ("properties" in schema ||
-      schema.type === "object" ||
-      schema.type === "any")
+    ("properties" in schema || schema.type === "object" || schema.type === "any")
   ) {
     const propsWithDefaults = Object.entries(schema.properties || {})
       .filter(([, prop]) => "default" in prop)
