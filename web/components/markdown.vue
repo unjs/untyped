@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-tomorrow.css";
 import { defineComponent, ref } from "vue";
 import { marked } from "marked";
 import prism from "prismjs";
@@ -27,7 +27,7 @@ export default defineComponent({
   setup(ctx) {
     const render = ref(true);
     const rendered = safeComputed(() =>
-      marked(ctx.value, {
+      ctx.value && marked(ctx.value, {
         highlight(code, lang) {
           if (lang === "ts") {
             lang = "js";
@@ -62,7 +62,7 @@ export default defineComponent({
     sans-serif,
     Apple Color Emoji,
     Segoe UI Emoji !important;
-  color: #24292e !important;
+  color: #d4d4d4 !important;
   word-wrap: break-word;
 }
 
@@ -75,7 +75,7 @@ export default defineComponent({
     monospace;
   padding: 0.2em 0.4em;
   font-size: 85%;
-  background-color: #f6f8fa;
+  background-color: #2e2e2e;
   border-radius: 6px;
 }
 </style>

@@ -1,8 +1,0 @@
-import { defineNuxtConfig } from "nuxt/config";
-
-// https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
-export default defineNuxtConfig({
-  ssr: false,
-  modules: ["nuxt-windicss"],
-  compatibilityDate: "2025-02-26",
-});

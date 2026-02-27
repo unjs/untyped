@@ -35,8 +35,8 @@
     "release": "pnpm test && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage",
     "untyped": "jiti ./src/cli.ts",
-    "web": "nuxi dev web",
-    "web:build": "nuxi generate web"
+    "web": "vite dev web",
+    "web:build": "vite build web"
   },
   "dependencies": {
     "citty": "^0.2.1",
@@ -62,9 +62,12 @@
     "hljs": "^6.2.3",
     "json-schema": "^0.4.0",
     "marked": "^17.0.3",
-    "monaco-editor": "^0.55.1",
-    "nuxt": "^4.3.1",
-    "nuxt-windicss": "^3.0.1",
+    "modern-monaco": "^0.3.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@tailwindcss/vite": "^4.1.7",
+    "tailwindcss": "^4.1.7",
+    "vite": "^6.3.5",
+    "vue": "^3.5.29",
     "oxfmt": "^0.35.0",
     "oxlint": "^1.50.0",
     "prismjs": "^1.30.0",

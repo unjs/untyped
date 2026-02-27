@@ -4,7 +4,7 @@
       v-for="tab in tabs"
       :key="tab"
       class="select-none px-3 mx-1 rounded"
-      :class="[tab == modelValue ? 'bg-gray-400' : 'bg-gray-200']"
+      :class="[tab == modelValue ? 'bg-neutral-600 text-white' : 'bg-neutral-800 text-neutral-400']"
       @click="$emit('update:modelValue', tab)"
     >
       {{ tab[0].toUpperCase() + tab.substr(1) }}

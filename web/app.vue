@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col min-h-screen max-w-screen">
+  <div class="flex flex-col min-h-screen max-w-screen bg-neutral-900 text-neutral-200">
     <!-- Nav -->
-    <div class="p-1em bg-cyan-500 text-white flex space-x-0 justify-between">
+    <div class="p-4 bg-neutral-800 text-white flex justify-between">
       <p class="font-extrabold">
         <a href="/">Untyped</a>
       </p>
@@ -83,7 +83,14 @@
 <script>
 import { defineComponent, defineAsyncComponent } from "vue";
 import { resolveSchema, generateTypes, applyDefaults, generateMarkdown } from "../src";
-import { defaultReference, defaultInput } from "./consts";
+import { defaultReference, defaultInput } from "./consts.ts";
+import {
+  persistedState,
+  asyncImport,
+  safeComputed,
+  asyncComputed,
+  evaluateSource,
+} from "./composables/utils.ts";
 import LoadingComponent from "./components/loading.vue";
 import Tabs from "./components/tabs.vue";
 
@@ -115,13 +122,15 @@ export default defineComponent({
           import("../src/loader/babel"),
         ]);
 
-        return (src, opts = {}) => {
-          const res = babelTransform(src, {
-            filename: "src.ts",
-            presets: ["typescript"],
-            plugins: [[untypedPlugin, opts]],
-          });
-          return res.code;
+        return {
+          transform: (src, opts = {}) => {
+            const res = babelTransform(src, {
+              filename: "src.ts",
+              presets: ["typescript"],
+              plugins: [[untypedPlugin, opts]],
+            });
+            return res.code;
+          },
         };
       },
       loading: { transform: () => "export default {} // loader is loading..." },
@@ -137,8 +146,8 @@ export default defineComponent({
     );
     const referenceObj = safeComputed(() => evaluateSource(transpiledRef.value));
     const schema = asyncComputed(async () => await resolveSchema(referenceObj.value));
-    const types = safeComputed(() => generateTypes(schema.value));
-    const markdown = safeComputed(() => generateMarkdown(schema.value));
+    const types = safeComputed(() => schema.value && generateTypes(schema.value));
+    const markdown = safeComputed(() => schema.value && generateMarkdown(schema.value));
 
     const inputObj = safeComputed(() => evaluateSource(state.input));
     const resolvedInput = asyncComputed(
@@ -164,7 +173,9 @@ html,
 #app {
   margin: 0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  @apply antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #171717;
 }
 
 .block {
@@ -172,31 +183,48 @@ html,
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @apply lg:shadow-lg lg:rounded lg:m-30px;
+}
+
+@media (min-width: 1024px) {
+  .block {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.4);
+    border-radius: 0.25rem;
+    margin: 30px;
+    border: 1px solid #2e2e2e;
+  }
 }
 
 .block-title {
   padding: 0.5em;
   position: relative;
-  @apply border-green-500 border-b-2 flex flex-col;
+  border-bottom: 2px solid #22c55e;
+  display: flex;
+  flex-direction: column;
 }
 
 .block-label {
   position: absolute;
   right: 0;
   top: 0;
-  @apply rounded-bl-xl bg-green-400 px-3 text-white select-none;
+  border-bottom-left-radius: 0.75rem;
+  background-color: #22c55e;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  color: white;
+  user-select: none;
 }
 
 .block-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  @apply: pt-3;
+  padding-top: 0.75rem;
 }
 
 .block-info {
   padding: 0.25em;
-  @apply border-dashed border-light-blue-500 border-b-1 mb-3 text-gray-700;
+  border-bottom: 1px dashed #404040;
+  margin-bottom: 0.75rem;
+  color: #a3a3a3;
 }
 </style>
