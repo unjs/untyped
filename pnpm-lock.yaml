@@ -76,8 +76,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       marked:
-        specifier: ^17.0.3
-        version: 17.0.3
+        specifier: ^18.0.3
+        version: 18.0.3
       modern-monaco:
         specifier: ^0.3.0
         version: 0.3.8(typescript@5.9.3)
@@ -2092,8 +2092,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  marked@17.0.3:
-    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
+  marked@18.0.3:
+    resolution: {integrity: sha512-7VT90JOkDeaRWpfjOReRGPEKn0ecdARBkDGL+tT1wZY0efPPqkUxLUSmzy/C7TIylQYJC9STISEsCHrqb/7VIA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -4616,7 +4616,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  marked@17.0.3: {}
+  marked@18.0.3: {}
 
   md4w@0.2.7: {}
 
