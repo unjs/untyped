@@ -47,9 +47,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
-    "@babel/standalone": "^7.29.1",
-    "@babel/template": "^7.28.6",
-    "@babel/types": "^7.29.0",
+    "@babel/standalone": "^8.0.4",
+    "@babel/template": "^8.0.0",
+    "@babel/types": "^8.0.4",
     "@types/babel__standalone": "^7.1.9",
     "@types/babel__traverse": "^7.28.0",
     "@types/node": "^25.3.2",
