@@ -201,6 +201,31 @@ describe("resolveSchema", () => {
     });
   });
 
+  it("array type without an array default", async () => {
+    // A declared `array` type can have no default at all (#87), or have it
+    // dropped by `ignoreDefaults`. Neither should crash normalization.
+    const declared = await resolveSchema({
+      list: { $schema: { type: "array" } },
+      typed: { $schema: { type: "array", tsType: "string[]" } },
+    });
+    expect(declared).toMatchObject({
+      properties: {
+        list: { type: "array", items: { type: "any" } },
+        typed: { type: "array", tsType: "string[]", items: { type: "any" } },
+      },
+    });
+
+    const ignored = await resolveSchema({ list: [1, 2] }, undefined, {
+      ignoreDefaults: true,
+    });
+    expect(ignored).toMatchObject({
+      properties: {
+        list: { type: "array", items: { type: "any" } },
+      },
+    });
+    expect(ignored.properties?.list.default).toBeUndefined();
+  });
+
   it("Handle @required tag", async () => {
     const schema = await resolveSchema({
       some: {

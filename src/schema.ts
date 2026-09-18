@@ -132,8 +132,12 @@ function normalizeSchema(
   options: NormalizeSchemaOptions,
 ): asserts schema is Schema {
   if (schema.type === "array" && !("items" in schema)) {
+    // A declared `array` type does not guarantee an array default: it may be
+    // missing entirely, or dropped by `ignoreDefaults`. Fall back to `any`
+    // items instead of dereferencing `undefined`.
+    const defaults = Array.isArray(schema.default) ? schema.default : [];
     schema.items = {
-      type: nonEmpty(unique((schema.default as any[]).map((i) => getType(i)))),
+      type: nonEmpty(unique(defaults.map((i) => getType(i)))),
     };
     if (schema.items.type) {
       if (schema.items.type.length === 0) {
